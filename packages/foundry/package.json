@@ -14,8 +14,9 @@
     "flatten": "make flatten",
     "fork": "make fork FORK_URL=${1:-mainnet}",
     "format": "make format",
-    "postinstall": "shx cp -n .env.example .env",
     "lint": "make lint",
+    "postinstall": "shx cp -n .env.example .env",
+    "seed": "ETH_KEYSTORE_ACCOUNT=scaffold-eth-default forge script script/SeedCampaigns.s.sol --rpc-url localhost --password localhost --broadcast -vv",
     "test": "forge test",
     "verify": "make verify RPC_URL=${1:-localhost}"
   },

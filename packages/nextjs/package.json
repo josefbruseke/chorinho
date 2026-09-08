@@ -26,6 +26,7 @@
     "blo": "~2.0.0",
     "burner-connector": "0.0.21",
     "daisyui": "5.5.19",
+    "html5-qrcode": "^2.3.8",
     "kubo-rpc-client": "~6.1.0",
     "next": "~16.2.4",
     "next-nprogress-bar": "~2.4.7",

@@ -32,10 +32,17 @@ export default serwist({
    *
    * O que continua no precache: o CSS, os icones e a pagina de falta de
    * conexao -- poucos kilobytes, e o que garante que a tela nao apareca crua.
+   *
+   * Fora tambem as rotas do grupo (dev): elas respondem 404 em producao, e uma
+   * unica entrada de precache que devolve 404 faz a instalacao INTEIRA do
+   * service worker falhar -- o aplicativo fica sem modo offline por causa de
+   * uma pagina de depuracao que ninguem usa.
    */
   manifestTransforms: [
     manifest => ({
-      manifest: manifest.filter(entrada => !/\/chunks\/|\.map$/.test(entrada.url)),
+      manifest: manifest.filter(
+        entrada => !/\/chunks\/|\.map$/.test(entrada.url) && !/^\/(debug|blockexplorer)(\/|$)/.test(entrada.url),
+      ),
       warnings: [],
     }),
   ],

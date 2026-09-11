@@ -34,8 +34,8 @@
         "@scaffold-ui/components": "^0.1.12",
         "@scaffold-ui/debug-contracts": "^0.1.11",
         "@scaffold-ui/hooks": "^0.1.8",
-        "@supabase/ssr": "^0.12.7",
-        "@supabase/supabase-js": "^2.116.0",
+        "@supabase/ssr": "~0.12.7",
+        "@supabase/supabase-js": "~2.116.0",
         "@tanstack/react-query": "~5.100.5",
         "@uniswap/sdk-core": "^7.19.1",
         "@uniswap/v2-sdk": "^4.19.1",
@@ -44,8 +44,8 @@
         "daisyui": "5.5.19",
         "html5-qrcode": "^2.3.8",
         "kubo-rpc-client": "~6.1.0",
-        "leaflet": "^1.9.4",
-        "leaflet.markercluster": "^1.5.3",
+        "leaflet": "~1.9.4",
+        "leaflet.markercluster": "~1.5.3",
         "next": "~16.2.4",
         "next-nprogress-bar": "~2.4.7",
         "next-themes": "~0.4.6",
@@ -53,7 +53,7 @@
         "react": "~19.2.5",
         "react-dom": "~19.2.5",
         "react-hot-toast": "~2.6.0",
-        "react-leaflet": "^5.0.0",
+        "react-leaflet": "~5.0.0",
         "usehooks-ts": "~3.1.1",
         "viem": "2.53.1",
         "wagmi": "2.19.5",
@@ -62,11 +62,11 @@
       "devDependencies": {
         "@tailwindcss/postcss": "4.2.4",
         "@trivago/prettier-plugin-sort-imports": "~6.0.2",
-        "@types/leaflet": "^1.9.22",
-        "@types/leaflet.markercluster": "^1.5.6",
+        "@types/leaflet": "~1.9.22",
+        "@types/leaflet.markercluster": "~1.5.6",
         "@types/node": "~18.19.130",
         "@types/react": "~19.2.14",
-        "@types/react-dom": "^19.3.0",
+        "@types/react-dom": "~19.2.0",
         "abitype": "1.2.4",
         "bgipfs": "~0.0.18",
         "eslint": "~9.39.0",
@@ -872,7 +872,7 @@
 
     "@types/react": ["@types/react@19.2.18", "", { "dependencies": { "csstype": "^3.2.2" } }, "sha512-AnzbBERsrLKtk2XSfTbYRLjQPdy116Sty4q+T+Bp3IC4l6jNBvreVPAHmpq9qhXQM7CXZPjLVmGMw9sy+hxQ3w=="],
 
-    "@types/react-dom": ["@types/react-dom@19.3.0", "", { "peerDependencies": { "@types/react": "^19.3.0" } }, "sha512-ZI7bU42mZXXKHn/qNLEw2IrbiINU7X5+vfgdixBHkCNpYWXjKgfQ/P+uyGb5CjOLB9UcnTeg3rylQtV2hym44Q=="],
+    "@types/react-dom": ["@types/react-dom@19.2.7", "", { "peerDependencies": { "@types/react": "^19.2.0" } }, "sha512-I8bPpDLcHBv1qiIiXDCy71Rt8eQDKJP0sMSWJphDdAcdqiJ1sGpZamavoEIRZmYzjia9LuEb2HlYdDpmoENpvQ=="],
 
     "@types/trusted-types": ["@types/trusted-types@2.0.7", "", {}, "sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw=="],
 
@@ -904,7 +904,7 @@
 
     "@uniswap/sdk-core": ["@uniswap/sdk-core@7.19.2", "", { "dependencies": { "@ethersproject/address": "^5.0.2", "@ethersproject/bignumber": "^5.5.0", "@ethersproject/bytes": "^5.7.0", "@ethersproject/keccak256": "5.7.0", "@ethersproject/strings": "5.7.0", "big.js": "^5.2.2", "decimal.js-light": "^2.5.0", "jsbi": "^3.1.4", "tiny-invariant": "^1.1.0", "toformat": "^2.0.0", "tslib": "^2.3.0" } }, "sha512-pybd+xXJa7E2CuuLBoGpM+ta0peCIewhOZ4VMXajkE6JpCtc/L/2o0vKbLwG8prQRWxUjVMdIrK/D91hQzUnRQ=="],
 
-    "@uniswap/v2-sdk": ["@uniswap/v2-sdk@4.19.1", "", { "dependencies": { "@ethersproject/address": "^5.0.2", "@ethersproject/solidity": "^5.0.9", "@uniswap/sdk-core": "^7.12.1", "tiny-invariant": "^1.1.0", "tiny-warning": "^1.0.3" } }, "sha512-c89H6S8YNI7tGSsk5wWXLxnXUe/jT+BewKSXtJ/w0WXEV8r4dl18R80YfOtwajnYbt8jYrUVVdPgPLaX0CdDEg=="],
+    "@uniswap/v2-sdk": ["@uniswap/v2-sdk@4.21.3", "", { "dependencies": { "@ethersproject/address": "^5.0.2", "@ethersproject/bignumber": "^5.5.0", "@ethersproject/solidity": "^5.0.9", "@uniswap/sdk-core": "^7.19.2", "jsbi": "^3.1.4", "tiny-invariant": "^1.1.0", "tiny-warning": "^1.0.3", "tslib": "^2.3.0" } }, "sha512-pKn0Mg5Eulgik/6sYJ6UpxwvbHcnd/3UYS3gNHYxdEokNacI/P2nv/mfLRC7de7DGUcARbjBh1N6JkCzbqmXeQ=="],
 
     "@unrs/resolver-binding-android-arm-eabi": ["@unrs/resolver-binding-android-arm-eabi@1.12.2", "", { "os": "android", "cpu": "arm" }, "sha512-g5T90pqg1bo/7mytQx6F4iBNC0Wsh9cu+z9veDbFjc7HjpesJFWD7QMS0NGStXM075+7dJPPVvBbpZlnrdpi/w=="],
 
@@ -2952,6 +2952,8 @@
 
     "@rollup/pluginutils/picomatch": ["picomatch@4.0.7", "", {}, "sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA=="],
 
+    "@scaffold-ui/hooks/@uniswap/v2-sdk": ["@uniswap/v2-sdk@4.19.1", "", { "dependencies": { "@ethersproject/address": "^5.0.2", "@ethersproject/solidity": "^5.0.9", "@uniswap/sdk-core": "^7.12.1", "tiny-invariant": "^1.1.0", "tiny-warning": "^1.0.3" } }, "sha512-c89H6S8YNI7tGSsk5wWXLxnXUe/jT+BewKSXtJ/w0WXEV8r4dl18R80YfOtwajnYbt8jYrUVVdPgPLaX0CdDEg=="],
+
     "@scaffold-ui/hooks/blo": ["blo@1.2.0", "", {}, "sha512-bZES7RzJ14B4WBT3JuOHSOAvCBmUhqznrojQ8xRjN1Fx9X9N7R+rygOFS3k4wXel2nFg4lwzL3luAYzObaDLng=="],
 
     "@se-2/nextjs/prettier": ["prettier@3.8.5", "", { "bin": { "prettier": "bin/prettier.cjs" } }, "sha512-zxcTTCedNGJM4R8sj/Cq/F0W/c4iE0afWBcBwMTRtw4WHYP9TWkYjdiH3npPRUYsXQCPR0hTU9yjovOu+E6EQA=="],
@@ -3945,6 +3947,8 @@
     "uint8arraylist/uint8arrays/multiformats": ["multiformats@14.0.5", "", {}, "sha512-vbIm83F2yZ1pWJGS0yl0ysracIvv56LtbrIyiIQHoLdYDJOMoLfVFsXhh9DUH4SFdkdkFhucyWniihsNzVEjkQ=="],
 
     "unstorage/chokidar/readdirp": ["readdirp@5.1.1", "", {}, "sha512-Kko+Y5XQ6fM+Ce3dq3m9YGxnacYZYl9cA1wZjaF3Vbry2L3i1qVg8+CAgNPsXRArPMUMCaOR7oa9Nqntc43JKA=="],
+
+    "valtio/use-sync-external-store/react": ["react@19.3.0", "", {}, "sha512-E8LUcbtBWt20bbl2YoHfx4ZDBdxVTfOKtCZn9cDSJ4l6/nuoApcpIBcj47t2wZoVX8g2ZHuMHbiShgCR1T5Sog=="],
 
     "widest-line/string-width/emoji-regex": ["emoji-regex@8.0.0", "", {}, "sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A=="],
 

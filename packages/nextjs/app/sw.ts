@@ -1,6 +1,7 @@
 import { defaultCache } from "@serwist/next/worker";
 import {
   CacheFirst,
+  CacheableResponsePlugin,
   ExpirationPlugin,
   NetworkOnly,
   type PrecacheEntry,
@@ -53,7 +54,18 @@ const serwist = new Serwist({
       matcher: ({ url }) => /(?:tile\.openstreetmap|basemaps|\.pmtiles)/.test(url.href),
       handler: new CacheFirst({
         cacheName: "chorinho-mapa",
-        plugins: [new ExpirationPlugin({ maxEntries: 600, maxAgeSeconds: 30 * 24 * 60 * 60 })],
+        plugins: [
+          /**
+           * `statuses: [0, 200]` é o que faz o mapa aparecer.
+           *
+           * O Leaflet busca ladrilho como imagem sem CORS, então a resposta
+           * volta opaca, com status 0. O padrão do CacheFirst só aceita 200:
+           * ele recusava o ladrilho, a estratégia lançava, e o mapa ficava em
+           * branco na aplicação publicada — sem erro nenhum na tela.
+           */
+          new CacheableResponsePlugin({ statuses: [0, 200] }),
+          new ExpirationPlugin({ maxEntries: 600, maxAgeSeconds: 30 * 24 * 60 * 60 }),
+        ],
       }),
     },
     ...defaultCache,

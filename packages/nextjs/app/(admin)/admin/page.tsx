@@ -1,18 +1,12 @@
 import type { NextPage } from "next";
-import { EmConstrucao } from "~~/components/EmConstrucao";
+import { VisaoGeralDaPlataforma } from "~~/components/admin/VisaoGeralDaPlataforma";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
 
 export const metadata = getMetadata({
   title: "Plataforma",
-  description: "Administração do Chorinho.",
+  description: "Visão geral da plataforma Chorinho: lojas, carimbos, vendas e o que precisa de atenção.",
 });
 
-const Admin: NextPage = () => (
-  <EmConstrucao
-    titulo="Administração da plataforma"
-    descricao="Aprovar estabelecimentos, conceder papéis on-chain, configurar tipos de ponto, acompanhar a saúde do relayer e auditar divergências."
-    etapa="M7"
-  />
-);
+const Admin: NextPage = () => <VisaoGeralDaPlataforma />;
 
 export default Admin;

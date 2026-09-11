@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import {
   BuildingStorefrontIcon,
   ClipboardDocumentListIcon,
-  DocumentTextIcon,
   SignalIcon,
   SparklesIcon,
   Squares2X2Icon,
@@ -17,7 +16,6 @@ const ITENS = [
   { href: "/admin", label: "Visão geral", Icon: Squares2X2Icon },
   { href: "/admin/estabelecimentos", label: "Estabelecimentos", Icon: BuildingStorefrontIcon },
   { href: "/admin/pontos", label: "Tipos de ponto", Icon: SparklesIcon },
-  { href: "/admin/conteudo", label: "Conteúdo", Icon: DocumentTextIcon },
   { href: "/admin/relayer", label: "Relayer", Icon: SignalIcon },
   { href: "/admin/auditoria", label: "Auditoria", Icon: ClipboardDocumentListIcon },
 ];

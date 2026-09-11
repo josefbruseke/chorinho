@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bun lint)",
+      "Bash(bun next:lint)",
+      "Bash(bun next:lint *)",
+      "Bash(bun next:check-types)",
+      "Bash(bun next:build)",
+      "Bash(bun run test)",
+      "Bash(bun run foundry:lint)",
+      "Bash(bun run foundry:test)",
+      "Bash(bun compile)",
+      "Bash(forge fmt --check)",
+      "Bash(forge fmt --check *)",
+      "Bash(forge test)",
+      "Bash(forge test *)",
+      "Bash(git check-ignore *)",
+      "Bash(sips -g *)",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "mcp__plugin_playwright_playwright__browser_snapshot",
+      "mcp__plugin_playwright_playwright__browser_console_messages"
+    ]
+  }
+}

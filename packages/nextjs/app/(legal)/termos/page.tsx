@@ -8,11 +8,24 @@ export const metadata = getMetadata({
   description: "As regras de uso do Chorinho para clientes e para estabelecimentos parceiros.",
 });
 
+// Espelha os <section id="..."> abaixo — usado pelo sumário navegável no topo do documento.
+const SUMARIO = [
+  { id: "o-que-o-chorinho-e", titulo: "O que o Chorinho é" },
+  { id: "sua-conta", titulo: "Sua conta" },
+  { id: "carimbos-pontos-e-recompensas", titulo: "Carimbos, pontos e recompensas" },
+  { id: "uso-indevido", titulo: "Uso indevido" },
+  { id: "para-estabelecimentos-parceiros", titulo: "Para estabelecimentos parceiros" },
+  { id: "disponibilidade", titulo: "Disponibilidade" },
+  { id: "blockchain", titulo: "Blockchain" },
+  { id: "mudancas-e-foro", titulo: "Mudanças e foro" },
+];
+
 const Termos: NextPage = () => (
   <DocumentoLegal
     titulo="Termos de uso"
     resumo="As regras do jogo para quem usa o Chorinho como cliente e para quem participa como estabelecimento parceiro."
     vigenteDesde="11 de setembro de 2026"
+    sumario={SUMARIO}
   >
     <AvisoLegal titulo="Rascunho pendente de revisão jurídica">
       <p>
@@ -21,7 +34,7 @@ const Termos: NextPage = () => (
       </p>
     </AvisoLegal>
 
-    <section>
+    <section id="o-que-o-chorinho-e">
       <h2>O que o Chorinho é</h2>
       <p>
         O Chorinho é uma plataforma que conecta comércios de bairro e seus clientes através de um programa de fidelidade
@@ -35,7 +48,7 @@ const Termos: NextPage = () => (
       </p>
     </section>
 
-    <section>
+    <section id="sua-conta">
       <h2>Sua conta</h2>
       <ul>
         <li>Você precisa ter 16 anos ou mais.</li>
@@ -45,7 +58,7 @@ const Termos: NextPage = () => (
       </ul>
     </section>
 
-    <section>
+    <section id="carimbos-pontos-e-recompensas">
       <h2>Carimbos, pontos e recompensas</h2>
       <p>
         Os carimbos são creditados pelo caixa do estabelecimento no momento da compra, segundo as regras que aquele
@@ -64,7 +77,7 @@ const Termos: NextPage = () => (
       </ul>
     </section>
 
-    <section>
+    <section id="uso-indevido">
       <h2>Uso indevido</h2>
       <p>Encerramos contas, sem aviso prévio, em caso de:</p>
       <ul>
@@ -75,7 +88,7 @@ const Termos: NextPage = () => (
       </ul>
     </section>
 
-    <section>
+    <section id="para-estabelecimentos-parceiros">
       <h2>Para estabelecimentos parceiros</h2>
       <ul>
         <li>A participação exige assinatura ativa de um dos planos.</li>
@@ -91,7 +104,7 @@ const Termos: NextPage = () => (
       </ul>
     </section>
 
-    <section>
+    <section id="disponibilidade">
       <h2>Disponibilidade</h2>
       <p>
         Trabalhamos para manter o serviço no ar, mas não garantimos funcionamento ininterrupto. Manutenções, falhas de
@@ -100,7 +113,7 @@ const Termos: NextPage = () => (
       </p>
     </section>
 
-    <section>
+    <section id="blockchain">
       <h2>Blockchain</h2>
       <p>
         Os registros de carimbo e resgate são gravados numa blockchain pública e não podem ser alterados nem removidos.
@@ -109,7 +122,7 @@ const Termos: NextPage = () => (
       </p>
     </section>
 
-    <section>
+    <section id="mudancas-e-foro">
       <h2>Mudanças e foro</h2>
       <p>
         Podemos alterar estes termos. Mudanças relevantes são avisadas no aplicativo antes de entrarem em vigor. Fica

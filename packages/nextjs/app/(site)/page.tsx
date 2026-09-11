@@ -57,8 +57,8 @@ const Landing: NextPage = () => (
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] max-w-full bg-gradient-to-b from-primary/10 via-accent/5 to-transparent rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-5xl mx-auto px-5 pt-12 pb-10 text-center flex flex-col items-center relative z-10">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-black tracking-wide mb-6 shadow-xs">
-          <SparklesIcon className="w-4 h-4" />
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-black tracking-wide mb-6 shadow-xs">
+          <SparklesIcon className="w-4 h-4 shrink-0" />
           <span>Aquele agrado no final da conta que você só tem no bairro</span>
         </div>
 
@@ -74,8 +74,9 @@ const Landing: NextPage = () => (
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 mt-8 w-full sm:w-auto">
-          <Link href="/mapa" className="btn btn-primary btn-lg rounded-2xl font-bold gap-2 shadow-sm">
-            <MapPinIcon className="w-5 h-5" />
+          {/* botão principal da página: min-h-14 garante os 56px mesmo se o texto quebrar linha num celular de 360px */}
+          <Link href="/mapa" className="btn btn-primary min-h-14 rounded-2xl text-base font-black gap-2 shadow-sm">
+            <MapPinIcon className="w-5 h-5 shrink-0" />
             Ver quem participa perto de mim
           </Link>
           <Link href="/para-comerciantes" className="btn btn-ghost btn-lg rounded-2xl font-bold gap-2">
@@ -86,26 +87,30 @@ const Landing: NextPage = () => (
       </div>
     </section>
 
-    {/* ---------------------------------------------------------------- mapa */}
-    <section className="w-full max-w-6xl mx-auto px-5 py-12 flex flex-col gap-5">
-      <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-        <div>
-          <h2 className="text-2xl sm:text-3xl font-serif font-black m-0 tracking-tight text-secondary">
+    {/* ------------------------------------------------- mapa (coração da página) */}
+    <section className="w-full max-w-6xl mx-auto px-5 py-14 flex flex-col gap-5">
+      <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <span className="inline-flex items-center gap-1.5 self-start px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-wider">
+            <MapPinIcon className="w-3.5 h-3.5 shrink-0" />O coração do Chorinho
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-serif font-black m-0 tracking-tight text-secondary text-balance">
             Os comércios que já participam
           </h2>
-          <p className="m-0 mt-1 text-sm opacity-75">
+          <p className="m-0 text-sm sm:text-base opacity-80 max-w-md">
             Arraste o mapa para ver quem está perto de você. Toque num pino para conhecer o lugar.
           </p>
         </div>
-        <Link href="/explorar" className="btn btn-ghost btn-sm rounded-xl gap-1.5 self-start sm:self-auto">
+        <Link href="/explorar" className="btn btn-ghost min-h-12 rounded-xl gap-1.5 self-start sm:self-auto shrink-0">
           <BuildingStorefrontIcon className="w-4 h-4" />
           Ver em lista
         </Link>
       </header>
 
       {/* Altura explícita: o Leaflet mede o container na montagem e nasce com
-          0px se o pai não tiver altura definida. */}
-      <Mapa className="w-full h-[420px] sm:h-[520px] rounded-box overflow-hidden border border-base-300 shadow-sm" />
+          0px se o pai não tiver altura definida. Generosa porque este é o
+          elemento mais importante da página. */}
+      <Mapa className="w-full h-[460px] sm:h-[560px] md:h-[620px] rounded-3xl overflow-hidden border border-base-300 shadow-md" />
     </section>
 
     {/* -------------------------------------------------------------- passos */}
@@ -139,7 +144,7 @@ const Landing: NextPage = () => (
         </ol>
 
         <div className="text-center">
-          <Link href="/como-funciona" className="btn btn-ghost rounded-2xl font-bold gap-2">
+          <Link href="/como-funciona" className="btn btn-ghost min-h-12 rounded-2xl font-bold gap-2">
             Ver em detalhe
             <ArrowRightIcon className="w-4 h-4" />
           </Link>
@@ -183,10 +188,10 @@ const Landing: NextPage = () => (
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link href="/para-comerciantes" className="btn btn-primary rounded-2xl font-bold">
+          <Link href="/para-comerciantes" className="btn btn-primary min-h-14 rounded-2xl font-black">
             Ver os planos
           </Link>
-          <Link href="/ajuda" className="btn btn-ghost rounded-2xl font-bold">
+          <Link href="/ajuda" className="btn btn-ghost min-h-12 rounded-2xl font-bold">
             Tirar uma dúvida
           </Link>
         </div>

@@ -54,7 +54,7 @@ export const Mapa = ({ className = "" }: { className?: string }) => {
       <MapaCanvas className="w-full h-full" centroSolicitado={centro} />
 
       {convite && (
-        <div className="absolute inset-x-3 bottom-3 z-10 rounded-box border border-base-300 bg-base-100/95 backdrop-blur-md p-4 shadow-lg flex flex-col gap-2.5 sm:max-w-sm">
+        <div className="absolute inset-x-3 bottom-3 z-10 rounded-box border border-base-300 bg-base-100/95 backdrop-blur-md p-4 shadow-lg flex flex-col gap-3 sm:max-w-sm">
           <div className="flex items-start justify-between gap-3">
             <div className="flex gap-2.5">
               <span className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
@@ -64,18 +64,19 @@ export const Mapa = ({ className = "" }: { className?: string }) => {
                 <strong className="font-serif font-extrabold text-secondary block leading-tight">
                   Ver os comércios perto de você?
                 </strong>
-                <span className="text-xs opacity-75 leading-snug block mt-0.5">
+                <span className="text-sm opacity-75 leading-snug block mt-0.5">
                   Usamos sua localização só para ordenar o mapa. Nada fica salvo nos nossos servidores.
                 </span>
               </div>
             </div>
+            {/* w-12 h-12 sobrepõe o tamanho padrão do btn-circle: alvo de toque 48px mesmo num "x" discreto. */}
             <button
               type="button"
               onClick={() => setConvite(false)}
               aria-label="Agora não"
-              className="btn btn-ghost btn-xs btn-circle shrink-0"
+              className="btn btn-ghost btn-circle w-12 h-12 shrink-0 -mt-1 -mr-1"
             >
-              <XMarkIcon className="w-4 h-4" />
+              <XMarkIcon className="w-5 h-5" />
             </button>
           </div>
 
@@ -84,11 +85,11 @@ export const Mapa = ({ className = "" }: { className?: string }) => {
               type="button"
               onClick={pedirLocalizacao}
               disabled={buscando}
-              className="btn btn-primary btn-sm rounded-xl font-bold flex-1"
+              className="btn btn-primary h-14 rounded-2xl font-black flex-1"
             >
-              {buscando ? <span className="loading loading-spinner loading-xs" /> : "Usar minha localização"}
+              {buscando ? <span className="loading loading-spinner loading-sm" /> : "Usar minha localização"}
             </button>
-            <button type="button" onClick={() => setConvite(false)} className="btn btn-ghost btn-sm rounded-xl">
+            <button type="button" onClick={() => setConvite(false)} className="btn btn-ghost h-14 rounded-2xl">
               Agora não
             </button>
           </div>
@@ -96,7 +97,7 @@ export const Mapa = ({ className = "" }: { className?: string }) => {
       )}
 
       {recusado && (
-        <p className="absolute inset-x-3 bottom-3 z-10 m-0 rounded-box border border-base-300 bg-base-100/95 backdrop-blur-md px-4 py-3 text-xs shadow-lg sm:max-w-sm">
+        <p className="absolute inset-x-3 bottom-3 z-10 m-0 rounded-box border border-base-300 bg-base-100/95 backdrop-blur-md px-4 py-3 text-sm shadow-lg sm:max-w-sm">
           Tudo bem — arraste o mapa até o seu bairro. O Chorinho funciona inteiro sem localização.
         </p>
       )}

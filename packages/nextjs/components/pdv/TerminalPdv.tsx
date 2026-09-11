@@ -11,6 +11,7 @@ import {
   InboxArrowDownIcon,
 } from "@heroicons/react/24/outline";
 import { BarraPdv } from "~~/components/pdv/BarraPdv";
+import { PareamentoPdv } from "~~/components/pdv/PareamentoPdv";
 import { TecladoDeValor } from "~~/components/pdv/TecladoDeValor";
 import { QrScanner } from "~~/components/vitrine/QrScanner";
 import { useFilaOffline } from "~~/hooks/pdv/useFilaOffline";
@@ -42,6 +43,7 @@ export const TerminalPdv = () => {
   const [loja, setLoja] = useState<string>();
 
   const [semAcesso, setSemAcesso] = useState<string>();
+  const [precisaParear, setPrecisaParear] = useState(false);
   const [cameraLiberada, setCameraLiberada] = useState(false);
   const enviando = useRef(false);
 
@@ -66,19 +68,28 @@ export const TerminalPdv = () => {
 
   // O nome da loja aparece antes de qualquer digitação: é assim que o atendente
   // percebe na hora que entrou com a conta errada.
-  useEffect(() => {
-    const carregar = async () => {
-      try {
-        const r = await fetch("/api/pos/balcao");
-        const corpo = await r.json();
-        if (r.ok) setLoja(corpo.nome);
-        else setSemAcesso(r.status === 401 ? "Entre com a conta do balcão para registrar vendas." : corpo?.erro);
-      } catch {
-        // Sem internet: o balcão continua registrando para a fila.
+  const carregarBalcao = useCallback(async () => {
+    try {
+      const r = await fetch("/api/pos/balcao");
+      const corpo = await r.json();
+      if (r.ok) {
+        setLoja(corpo.nome);
+        setPrecisaParear(false);
+        setSemAcesso(undefined);
+      } else if (r.status === 401) {
+        setPrecisaParear(true);
+      } else {
+        setSemAcesso(corpo?.erro);
       }
-    };
-    void carregar();
+    } catch {
+      // Sem internet: o balcão continua registrando para a fila com o que já
+      // sabe. Não é motivo para pedir pareamento de novo.
+    }
   }, []);
+
+  useEffect(() => {
+    void carregarBalcao();
+  }, [carregarBalcao]);
 
   // Prévia dos carimbos: o atendente confere o número antes de pedir o passe,
   // e um valor abaixo do piso da loja aparece como zero, não como surpresa.
@@ -167,6 +178,10 @@ export const TerminalPdv = () => {
     setPrevia(null);
     setEtapa({ nome: "valor" });
   };
+
+  if (precisaParear) {
+    return <PareamentoPdv aoParear={carregarBalcao} />;
+  }
 
   return (
     <div className="flex flex-1 flex-col">

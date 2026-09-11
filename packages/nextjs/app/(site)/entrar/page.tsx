@@ -93,13 +93,13 @@ const Formulario = () => {
         type="button"
         onClick={comGoogle}
         disabled={carregando}
-        className="btn rounded-2xl font-bold gap-2.5 bg-base-100 border-base-300 hover:bg-base-200"
+        className="btn min-h-14 rounded-2xl font-bold gap-2.5 bg-base-100 border-base-300 hover:bg-base-200"
       >
         <MarcaGoogle className="w-5 h-5" />
         Continuar com Google
       </button>
 
-      <div className="flex items-center gap-3 text-xs opacity-55">
+      <div className="flex items-center gap-3 text-xs opacity-75">
         <span className="h-px bg-base-300 flex-1" />
         ou com e-mail
         <span className="h-px bg-base-300 flex-1" />
@@ -133,7 +133,11 @@ const Formulario = () => {
           />
         </label>
 
-        <button type="submit" disabled={carregando} className="btn btn-primary rounded-2xl font-bold gap-2 mt-1">
+        <button
+          type="submit"
+          disabled={carregando}
+          className="btn btn-primary min-h-14 rounded-2xl font-black gap-2 mt-1"
+        >
           {carregando ? (
             <span className="loading loading-spinner loading-sm" />
           ) : (
@@ -165,7 +169,7 @@ const Formulario = () => {
           setErro(null);
           setAviso(null);
         }}
-        className="btn btn-ghost btn-sm rounded-xl font-semibold"
+        className="btn btn-ghost min-h-12 rounded-xl font-semibold"
       >
         {modo === "entrar" ? "Não tenho conta ainda" : "Já tenho conta"}
       </button>
@@ -191,7 +195,7 @@ const Entrar: NextPage = () => (
       <Formulario />
     </Suspense>
 
-    <p className="m-0 text-center text-xs opacity-65 max-w-xs leading-relaxed">
+    <p className="m-0 text-center text-sm opacity-75 max-w-xs leading-relaxed">
       Ao entrar você concorda com os{" "}
       <Link href="/termos" className="text-primary underline underline-offset-2">
         Termos
@@ -203,7 +207,7 @@ const Entrar: NextPage = () => (
       .
     </p>
 
-    <Link href="/" className="btn btn-ghost btn-sm rounded-xl gap-1.5">
+    <Link href="/" className="btn btn-ghost min-h-12 rounded-xl gap-1.5">
       <ArrowLeftIcon className="w-4 h-4" />
       Voltar ao site
     </Link>

@@ -49,7 +49,7 @@ const CampaignDetail: NextPage = () => {
     return (
       <div className="text-center py-24 flex flex-col items-center gap-4">
         <p className="text-lg opacity-70 m-0">Esta oferta não existe ou ainda não foi publicada.</p>
-        <Link href="/" className="btn btn-primary btn-sm">
+        <Link href="/" className="btn btn-primary h-12 rounded-2xl">
           Ver estabelecimentos
         </Link>
       </div>
@@ -63,8 +63,8 @@ const CampaignDetail: NextPage = () => {
 
   return (
     <div className="max-w-5xl w-full mx-auto px-5 py-8">
-      <Link href="/" className="btn btn-ghost btn-sm gap-1 mb-4 -ml-2">
-        <ArrowLeftIcon className="h-4 w-4" />
+      <Link href="/" className="btn btn-ghost h-12 rounded-2xl gap-1 mb-4 -ml-2">
+        <ArrowLeftIcon className="h-5 w-5" />
         Ver estabelecimentos
       </Link>
 
@@ -87,7 +87,7 @@ const CampaignDetail: NextPage = () => {
                   <span className="font-extrabold text-lg">{meta.establishment}</span>
                   <VerifiedBadge />
                 </div>
-                <span className="text-sm opacity-60 flex items-center gap-1">
+                <span className="text-sm opacity-70 flex items-center gap-1">
                   {meta.cuisine ?? cat.label}
                   {meta.neighborhood && (
                     <>
@@ -99,12 +99,16 @@ const CampaignDetail: NextPage = () => {
                 </span>
               </>
             ) : (
-              <span className="text-xs uppercase tracking-wide opacity-60 inline-flex items-center gap-1">
+              <span className="text-xs uppercase tracking-wide opacity-70 inline-flex items-center gap-1">
                 <CategoryIcon iconKey={cat.iconKey} className="w-3.5 h-3.5" />
                 <span>{cat.label}</span>
               </span>
             )}
-            <h1 className="text-3xl font-extrabold mt-2 mb-0 text-balance">{campaignDisplayName(campaign)}</h1>
+            {/* O nome da oferta é a informação principal da página: título editorial grande,
+                no mesmo tratamento das demais telas do app. */}
+            <h1 className="font-serif text-3xl sm:text-4xl font-black mt-2 mb-0 text-balance text-secondary">
+              {campaignDisplayName(campaign)}
+            </h1>
           </div>
 
           {meta?.description && <p className="m-0 opacity-80 leading-relaxed">{meta.description}</p>}
@@ -128,7 +132,14 @@ const CampaignDetail: NextPage = () => {
             )}
           </div>
 
-          <div className="text-3xl font-black text-primary">{formatPrice(campaign.price)}</div>
+          {/* Segunda informação mais importante: quanto custa entrar no programa.
+              font-mono porque é número lido de relance, como em CartelaCard. */}
+          <div>
+            <span className="text-xs font-bold uppercase tracking-wider opacity-70 block">Valor da adesão</span>
+            <span className="font-mono text-4xl font-black leading-none text-primary">
+              {formatPrice(campaign.price)}
+            </span>
+          </div>
 
           {comboCampaigns.length > 0 && (
             <div className="rounded-box border border-success/40 bg-success/10 p-4 flex flex-col gap-2">
@@ -147,13 +158,13 @@ const CampaignDetail: NextPage = () => {
                   </div>
                   <div className="text-sm">
                     <div className="font-medium">{campaignDisplayName(combo)}</div>
-                    <div className="opacity-60 text-xs">
+                    <div className="opacity-70 text-xs">
                       {combo.metadata?.establishment ?? categoryInfo(combo.category).label}
                     </div>
                   </div>
                 </Link>
               ))}
-              <span className="text-xs opacity-60">O brinde é entregue junto, enquanto houver estoque dele.</span>
+              <span className="text-xs opacity-70">O brinde é entregue junto, enquanto houver estoque dele.</span>
             </div>
           )}
 
@@ -165,7 +176,7 @@ const CampaignDetail: NextPage = () => {
 
       {/* How it works */}
       <section className="mt-12">
-        <h2 className="text-xl font-extrabold mb-4">Como funciona</h2>
+        <h2 className="font-serif text-2xl font-black mb-4 text-secondary">Como funciona</h2>
         <div className="grid sm:grid-cols-3 gap-4">
           {HOW_IT_WORKS.map(({ Icon, title, text }, i) => (
             <div

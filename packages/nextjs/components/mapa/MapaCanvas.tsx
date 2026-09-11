@@ -164,13 +164,18 @@ export const MapaCanvas = ({ className = "", centroSolicitado = null, aoCarregar
           <Marker key={local.id} position={[local.lat_out, local.lng_out]} icon={pino(local.category, local.featured)}>
             <Popup>
               <div className="flex flex-col gap-1 min-w-44">
-                <strong className="font-serif text-base leading-tight">{local.name}</strong>
+                <strong className="font-serif text-base font-black leading-tight">{local.name}</strong>
                 <span className="text-xs opacity-70 flex items-center gap-1">
                   <MapPinIcon className="w-3.5 h-3.5 shrink-0" />
                   {local.neighborhood ?? local.city}
                 </span>
                 {local.description && <p className="m-0 text-xs opacity-80">{local.description}</p>}
-                <Link href={`/local/${local.slug}`} className="text-xs font-bold text-primary no-underline mt-1">
+                {/* Balão do Leaflet é compacto por natureza, mas o link ainda ganha uma área de
+                    toque generosa em vez do texto pequeno "cru" que existia antes. */}
+                <Link
+                  href={`/local/${local.slug}`}
+                  className="mt-1 block rounded-lg bg-primary/10 px-3 py-2 text-center text-sm font-bold text-primary no-underline"
+                >
                   Ver o local
                 </Link>
               </div>

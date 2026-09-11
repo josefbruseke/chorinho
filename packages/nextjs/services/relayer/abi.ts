@@ -192,3 +192,48 @@ export const ABI_CATALOGO = [
     ],
   },
 ] as const;
+
+/** O pedaço do SubscriptionManager que o painel do lojista lê. */
+export const ABI_ASSINATURA = [
+  {
+    type: "function",
+    name: "isActive",
+    stateMutability: "view",
+    inputs: [{ name: "establishmentId", type: "uint256" }],
+    outputs: [{ name: "", type: "bool" }],
+  },
+  {
+    type: "function",
+    name: "tierOf",
+    stateMutability: "view",
+    inputs: [{ name: "establishmentId", type: "uint256" }],
+    outputs: [{ name: "", type: "uint8" }],
+  },
+  {
+    type: "function",
+    name: "expiresAt",
+    stateMutability: "view",
+    inputs: [{ name: "establishmentId", type: "uint256" }],
+    outputs: [{ name: "", type: "uint64" }],
+  },
+] as const;
+
+/** A regra de acúmulo da loja, como o contrato a guarda. */
+export const ABI_REGRA = [
+  {
+    type: "function",
+    name: "rules",
+    stateMutability: "view",
+    inputs: [{ name: "establishmentId", type: "uint256" }],
+    outputs: [
+      { name: "minTicketCents", type: "uint64" },
+      { name: "centsPerStamp", type: "uint64" },
+      { name: "maxStampsPerTx", type: "uint16" },
+      { name: "cooldownSeconds", type: "uint32" },
+      { name: "streakWindowSeconds", type: "uint32" },
+      { name: "pointsPerStamp", type: "uint32" },
+      { name: "pointTypeId", type: "uint256" },
+      { name: "active", type: "bool" },
+    ],
+  },
+] as const;

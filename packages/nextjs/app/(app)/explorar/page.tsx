@@ -42,24 +42,26 @@ const Explorar: NextPage = () => {
             <h1 className="text-2xl sm:text-3xl font-serif font-black m-0 tracking-tight text-secondary">
               Lugares do bairro
             </h1>
-            <p className="text-xs sm:text-sm opacity-70 m-0 mt-1">
+            <p className="text-sm opacity-70 m-0 mt-1">
               Descubra os estabelecimentos parceiros e garanta seu passe no balcão
             </p>
           </div>
-          <Link href="/mapa" className="btn btn-ghost btn-sm rounded-xl gap-1.5 shrink-0" aria-label="Ver no mapa">
-            <MapIcon className="w-4 h-4" />
+          <Link href="/mapa" className="btn btn-ghost h-12 rounded-2xl gap-1.5 shrink-0" aria-label="Ver no mapa">
+            <MapIcon className="w-5 h-5" />
             <span className="hidden sm:inline">Mapa</span>
           </Link>
         </div>
 
+        {/* Campo de busca com altura de 48px: é o ponto de entrada alternativo ao mapa,
+            precisa ser fácil de tocar e o texto digitado fácil de ler. */}
         <div className="relative">
-          <MagnifyingGlassIcon className="h-4 w-4 absolute left-3.5 top-1/2 -translate-y-1/2 opacity-50" />
+          <MagnifyingGlassIcon className="h-5 w-5 absolute left-4 top-1/2 -translate-y-1/2 opacity-60" />
           <input
             type="search"
             placeholder="Buscar café, padaria, bairro..."
             value={busca}
             onChange={e => setBusca(e.target.value)}
-            className="input input-bordered input-sm pl-10 w-full rounded-2xl text-sm bg-base-100 shadow-2xs"
+            className="input input-bordered h-12 pl-11 w-full rounded-2xl text-base bg-base-100 shadow-2xs"
           />
         </div>
 
@@ -74,10 +76,10 @@ const Explorar: NextPage = () => {
         <div className="text-center py-16 rounded-3xl border-2 border-dashed border-base-300 p-8 bg-base-100">
           <BuildingStorefrontIcon className="h-12 w-12 mx-auto text-primary opacity-60 mb-2" />
           <p className="text-lg font-serif font-bold m-0 text-secondary">Nenhuma oferta por aqui ainda.</p>
-          <p className="text-sm opacity-60 mt-1 mb-4">
+          <p className="text-sm opacity-70 mt-1 mb-4">
             Em breve novos estabelecimentos do seu bairro entram no programa.
           </p>
-          <Link href="/para-comerciantes" className="btn btn-primary btn-sm rounded-xl">
+          <Link href="/para-comerciantes" className="btn btn-primary h-12 rounded-2xl">
             Tenho um comércio
           </Link>
         </div>
@@ -87,12 +89,12 @@ const Explorar: NextPage = () => {
 
           <section className="w-full flex flex-col gap-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-mono uppercase tracking-wider opacity-60 font-bold">
+              <span className="text-xs font-mono uppercase tracking-wider opacity-70 font-bold">
                 {filtradas.length} {filtradas.length === 1 ? "estabelecimento" : "estabelecimentos"}
               </span>
               {(categoria !== null || busca) && (
                 <button
-                  className="btn btn-ghost btn-xs text-xs rounded-lg"
+                  className="btn btn-ghost h-12 text-xs rounded-xl"
                   onClick={() => {
                     setCategoria(null);
                     setBusca("");

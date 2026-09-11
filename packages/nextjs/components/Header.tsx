@@ -13,7 +13,8 @@ import {
   SparklesIcon,
 } from "@heroicons/react/24/outline";
 import { BrandLogo } from "~~/components/BrandLogo";
-import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
+import { ContaDoUsuario } from "~~/components/ContaDoUsuario";
+import { FaucetButton } from "~~/components/scaffold-eth";
 import { useOutsideClick, useTargetNetwork } from "~~/hooks/scaffold-eth";
 
 type HeaderMenuLink = {
@@ -73,7 +74,7 @@ export const HeaderMenuLinks = ({ links = menuLinks }: { links?: HeaderMenuLink[
                   isActive
                     ? "bg-primary/10 text-primary font-bold border border-primary/20"
                     : "text-base-content/80 hover:bg-base-200 hover:text-base-content border border-transparent"
-                } rounded-lg px-3.5 py-1.5 text-xs sm:text-sm font-medium gap-2 flex items-center whitespace-nowrap transition-all`}
+                } rounded-xl px-4 min-h-12 text-sm font-semibold gap-2 flex items-center whitespace-nowrap transition-all`}
               >
                 {icon}
                 <span>{label}</span>
@@ -113,7 +114,7 @@ export const Header = ({ links = menuLinks, homeHref = "/" }: { links?: HeaderMe
             <HeaderMenuLinks links={links} />
           </ul>
         </details>
-        <Link href={homeHref} passHref className="flex items-center gap-2.5 mx-2 lg:mr-8 shrink-0 group">
+        <Link href={homeHref} passHref className="flex items-center min-h-12 gap-2.5 mx-2 lg:mr-8 shrink-0 group">
           <BrandLogo className="w-9 h-9 group-hover:scale-105 transition-transform" />
           <div className="flex flex-col leading-tight">
             <div className="flex items-center gap-1.5">
@@ -122,7 +123,7 @@ export const Header = ({ links = menuLinks, homeHref = "/" }: { links?: HeaderMe
                 do bairro
               </span>
             </div>
-            <span className="text-[11px] opacity-65 hidden sm:block">O agrado do seu comércio local</span>
+            <span className="text-[11px] opacity-75 hidden sm:block">O agrado do seu comércio local</span>
           </div>
         </Link>
         <ul className="hidden lg:flex lg:flex-nowrap items-center gap-1.5 m-0 p-0 list-none">
@@ -130,7 +131,10 @@ export const Header = ({ links = menuLinks, homeHref = "/" }: { links?: HeaderMe
         </ul>
       </div>
       <div className="navbar-end grow mr-2">
-        <RainbowKitCustomConnectButton />
+        {/* Aqui ninguem conecta carteira: a conta e e-mail ou Google, e a
+            carteira nasce junto, invisivel. O botao do boilerplate so
+            confundiria quem chega pela primeira vez. */}
+        <ContaDoUsuario />
         {isLocalNetwork && <FaucetButton />}
       </div>
     </div>

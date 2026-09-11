@@ -115,25 +115,28 @@ export const MintPanel = ({ campaign }: { campaign: Campaign }) => {
             <CheckCircleIcon className="h-5 w-5" />
             <span>Compra concluída! Seu cupom já está pronto para usar.</span>
           </div>
-          <Link href="/carteira" className="btn btn-success btn-lg">
+          <Link href="/carteira" className="btn btn-success h-14 rounded-2xl font-black">
             Ver meu cupom
           </Link>
         </div>
       )}
 
+      {/* join-item herda a altura de --size do daisyUI; h-12 sobrepõe para o alvo de toque mínimo. */}
       <div className="flex items-center gap-4">
         <div className="join">
           <button
-            className="btn join-item"
+            className="btn join-item h-12 min-w-12"
             onClick={() => setQuantity(q => Math.max(1, q - 1))}
             disabled={quantity <= 1 || isMining}
             aria-label="Diminuir quantidade"
           >
             −
           </button>
-          <span className="join-item btn btn-ghost no-animation pointer-events-none w-12 tabular-nums">{quantity}</span>
+          <span className="join-item btn btn-ghost h-12 no-animation pointer-events-none w-12 font-mono tabular-nums">
+            {quantity}
+          </span>
           <button
-            className="btn join-item"
+            className="btn join-item h-12 min-w-12"
             onClick={() => setQuantity(q => Math.min(maxQuantity, q + 1))}
             disabled={quantity >= maxQuantity || isMining}
             aria-label="Aumentar quantidade"
@@ -142,11 +145,12 @@ export const MintPanel = ({ campaign }: { campaign: Campaign }) => {
           </button>
         </div>
         {campaign.maxPerWallet > 0n && (
-          <span className="text-xs opacity-60">máx. {campaign.maxPerWallet.toString()} por pessoa</span>
+          <span className="text-xs opacity-70">máx. {campaign.maxPerWallet.toString()} por pessoa</span>
         )}
       </div>
 
-      <button className="btn btn-primary btn-lg" onClick={handleBuy} disabled={isMining}>
+      {/* Botão principal da tela: comprar o cupom. 56px, igual ao padrão do resto do app. */}
+      <button className="btn btn-primary h-14 rounded-2xl font-black" onClick={handleBuy} disabled={isMining}>
         {isMining ? (
           <>
             <span className="loading loading-spinner loading-sm" />

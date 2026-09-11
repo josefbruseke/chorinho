@@ -53,7 +53,7 @@ const Perfil: NextPage = () => {
     return (
       <div className="flex flex-col items-center justify-center grow px-6 py-20 text-center gap-4">
         <h1 className="text-2xl font-serif font-black m-0 text-secondary">Entre para ver seu perfil</h1>
-        <Link href="/entrar?proximo=/perfil" className="btn btn-primary rounded-2xl font-bold">
+        <Link href="/entrar?proximo=/perfil" className="btn btn-primary h-14 rounded-2xl font-black px-8">
           Entrar
         </Link>
       </div>
@@ -62,12 +62,13 @@ const Perfil: NextPage = () => {
 
   return (
     <div className="w-full max-w-lg mx-auto px-4 py-5 flex flex-col gap-5">
+      {/* Quem sou eu é a informação nº 1 desta tela: avatar e nome ganham mais peso que o resto. */}
       <header className="flex items-center gap-4">
-        <span className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center text-xl font-serif font-black shrink-0">
+        <span className="w-16 h-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center text-2xl font-serif font-black shrink-0">
           {(perfil?.display_name ?? usuario.email ?? "?").charAt(0).toUpperCase()}
         </span>
         <div className="min-w-0">
-          <h1 className="text-xl font-serif font-black m-0 text-secondary truncate">
+          <h1 className="text-2xl font-serif font-black m-0 text-secondary truncate">
             {perfil?.display_name ?? "Sem nome"}
           </h1>
           <p className="m-0 text-sm opacity-70 truncate">{usuario.email}</p>
@@ -75,7 +76,7 @@ const Perfil: NextPage = () => {
       </header>
 
       <section className="rounded-box border border-base-300 bg-base-100 divide-y divide-base-300">
-        <div className="flex gap-3 p-4">
+        <div className="flex gap-3 p-4 min-h-12">
           <WalletIcon className="w-5 h-5 text-primary shrink-0 mt-0.5" />
           <div className="min-w-0 flex-1">
             <strong className="block text-sm">Sua carteira</strong>
@@ -90,7 +91,10 @@ const Perfil: NextPage = () => {
           </div>
         </div>
 
-        <Link href="/carteira-e-seguranca" className="flex gap-3 p-4 hover:bg-base-200 transition-colors">
+        <Link
+          href="/carteira-e-seguranca"
+          className="flex items-center gap-3 p-4 min-h-12 hover:bg-base-200 active:bg-base-200 transition-colors"
+        >
           <ShieldCheckIcon className="w-5 h-5 text-primary shrink-0" />
           <div>
             <strong className="block text-sm">Carteira e segurança</strong>
@@ -98,7 +102,10 @@ const Perfil: NextPage = () => {
           </div>
         </Link>
 
-        <Link href="/ajuda" className="flex gap-3 p-4 hover:bg-base-200 transition-colors">
+        <Link
+          href="/ajuda"
+          className="flex items-center gap-3 p-4 min-h-12 hover:bg-base-200 active:bg-base-200 transition-colors"
+        >
           <SparklesIcon className="w-5 h-5 text-primary shrink-0" />
           <div>
             <strong className="block text-sm">Ajuda</strong>
@@ -107,7 +114,7 @@ const Perfil: NextPage = () => {
         </Link>
       </section>
 
-      <button type="button" onClick={sair} className="btn btn-ghost rounded-2xl font-bold gap-2 text-error">
+      <button type="button" onClick={sair} className="btn btn-ghost h-12 rounded-2xl font-bold gap-2 text-error">
         <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
         Sair da conta
       </button>

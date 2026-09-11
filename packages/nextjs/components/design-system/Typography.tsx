@@ -11,7 +11,7 @@ interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
 
 export const Heading: React.FC<HeadingProps> = ({
   as = "h2",
-  variant = "sans",
+  variant,
   tone = "espresso",
   className = "",
   children,
@@ -33,7 +33,12 @@ export const Heading: React.FC<HeadingProps> = ({
     honey: "text-accent",
   }[tone];
 
-  const fontStyle = variant === "serif" ? "font-serif tracking-normal" : "font-sans";
+  // h1-h3 sao titulo de destaque (nome de estabelecimento, headline de tela) e
+  // usam a serif editorial Fraunces por padrao, conforme DESIGN_SYSTEM.md;
+  // h4-h5 sao rotulo de interface e ficam na sans -- `variant` ainda permite
+  // forcar o outro estilo quando o chamador precisar.
+  const resolvedVariant = variant ?? (as === "h4" || as === "h5" ? "sans" : "serif");
+  const fontStyle = resolvedVariant === "serif" ? "font-serif tracking-normal" : "font-sans";
 
   return (
     <Component className={`${sizeStyles} ${toneStyles} ${fontStyle} ${className}`} {...props}>

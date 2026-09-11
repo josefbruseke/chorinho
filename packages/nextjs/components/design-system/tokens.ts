@@ -38,7 +38,9 @@ export const chorinhoTokens = {
       800: "#38291e",
       700: "#4f3c2e",
       600: "#695343",
-      500: "#856d5c", // Textos secundários
+      // Espelha --color-kraft-ink de globals.css (escurecido para 7:1 contra o
+      // fundo kraft claro, exigido pelo tema pos-light sob luz do dia).
+      500: "#695242", // Textos secundários
       400: "#a89483",
       300: "#ccaebc",
       200: "#e6dad0",

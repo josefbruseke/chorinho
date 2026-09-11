@@ -35,7 +35,7 @@ export const ReceiptTicket: React.FC<ReceiptTicketProps> = ({
             Chorinho
           </span>
         </div>
-        <h3 className="text-xl font-extrabold text-secondary mt-1">{establishmentName}</h3>
+        <h3 className="font-serif text-xl font-extrabold text-secondary mt-1">{establishmentName}</h3>
         <p className="text-base font-semibold text-primary mt-0.5">{offerTitle}</p>
       </div>
 

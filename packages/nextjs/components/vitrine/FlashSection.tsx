@@ -25,7 +25,7 @@ export const FlashSection = ({ campaigns }: { campaigns: Campaign[] }) => {
     <section className="w-full">
       <div className="flex items-center gap-2 mb-3">
         <BoltIcon className="h-6 w-6 text-warning" />
-        <h2 className="text-xl font-extrabold m-0">Só hoje</h2>
+        <h2 className="font-serif text-2xl font-black m-0 text-secondary">Só hoje</h2>
         <span className="badge badge-warning badge-sm font-semibold">corre que acaba</span>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -46,10 +46,10 @@ export const FlashSection = ({ campaigns }: { campaigns: Campaign[] }) => {
                 {c.metadata?.establishment && (
                   <span className="text-xs font-bold opacity-70 -mb-1">{c.metadata.establishment}</span>
                 )}
-                <h3 className="card-title text-base leading-snug">{campaignDisplayName(c)}</h3>
+                <h3 className="card-title font-serif text-base leading-snug">{campaignDisplayName(c)}</h3>
                 <div className="flex items-center gap-2 text-sm">
-                  <span className="font-bold">{formatPrice(c.price)}</span>
-                  <span className="opacity-50">·</span>
+                  <span className="font-mono font-black">{formatPrice(c.price)}</span>
+                  <span className="opacity-70">·</span>
                   <span className="text-warning font-semibold flex items-center gap-1">
                     <BoltIcon className="h-4 w-4" />
                     termina em <Countdown target={c.endTime} />

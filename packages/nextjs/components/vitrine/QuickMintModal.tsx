@@ -70,10 +70,11 @@ export const QuickMintModal: React.FC<QuickMintModalProps> = ({ campaign, onClos
             <VerifiedBadge compact />
           </div>
 
+          {/* w-12 h-12 sobrepõe o tamanho padrão do btn-circle: alvo de toque de 48px. */}
           <button
             type="button"
             onClick={onClose}
-            className="btn btn-ghost btn-sm btn-circle text-secondary/60 hover:text-secondary"
+            className="btn btn-ghost btn-circle w-12 h-12 text-secondary/60 hover:text-secondary"
           >
             <XMarkIcon className="w-5 h-5" />
           </button>
@@ -96,25 +97,27 @@ export const QuickMintModal: React.FC<QuickMintModalProps> = ({ campaign, onClos
 
               <div className="w-full p-4 rounded-2xl bg-kraft border border-base-300 text-left text-xs space-y-1">
                 <div className="flex justify-between">
-                  <span className="text-secondary/60">Estabelecimento:</span>
+                  <span className="text-secondary/70">Estabelecimento:</span>
                   <span className="font-bold text-secondary">{meta?.establishment ?? "Comércio Local"}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-secondary/60">Chorinho Prometido:</span>
+                  <span className="text-secondary/70">Chorinho Prometido:</span>
                   <span className="font-bold text-primary">{campaignDisplayName(campaign)}</span>
                 </div>
               </div>
 
+              {/* "Ver Minha Carteira" vira a ação principal deste estado (o passe já está
+                  garantido), por isso ganha os 56px reservados ao botão nº 1 da tela. */}
               <div className="flex flex-col sm:flex-row gap-2.5 w-full pt-2">
                 <Link
                   href="/carteira"
-                  className="btn btn-primary rounded-2xl flex-1 font-bold gap-1.5"
+                  className="btn btn-primary h-14 rounded-2xl flex-1 font-black gap-1.5"
                   onClick={onClose}
                 >
-                  <TicketIcon className="w-4 h-4" />
+                  <TicketIcon className="w-5 h-5" />
                   <span>Ver Minha Carteira</span>
                 </Link>
-                <button type="button" onClick={onClose} className="btn btn-outline rounded-2xl font-bold">
+                <button type="button" onClick={onClose} className="btn btn-outline h-12 rounded-2xl font-bold">
                   Continuar Explorando
                 </button>
               </div>
@@ -123,7 +126,7 @@ export const QuickMintModal: React.FC<QuickMintModalProps> = ({ campaign, onClos
             <>
               {/* Detalhes do Estabelecimento e Oferta */}
               <div>
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-secondary/60">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-secondary/70">
                   <MapPinIcon className="w-3.5 h-3.5" />
                   <span>{meta?.neighborhood ?? "Bairro Local"}</span>
                 </div>
@@ -140,29 +143,32 @@ export const QuickMintModal: React.FC<QuickMintModalProps> = ({ campaign, onClos
               )}
 
               {/* Destaque do Preço e Quantidade */}
-              <div className="p-4 rounded-2xl bg-kraft border border-base-300 flex items-center justify-between">
-                <div>
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-secondary/50 block">
+              <div className="p-4 rounded-2xl bg-kraft border border-base-300 flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-secondary/70 block">
                     Valor da Adesão
                   </span>
-                  <span className="font-serif font-black text-2xl text-primary">{formatPrice(totalPrice)}</span>
+                  <span className="font-mono font-black text-2xl text-primary">{formatPrice(totalPrice)}</span>
                   {campaign.price === 0n && <span className="text-xs text-success font-bold ml-1.5">Gratuito</span>}
                 </div>
 
-                <div className="flex items-center gap-2">
+                {/* Botões de +/- em 48px: é onde o polegar erra mais em modais de compra. */}
+                <div className="flex items-center gap-2 shrink-0">
                   <button
                     type="button"
                     disabled={quantity <= 1}
                     onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                    className="w-8 h-8 rounded-xl border border-base-300 bg-base-100 font-bold text-sm text-secondary disabled:opacity-30 active:scale-95"
+                    aria-label="Diminuir quantidade"
+                    className="w-12 h-12 rounded-xl border border-base-300 bg-base-100 font-black text-lg text-secondary disabled:opacity-30 active:scale-95"
                   >
-                    -
+                    −
                   </button>
-                  <span className="font-bold text-base min-w-[20px] text-center text-secondary">{quantity}</span>
+                  <span className="font-mono font-black text-lg min-w-6 text-center text-secondary">{quantity}</span>
                   <button
                     type="button"
                     onClick={() => setQuantity(q => q + 1)}
-                    className="w-8 h-8 rounded-xl border border-base-300 bg-base-100 font-bold text-sm text-secondary active:scale-95"
+                    aria-label="Aumentar quantidade"
+                    className="w-12 h-12 rounded-xl border border-base-300 bg-base-100 font-black text-lg text-secondary active:scale-95"
                   >
                     +
                   </button>
@@ -188,7 +194,7 @@ export const QuickMintModal: React.FC<QuickMintModalProps> = ({ campaign, onClos
                   type="button"
                   onClick={handleMint}
                   disabled={isMining}
-                  className="btn btn-primary btn-lg w-full rounded-2xl font-extrabold shadow-md gap-2"
+                  className="btn btn-primary h-14 w-full rounded-2xl font-black shadow-md gap-2"
                 >
                   {isMining ? (
                     <>

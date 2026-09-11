@@ -1,4 +1,4 @@
-import { ABI_CATALOGO, ABI_LEDGER, ABI_PONTOS } from "./abi";
+import { ABI_ASSINATURA, ABI_CATALOGO, ABI_LEDGER, ABI_PONTOS, ABI_REGRA } from "./abi";
 import "server-only";
 import {
   BaseError,
@@ -258,3 +258,43 @@ export const podeResgatar = async (rewardId: bigint, cliente: `0x${string}`) =>
     functionName: "canClaim",
     args: [rewardId, cliente],
   });
+
+/** A assinatura da loja, direto da cadeia — a fonte da verdade da cobrança. */
+export const lerAssinatura = async (establishmentId: bigint) => {
+  const publico = clientePublico();
+  const endereco = enderecoDoContrato("SubscriptionManager");
+
+  const [ativa, plano, vence] = await Promise.all([
+    publico.readContract({ address: endereco, abi: ABI_ASSINATURA, functionName: "isActive", args: [establishmentId] }),
+    publico.readContract({ address: endereco, abi: ABI_ASSINATURA, functionName: "tierOf", args: [establishmentId] }),
+    publico.readContract({
+      address: endereco,
+      abi: ABI_ASSINATURA,
+      functionName: "expiresAt",
+      args: [establishmentId],
+    }),
+  ]);
+
+  return { ativa, plano, venceEm: Number(vence) };
+};
+
+/** A regra de acúmulo que o balcão aplica. */
+export const lerRegra = async (establishmentId: bigint) => {
+  const [minTicketCents, centsPerStamp, maxStampsPerTx, cooldownSeconds, streakWindowSeconds, pointsPerStamp, , ativa] =
+    await clientePublico().readContract({
+      address: enderecoDoContrato("StampLedger"),
+      abi: ABI_REGRA,
+      functionName: "rules",
+      args: [establishmentId],
+    });
+
+  return {
+    ativa,
+    pisoDeTicketCentavos: Number(minTicketCents),
+    centavosPorCarimbo: Number(centsPerStamp),
+    tetoPorVenda: maxStampsPerTx,
+    intervaloSegundos: cooldownSeconds,
+    janelaDaSequenciaSegundos: streakWindowSeconds,
+    pontosPorCarimbo: pointsPerStamp,
+  };
+};

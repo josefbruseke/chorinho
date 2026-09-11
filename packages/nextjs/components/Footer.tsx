@@ -50,11 +50,14 @@ export const Footer = () => {
             <BrandLogo className="w-6 h-6" />
             <div className="flex flex-col">
               <span className="font-extrabold tracking-tight">Chorinho</span>
-              <span className="text-[11px] opacity-65">Aquele agrado que só o comércio de bairro sabe dar</span>
+              <span className="text-[11px] opacity-75">Aquele agrado que só o comércio de bairro sabe dar</span>
             </div>
           </div>
           <div className="flex items-center gap-4 text-xs">
-            <Link href="/cadastro" className="font-semibold hover:text-primary transition-colors">
+            <Link
+              href="/cadastro"
+              className="flex items-center min-h-12 px-3 rounded-xl font-semibold hover:bg-base-200 hover:text-primary transition-colors"
+            >
               Cadastrar meu estabelecimento
             </Link>
           </div>

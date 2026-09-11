@@ -13,10 +13,11 @@ export const runtime = "nodejs";
  * perdem vendas de verdade.
  */
 export async function POST(request: NextRequest) {
+  // Sem sessão não é erro: o tablet do balcão opera pelo cookie do terminal
+  // pareado. Quem decide se este pedido tem balcão é o `balcaoDoOperador`.
   const supabase = await supabaseServer();
   const { data: claims } = await supabase.auth.getClaims();
   const userId = claims?.claims?.sub;
-  if (!userId) return NextResponse.json({ erro: "sem sessão" }, { status: 401 });
 
   let corpo: { vendas?: unknown };
   try {

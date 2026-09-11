@@ -57,6 +57,9 @@
     "vercel:yolo": "bun --filter @se-2/nextjs vercel:yolo",
     "verify": "bun run foundry:verify"
   },
+  "resolutions": {
+    "@coinbase/cdp-sdk": "1.52.0"
+  },
   "devDependencies": {
     "husky": "~9.1.6",
     "lint-staged": "~13.2.2"

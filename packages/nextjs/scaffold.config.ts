@@ -13,10 +13,34 @@ export type ScaffoldConfig = BaseConfig;
 
 export const DEFAULT_ALCHEMY_API_KEY = "IZYEU2cWBgnFmgiTAgpWD";
 
+/**
+ * A rede que o frontend usa.
+ *
+ * Precisa vir do ambiente: com `foundry` fixo em primeiro lugar, a aplicacao
+ * publicada se acha numa cadeia local e passa a bater em `127.0.0.1:8545` --
+ * a torneira de ETH tentando conectar no anvil de quem publicou.
+ *
+ * As duas redes continuam na lista, e so a ORDEM muda: a primeira e a rede
+ * alvo, e a presenca da foundry e o que da tipagem aos contratos implantados.
+ *
+ * A anotacao de tipo fixa o PAR, nao a ordem. E de proposito: o indexador de
+ * `deployedContracts` precisa dos ids literais, e um ramo ternario devolveria
+ * uma uniao de tuplas que o TypeScript nao consegue colapsar. A ordem so
+ * importa em tempo de execucao.
+ */
+const ID_DA_REDE =
+  process.env.NEXT_PUBLIC_CHORINHO_CHAIN_ID ?? (process.env.NODE_ENV === "development" ? "31337" : "84532");
+
+const REDES_CONFIGURADAS = (
+  ID_DA_REDE === "31337" ? [chains.foundry, chains.baseSepolia] : [chains.baseSepolia, chains.foundry]
+) as readonly [typeof chains.foundry, typeof chains.baseSepolia];
+
 const scaffoldConfig = {
-  // The networks on which your DApp is live
-  // foundry (anvil) for local dev; baseSepolia is the target testnet
-  targetNetworks: [chains.foundry, chains.baseSepolia],
+  // A rede alvo vem primeiro: e ela que o `useTargetNetwork` devolve, e era a
+  // ordem fixa com `foundry` na frente que fazia o aplicativo publicado se
+  // comportar como se fosse local. As outras seguem na lista porque e delas
+  // que os hooks tiram a tipagem dos contratos implantados.
+  targetNetworks: REDES_CONFIGURADAS,
   // The interval at which your front-end polls the RPC servers for new data (it has no effect if you only target the local network (default is 4000))
   pollingInterval: 3000,
   // This is ours Alchemy's default API key.

@@ -1,7 +1,5 @@
 // @ts-check
 import { serwist } from "@serwist/next/config";
-import { spawnSync } from "node:child_process";
-import { randomUUID } from "node:crypto";
 
 /**
  * O service worker e construido por fora do Next, no modo configurador.
@@ -11,14 +9,17 @@ import { randomUUID } from "node:crypto";
  * `public/sw.js` depois — o mesmo resultado, sem abrir mao do Turbopack.
  */
 
-// Versao da pagina offline. Sem isso, um tablet que instalou o balcao em marco
-// continuaria servindo a tela de marco para sempre.
-const revisao = spawnSync("git", ["rev-parse", "HEAD"], { encoding: "utf-8" }).stdout?.trim() || randomUUID();
-
 export default serwist({
   swSrc: "app/sw.ts",
   swDest: "public/sw.js",
-  additionalPrecacheEntries: [{ url: "/sem-conexao", revision: revisao }],
+  // Nada de `additionalPrecacheEntries` para a pagina offline.
+  //
+  // O `@serwist/next` ja coloca todas as paginas do build no precache, com a
+  // revisao derivada do conteudo. Acrescentar `/sem-conexao` a mao criava uma
+  // SEGUNDA entrada para a mesma URL com outra revisao, e o Serwist recusa
+  // entradas conflitantes lancando na avaliacao do script -- ou seja, o
+  // service worker simplesmente nao registrava, e o aplicativo inteiro ficava
+  // sem modo offline sem nenhum erro visivel na tela.
   /**
    * Fora do precache: os 400 pedacos de JavaScript do build.
    *

@@ -1,13 +1,13 @@
 import type { NextPage } from "next";
-import { MerchantTerminal } from "~~/components/vitrine/MerchantTerminal";
+import { TerminalPdv } from "~~/components/pdv/TerminalPdv";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
 
 export const metadata = getMetadata({
   title: "Terminal do balcão",
-  description: "Registre carimbos e entregue recompensas no caixa.",
+  description: "Registre a venda e carimbe o cliente em dois toques.",
 });
 
 /** Tela principal do PDV: o atendente opera daqui o dia inteiro. */
-const Pdv: NextPage = () => <MerchantTerminal />;
+const Pdv: NextPage = () => <TerminalPdv />;
 
 export default Pdv;

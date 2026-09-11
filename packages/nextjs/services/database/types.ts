@@ -1,13 +1,13 @@
 /**
  * GERADO a partir do schema da Supabase — não edite à mão.
- * Para regenerar, veja services/database/README.md.
+ *
+ * Para regenerar: `bun db:types` (exige SUPABASE_ACCESS_TOKEN, criado em
+ * Account > Access Tokens no painel). Sem o token, use o MCP da Supabase.
  */
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
-  __InternalSupabase: {
-    PostgrestVersion: "14.5";
-  };
+  __InternalSupabase: { PostgrestVersion: "14.5" };
   public: {
     Tables: {
       establishment_members: {
@@ -38,22 +38,7 @@ export type Database = {
           profile_id?: string;
           role?: Database["public"]["Enums"]["papel_membro"];
         };
-        Relationships: [
-          {
-            foreignKeyName: "establishment_members_establishment_id_fkey";
-            columns: ["establishment_id"];
-            isOneToOne: false;
-            referencedRelation: "establishments";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "establishment_members_profile_id_fkey";
-            columns: ["profile_id"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          },
-        ];
+        Relationships: [];
       };
       establishments: {
         Row: {
@@ -134,29 +119,40 @@ export type Database = {
           updated_at?: string;
           whatsapp?: string | null;
         };
-        Relationships: [
-          {
-            foreignKeyName: "establishments_owner_profile_id_fkey";
-            columns: ["owner_profile_id"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          },
-        ];
+        Relationships: [];
+      };
+      pass_nonces: {
+        Row: {
+          created_at: string;
+          expires_at: string;
+          nonce: string;
+          profile_id: string;
+          short_code: string;
+          used_at: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          expires_at: string;
+          nonce?: string;
+          profile_id: string;
+          short_code: string;
+          used_at?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          expires_at?: string;
+          nonce?: string;
+          profile_id?: string;
+          short_code?: string;
+          used_at?: string | null;
+        };
+        Relationships: [];
       };
       platform_admins: {
         Row: { created_at: string; profile_id: string };
         Insert: { created_at?: string; profile_id: string };
         Update: { created_at?: string; profile_id?: string };
-        Relationships: [
-          {
-            foreignKeyName: "platform_admins_profile_id_fkey";
-            columns: ["profile_id"];
-            isOneToOne: true;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          },
-        ];
+        Relationships: [];
       };
       profiles: {
         Row: {
@@ -194,20 +190,98 @@ export type Database = {
         };
         Relationships: [];
       };
+      sales: {
+        Row: {
+          amount_cents: number;
+          confirmed_at: string | null;
+          created_at: string;
+          customer_profile_id: string | null;
+          customer_wallet: string;
+          erro: string | null;
+          establishment_id: string;
+          id: string;
+          operator_profile_id: string | null;
+          points_issued: number | null;
+          products: Json;
+          sale_ref: string;
+          stamps_issued: number | null;
+          status: Database["public"]["Enums"]["status_venda"];
+          tx_hash: string | null;
+        };
+        Insert: {
+          amount_cents: number;
+          confirmed_at?: string | null;
+          created_at?: string;
+          customer_profile_id?: string | null;
+          customer_wallet: string;
+          erro?: string | null;
+          establishment_id: string;
+          id?: string;
+          operator_profile_id?: string | null;
+          points_issued?: number | null;
+          products?: Json;
+          sale_ref: string;
+          stamps_issued?: number | null;
+          status?: Database["public"]["Enums"]["status_venda"];
+          tx_hash?: string | null;
+        };
+        Update: {
+          amount_cents?: number;
+          confirmed_at?: string | null;
+          created_at?: string;
+          customer_profile_id?: string | null;
+          customer_wallet?: string;
+          erro?: string | null;
+          establishment_id?: string;
+          id?: string;
+          operator_profile_id?: string | null;
+          points_issued?: number | null;
+          products?: Json;
+          sale_ref?: string;
+          stamps_issued?: number | null;
+          status?: Database["public"]["Enums"]["status_venda"];
+          tx_hash?: string | null;
+        };
+        Relationships: [];
+      };
+      stamp_balances_cache: {
+        Row: {
+          balance: number;
+          establishment_id: string;
+          last_visit_at: string | null;
+          lifetime: number;
+          streak_best: number;
+          streak_current: number;
+          updated_at: string;
+          wallet: string;
+        };
+        Insert: {
+          balance?: number;
+          establishment_id: string;
+          last_visit_at?: string | null;
+          lifetime?: number;
+          streak_best?: number;
+          streak_current?: number;
+          updated_at?: string;
+          wallet: string;
+        };
+        Update: {
+          balance?: number;
+          establishment_id?: string;
+          last_visit_at?: string | null;
+          lifetime?: number;
+          streak_best?: number;
+          streak_current?: number;
+          updated_at?: string;
+          wallet?: string;
+        };
+        Relationships: [];
+      };
     };
-    Views: {
-      [_ in never]: never;
-    };
+    Views: { [_ in never]: never };
     Functions: {
       establishments_in_bounds: {
-        Args: {
-          cats?: number[];
-          lim?: number;
-          max_lat: number;
-          max_lng: number;
-          min_lat: number;
-          min_lng: number;
-        };
+        Args: { cats?: number[]; lim?: number; max_lat: number; max_lng: number; min_lat: number; min_lng: number };
         Returns: {
           category: number;
           city: string;
@@ -245,10 +319,9 @@ export type Database = {
     Enums: {
       papel_membro: "owner" | "manager" | "operator";
       status_estabelecimento: "rascunho" | "pendente" | "ativo" | "suspenso";
+      status_venda: "na_fila" | "enviada" | "confirmada" | "falhou";
     };
-    CompositeTypes: {
-      [_ in never]: never;
-    };
+    CompositeTypes: { [_ in never]: never };
   };
 };
 
@@ -267,6 +340,7 @@ export const Constants = {
     Enums: {
       papel_membro: ["owner", "manager", "operator"],
       status_estabelecimento: ["rascunho", "pendente", "ativo", "suspenso"],
+      status_venda: ["na_fila", "enviada", "confirmada", "falhou"],
     },
   },
 } as const;

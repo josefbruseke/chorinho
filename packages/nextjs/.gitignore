@@ -36,3 +36,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 ipfs-upload.config.json
+
+# service worker gerado pelo serwist
+/public/sw.js
+/public/sw.js.map
+/public/swe-worker-*.js

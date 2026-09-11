@@ -1,5 +1,15 @@
+import type { Metadata, Viewport } from "next";
 import { FlavorTheme } from "~~/components/FlavorTheme";
 import { TabBar } from "~~/components/app/TabBar";
+
+/**
+ * Cada flavor instala um aplicativo diferente: o cliente leva o mapa, o
+ * atendente leva o balcao, o lojista leva o painel. Tres manifestos, um
+ * codigo -- o `app/manifest.ts` do Next so permitiria um.
+ */
+export const metadata: Metadata = { manifest: "/manifest/cliente" };
+
+export const viewport: Viewport = { themeColor: "#c2410c", viewportFit: "cover" };
 
 /**
  * Flavor cliente: o PWA. Mobile-first, navegação por barra inferior ao alcance

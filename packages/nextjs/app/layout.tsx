@@ -1,5 +1,6 @@
 import "@rainbow-me/rainbowkit/styles.css";
 import "@scaffold-ui/components/styles.css";
+import { SerwistProvider } from "@serwist/next/react";
 import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
 import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
@@ -22,13 +23,18 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
         />
       </head>
       <body>
-        {/* attribute="data-theme": o daisyUI aplica tema por [data-theme], nao por
-            classe. Sem isso o next-themes escrevia class="dark" e o seletor de
-            tema nao mudava cor nenhuma -- o escuro so aparecia se o sistema
-            operacional estivesse escuro. */}
-        <ThemeProvider attribute="data-theme" enableSystem>
-          <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
-        </ThemeProvider>
+        {/* O service worker e o que deixa o balcao abrir sem internet. Fica
+            desligado em desenvolvimento: cache de rota antiga em dev vira
+            "por que minha mudanca nao aparece?". */}
+        <SerwistProvider swUrl="/sw.js" disable={process.env.NODE_ENV === "development"}>
+          {/* attribute="data-theme": o daisyUI aplica tema por [data-theme], nao
+              por classe. Sem isso o next-themes escrevia class="dark" e o seletor
+              de tema nao mudava cor nenhuma -- o escuro so aparecia se o sistema
+              operacional estivesse escuro. */}
+          <ThemeProvider attribute="data-theme" enableSystem>
+            <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
+          </ThemeProvider>
+        </SerwistProvider>
       </body>
     </html>
   );

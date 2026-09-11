@@ -6,14 +6,15 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "./scripts/dev.sh",
     "account": "bun run foundry:account",
     "account:generate": "bun run foundry:generate",
     "account:import": "bun run foundry:account-import",
     "account:reveal-pk": "bun --filter @se-2/foundry account:reveal-pk",
     "chain": "bun run foundry:chain",
     "compile": "bun run foundry:compile",
+    "db:types": "bunx --bun supabase@latest gen types typescript --project-id ausawazcrgebxkvxpqfc > packages/nextjs/services/database/types.ts",
     "deploy": "bun run foundry:deploy",
+    "dev": "./scripts/dev.sh",
     "flatten": "bun run foundry:flatten",
     "fork": "bun run foundry:fork",
     "format": "bun run next:format && bun run foundry:format",

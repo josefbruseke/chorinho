@@ -1,39 +1,83 @@
 "use client";
 
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { NextPage } from "next";
 import { QRCodeSVG } from "qrcode.react";
-import { useAccount } from "wagmi";
-import { ExclamationTriangleIcon, TicketIcon } from "@heroicons/react/24/outline";
-import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
-import { useMyCoupons } from "~~/hooks/vitrine/useMyCoupons";
-import { campaignDisplayName, encodeCouponQr } from "~~/utils/vitrine";
+import { ArrowPathIcon, ExclamationTriangleIcon, TicketIcon } from "@heroicons/react/24/outline";
+
+type Passe = {
+  qr: string;
+  codigoCurto: string;
+  expiraEm: number;
+  validadeSegundos: number;
+};
 
 /**
- * O passe que o cliente mostra no balcão. Tela dedicada em vez de modal porque
- * é a ação mais repetida do app: precisa de link direto, atalho instalável e a
- * tela inteira — QR grande escaneia mais rápido em câmera de celular barato.
+ * O passe que o cliente mostra no balcão — a tela mais usada do aplicativo.
+ *
+ * O código vale dois minutos e se renova sozinho antes de vencer. É isso que
+ * impede alguém de fotografar a tela e usar os carimbos depois. O cliente não
+ * precisa entender nada disso: para ele, o código simplesmente está sempre
+ * pronto.
  */
 const Passe: NextPage = () => {
-  const { address, isConnected } = useAccount();
-  const { coupons, isLoading } = useMyCoupons();
+  const [passe, setPasse] = useState<Passe | null>(null);
+  const [restantes, setRestantes] = useState(0);
+  const [erro, setErro] = useState<string | null>(null);
+  const [carregando, setCarregando] = useState(true);
+  const emVoo = useRef(false);
 
-  const passeAtivo = coupons[0];
+  const renovar = useCallback(async () => {
+    if (emVoo.current) return;
+    emVoo.current = true;
+    try {
+      const r = await fetch("/api/pass/issue", { method: "POST" });
+      const corpo = await r.json();
+      if (!r.ok) {
+        setErro(
+          r.status === 409
+            ? "Sua carteira ainda está sendo criada. Tente de novo em instantes."
+            : r.status === 401
+              ? "Entre na sua conta para abrir o passe."
+              : (corpo?.erro ?? "não foi possível gerar o passe"),
+        );
+        setPasse(null);
+        return;
+      }
+      setErro(null);
+      setPasse(corpo);
+    } catch {
+      setErro("Sem conexão. O passe precisa de internet para ser gerado.");
+    } finally {
+      emVoo.current = false;
+      setCarregando(false);
+    }
+  }, []);
 
-  if (!isConnected) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-4 px-6 py-20 text-center grow">
-        <TicketIcon className="w-12 h-12 text-primary/60" />
-        <h1 className="text-2xl font-serif font-black m-0 text-secondary">Entre para abrir seu passe</h1>
-        <p className="m-0 text-sm opacity-75 max-w-xs">
-          É ele que o caixa escaneia para creditar seus carimbos no balcão.
-        </p>
-        <RainbowKitCustomConnectButton />
-      </div>
-    );
-  }
+  useEffect(() => {
+    renovar();
+  }, [renovar]);
 
-  if (isLoading) {
+  // Renova 15 segundos antes de vencer: nunca pode existir uma janela em que a
+  // tela mostra um código morto enquanto o caixa tenta escanear.
+  useEffect(() => {
+    if (!passe) return;
+
+    const tick = () => {
+      const falta = Math.max(0, passe.expiraEm - Math.floor(Date.now() / 1000));
+      setRestantes(falta);
+      if (falta <= 15) renovar();
+    };
+
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [passe, renovar]);
+
+  const proporcao = passe ? restantes / passe.validadeSegundos : 0;
+
+  if (carregando) {
     return (
       <div className="flex justify-center items-center grow py-20">
         <span className="loading loading-spinner loading-lg text-primary" />
@@ -41,53 +85,59 @@ const Passe: NextPage = () => {
     );
   }
 
+  if (erro) {
+    return (
+      <div className="flex flex-col items-center justify-center grow gap-4 px-6 py-16 text-center">
+        <ExclamationTriangleIcon className="w-12 h-12 text-warning" />
+        <h1 className="text-xl font-serif font-black m-0 text-secondary">Não deu para gerar seu passe</h1>
+        <p className="m-0 text-sm opacity-75 max-w-xs leading-relaxed">{erro}</p>
+        <button type="button" onClick={renovar} className="btn btn-primary rounded-2xl font-bold gap-2">
+          <ArrowPathIcon className="w-5 h-5" />
+          Tentar de novo
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col items-center gap-5 px-5 py-6 grow">
+    <div className="flex flex-col items-center gap-4 px-5 py-5 grow">
       <header className="text-center">
-        <h1 className="text-2xl font-serif font-black m-0 text-secondary">Meu passe</h1>
-        <p className="m-0 mt-1 text-sm opacity-75">Mostre esta tela ao pagar</p>
+        <h1 className="text-2xl font-serif font-black m-0 text-secondary">Mostre no balcão</h1>
+        <p className="m-0 mt-1 text-sm opacity-75">O caixa escaneia e o carimbo cai na hora</p>
       </header>
 
-      {/* Fundo sempre claro e contraste alto: QR escuro sobre claro é o que a
-          câmera lê rápido, inclusive no tema escuro e sob luz do balcão. */}
-      <div className="w-full max-w-xs rounded-3xl border-2 border-base-300 bg-qr-surface p-6 shadow-md flex flex-col items-center gap-4">
-        {address && (
-          <QRCodeSVG
-            value={
-              passeAtivo ? encodeCouponQr({ owner: address, tokenId: passeAtivo.campaign.id }) : `chorinho:${address}:0`
-            }
-            size={224}
-            level="M"
-            bgColor="#ffffff"
-            fgColor="#261c14"
-          />
-        )}
+      {/* Fundo claro fixo: câmera de celular barato lê muito mais rápido código
+          escuro sobre claro, e isso vale também no tema escuro. */}
+      <div className="w-full max-w-xs rounded-3xl border-2 border-base-300 bg-qr-surface p-6 shadow-lg flex flex-col items-center gap-4">
+        {passe && <QRCodeSVG value={passe.qr} size={240} level="M" bgColor="#ffffff" fgColor="#261c14" />}
 
-        {passeAtivo ? (
-          <div className="text-center">
-            <span className="block font-serif font-extrabold text-qr-ink">
-              {campaignDisplayName(passeAtivo.campaign)}
-            </span>
-            <span className="text-xs text-qr-muted">
-              {passeAtivo.balance.toString()} {passeAtivo.balance === 1n ? "carimbo" : "carimbos"} nesta cartela
-            </span>
+        <div className="w-full flex flex-col gap-1.5">
+          <div className="h-1.5 w-full rounded-full bg-qr-muted/20 overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-[width] duration-1000 ease-linear ${
+                restantes <= 20 ? "bg-warning" : "bg-primary"
+              }`}
+              style={{ width: `${Math.max(2, proporcao * 100)}%` }}
+            />
           </div>
-        ) : (
           <p className="m-0 text-center text-xs text-qr-muted">
-            Você ainda não tem cartela. O caixa consegue abrir uma para você na primeira compra.
+            {restantes > 0 ? `Vale por mais ${restantes}s — renova sozinho` : "Renovando…"}
           </p>
-        )}
+        </div>
       </div>
 
-      <div className="w-full max-w-xs rounded-box border border-warning/40 bg-warning/10 p-3.5 flex gap-2.5">
-        <ExclamationTriangleIcon className="w-5 h-5 text-warning shrink-0 mt-0.5" />
-        <p className="m-0 text-xs leading-relaxed text-base-content/85">
-          <strong>Este passe ainda não expira.</strong> Por enquanto ele não deve ser fotografado nem compartilhado. A
-          versão com validade de dois minutos e uso único entra no M4.
+      {/* Saída para quando a câmera do balcão não coopera. Dígitos grandes e
+          espaçados: alguém vai ler em voz alta, com fila esperando. */}
+      <div className="w-full max-w-xs rounded-box border border-base-300 bg-base-100 p-4 text-center">
+        <span className="text-xs font-bold uppercase tracking-wider opacity-60">Câmera não funciona?</span>
+        <p className="m-0 mt-1.5 font-mono text-3xl font-black tracking-[0.3em] text-secondary">
+          {passe?.codigoCurto ?? "······"}
         </p>
+        <span className="text-xs opacity-65">Dite este código para o atendente</span>
       </div>
 
-      <Link href="/carteira" className="btn btn-ghost btn-sm rounded-xl">
+      <Link href="/carteira" className="btn btn-ghost btn-sm rounded-xl gap-1.5">
+        <TicketIcon className="w-4 h-4" />
         Ver minhas cartelas
       </Link>
     </div>

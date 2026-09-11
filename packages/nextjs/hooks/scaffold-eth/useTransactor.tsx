@@ -56,6 +56,10 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
       chainId = await walletClient.getChainId();
       // Get full transaction from public client
       const publicClient = getPublicClient(wagmiConfig);
+      // Pode nao existir cliente: a cadeia local sai da lista do wagmi fora de
+      // desenvolvimento, e uma carteira conectada numa rede que nao
+      // configuramos cai aqui.
+      if (!publicClient) throw new Error("Rede sem RPC configurado nesta aplicação");
 
       notificationId = notification.loading(<TxnNotification message="Awaiting for user confirmation" />);
       if (typeof tx === "function") {

@@ -7,6 +7,7 @@ import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
 import { useTheme } from "next-themes";
 import { Toaster } from "react-hot-toast";
 import { WagmiProvider } from "wagmi";
+import { CarteiraProvider } from "~~/components/carteira/CarteiraProvider";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 
@@ -40,7 +41,7 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
           theme={mounted ? (isDarkMode ? darkTheme() : lightTheme()) : lightTheme()}
         >
           <ProgressBar height="3px" color="var(--color-primary)" />
-          {children}
+          <CarteiraProvider>{children}</CarteiraProvider>
           <Toaster />
         </RainbowKitProvider>
       </QueryClientProvider>

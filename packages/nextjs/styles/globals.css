@@ -1,8 +1,13 @@
 @import "tailwindcss";
+/* As fontes (Fraunces + Plus Jakarta Sans) sao carregadas por <link> em app/layout.tsx.
+   Nao reintroduza um @import aqui: o Tailwind v4 injeta seu CSS acima desta linha, o
+   @import passa a vir depois de regras e o CSS inteiro falha ao parsear (pagina 500). */
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @theme {
+  --font-serif: "Fraunces", Georgia, Cambria, serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --shadow-center: 0 0 12px -2px rgb(0 0 0 / 0.05);
   --animate-pulse-fast: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
@@ -14,62 +19,63 @@
 }
 
 /*
-  "Floripa em Dobro" palette: warm terracotta/cream, rounded corners.
-  Deliberately nothing like the SE-2 default blue — this is a consumer
-  food-discount app, not a dev dashboard.
+  "Chorinho" Warm Humanist Palette:
+  Modern, organic, and inviting design inspired by authentic Brazilian neighborhood
+  commerce (cafés, bakeries, craft spots). Warm terracotta, roasted coffee tones,
+  artisanal linen paper, and golden honey accents.
 */
 @plugin "daisyui/theme" {
   name: "light";
 
-  --color-primary: #e8582d;
-  --color-primary-content: #fff6ef;
-  --color-secondary: #ffc24b;
-  --color-secondary-content: #4a2b12;
-  --color-accent: #1f9d6c;
-  --color-accent-content: #f0fbf6;
-  --color-neutral: #3d2c23;
-  --color-neutral-content: #fff6ef;
+  --color-primary: #c2410c;
+  --color-primary-content: #fffdfa;
+  --color-secondary: #261c14;
+  --color-secondary-content: #fdfbf7;
+  --color-accent: #d97706;
+  --color-accent-content: #261c14;
+  --color-neutral: #362a22;
+  --color-neutral-content: #fffdfa;
   --color-base-100: #ffffff;
-  --color-base-200: #fff8f1;
-  --color-base-300: #ffe8d6;
-  --color-base-content: #3d2c23;
-  --color-info: #3b82c4;
-  --color-success: #1f9d6c;
-  --color-warning: #f5a623;
-  --color-error: #d93636;
+  --color-base-200: #fbf8f2;
+  --color-base-300: #ebe3d5;
+  --color-base-content: #281d16;
+  --color-info: #1d4ed8;
+  --color-success: #15803d;
+  --color-warning: #d97706;
+  --color-error: #b91c1c;
 
   --radius-field: 0.75rem;
-  --radius-box: 1rem;
-  --radius-selector: 9999px;
+  --radius-box: 1.25rem;
+  --radius-selector: 0.75rem;
 
-  --tt-tailw: 6px;
+  --tt-tailw: 4px;
 }
 
 @plugin "daisyui/theme" {
   name: "dark";
 
-  --color-primary: #ff7a50;
-  --color-primary-content: #2a1109;
-  --color-secondary: #ffc24b;
-  --color-secondary-content: #3a2a10;
-  --color-accent: #34c98a;
-  --color-accent-content: #0f2a1e;
-  --color-neutral: #f5ede6;
-  --color-neutral-content: #3d2c23;
-  --color-base-100: #2a211c;
-  --color-base-200: #221a16;
-  --color-base-300: #1a1310;
-  --color-base-content: #f5ede6;
-  --color-info: #6aa5d8;
-  --color-success: #34c98a;
-  --color-warning: #ffb95e;
-  --color-error: #ff6b6b;
+  --color-primary: #ea580c;
+  --color-primary-content: #1e130b;
+  --color-secondary: #f5efe6;
+  --color-secondary-content: #261c14;
+  --color-accent: #fbbf24;
+  --color-accent-content: #261c14;
+  --color-neutral: #382d24;
+  --color-neutral-content: #fbf8f2;
+  --color-base-100: #231b15;
+  --color-base-200: #19130f;
+  --color-base-300: #3b2e24;
+  --color-base-content: #f7f1e6;
+  --color-info: #3b82f6;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
 
   --radius-field: 0.75rem;
-  --radius-box: 1rem;
-  --radius-selector: 9999px;
+  --radius-box: 1.25rem;
+  --radius-selector: 0.75rem;
 
-  --tt-tailw: 6px;
+  --tt-tailw: 4px;
   --tt-bg: var(--color-primary);
 }
 

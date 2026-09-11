@@ -237,3 +237,94 @@ export const ABI_REGRA = [
     ],
   },
 ] as const;
+
+/**
+ * A escrita da regra de acúmulo.
+ *
+ * Separada da leitura porque o contrato recebe a regra como tupla: os campos
+ * precisam estar exatamente nesta ordem, e um deslocamento silencioso aqui
+ * viraria "toda compra vale 1 carimbo" numa loja inteira.
+ */
+export const ABI_REGRA_ESCRITA = [
+  {
+    type: "function",
+    name: "setAccrualRule",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "establishmentId", type: "uint256" },
+      {
+        name: "rule",
+        type: "tuple",
+        components: [
+          { name: "minTicketCents", type: "uint64" },
+          { name: "centsPerStamp", type: "uint64" },
+          { name: "maxStampsPerTx", type: "uint16" },
+          { name: "cooldownSeconds", type: "uint32" },
+          { name: "streakWindowSeconds", type: "uint32" },
+          { name: "pointsPerStamp", type: "uint32" },
+          { name: "pointTypeId", type: "uint256" },
+          { name: "active", type: "bool" },
+        ],
+      },
+    ],
+    outputs: [],
+  },
+  { type: "error", name: "InvalidRule", inputs: [] },
+  { type: "error", name: "NotOperator", inputs: [] },
+] as const;
+
+/** O que o back office da plataforma escreve no registro de estabelecimentos. */
+export const ABI_REGISTRO = [
+  {
+    type: "function",
+    name: "registerEstablishment",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "owner", type: "address" },
+      { name: "metadataHash", type: "bytes32" },
+    ],
+    outputs: [{ name: "id", type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "setEstablishmentActive",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "id", type: "uint256" },
+      { name: "active", type: "bool" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "ownerOfEstablishment",
+    stateMutability: "view",
+    inputs: [{ name: "id", type: "uint256" }],
+    outputs: [{ name: "", type: "address" }],
+  },
+  {
+    type: "event",
+    name: "EstablishmentRegistered",
+    inputs: [
+      { name: "id", type: "uint256", indexed: true },
+      { name: "owner", type: "address", indexed: true },
+      { name: "metadataHash", type: "bytes32", indexed: false },
+    ],
+  },
+] as const;
+
+/** A assinatura escrita pelo oráculo de cobrança. */
+export const ABI_ASSINATURA_ESCRITA = [
+  {
+    type: "function",
+    name: "setSubscription",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "establishmentId", type: "uint256" },
+      { name: "tier", type: "uint8" },
+      { name: "validUntil", type: "uint64" },
+      { name: "providerRefHash", type: "bytes32" },
+    ],
+    outputs: [],
+  },
+] as const;

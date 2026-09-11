@@ -76,6 +76,63 @@ export const clienteRelayer = () =>
 export const enderecoDoRelayer = () => privateKeyToAccount(chaveDoRelayer()).address;
 
 /**
+ * A conta administradora da plataforma.
+ *
+ * Regra de acúmulo, registro de loja e tipo de ponto são escritas que o
+ * contrato só aceita do dono do estabelecimento ou do admin. O lojista não
+ * assina nada — ele nem sabe que existe uma carteira. Então quem escreve é a
+ * plataforma, depois de conferir no Supabase que aquela conta de fato
+ * administra aquela loja.
+ *
+ * Em rede local a chave é a mesma do relayer (a conta que fez o deploy). Em
+ * produção `CHORINHO_ADMIN_PRIVATE_KEY` aponta para uma chave separada, com
+ * custódia diferente: quem paga gás e quem muda regra não precisam ser a mesma
+ * pessoa, e não devem.
+ */
+const chaveDeAdmin = () => {
+  const chave = process.env.CHORINHO_ADMIN_PRIVATE_KEY ?? process.env.RELAYER_PRIVATE_KEY;
+  if (!chave) throw new Error("CHORINHO_ADMIN_PRIVATE_KEY ausente: a plataforma não consegue escrever na rede.");
+  return (chave.startsWith("0x") ? chave : `0x${chave}`) as `0x${string}`;
+};
+
+export const clienteAdmin = () =>
+  createWalletClient({
+    account: privateKeyToAccount(chaveDeAdmin()),
+    chain: REDES[idDaRede()],
+    transport: transporte(),
+  });
+
+/**
+ * Escreve na rede como a plataforma, simulando antes.
+ *
+ * Genérico de propósito: cada tela de configuração do painel precisa de uma
+ * função diferente do contrato, e repetir simulate/write/waitForReceipt em
+ * cada uma seria repetir também o esquecimento de esperar o recibo.
+ */
+export const escreverComoAdmin = async (
+  contrato: NomeDeContrato,
+  abi: readonly unknown[],
+  functionName: string,
+  args: readonly unknown[],
+) => {
+  const publico = clientePublico();
+  const carteira = clienteAdmin();
+
+  const { request } = await publico.simulateContract({
+    account: carteira.account,
+    address: enderecoDoContrato(contrato),
+    abi,
+    functionName,
+    args,
+  } as never);
+
+  const hash = await carteira.writeContract(request as never);
+  const recibo = await publico.waitForTransactionReceipt({ hash, confirmations: 1 });
+  if (recibo.status !== "success") throw new Error("a transação reverteu na rede");
+  return hash;
+};
+
+/**
  * A referência da venda dentro do contrato.
  *
  * É o `sale_ref` do banco passado por keccak256 — determinístico de propósito:

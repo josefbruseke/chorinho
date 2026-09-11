@@ -14,6 +14,7 @@
     "compile": "bun run foundry:compile",
     "db:types": "bunx --bun supabase@latest gen types typescript --project-id ausawazcrgebxkvxpqfc > packages/nextjs/services/database/types.ts",
     "deploy": "bun run foundry:deploy",
+    "deploy:vercel": "bun --filter @se-2/nextjs vercel -- --prod",
     "dev": "./scripts/dev.sh",
     "flatten": "bun run foundry:flatten",
     "fork": "bun run foundry:fork",
@@ -31,6 +32,8 @@
     "foundry:generate": "bun --filter @se-2/foundry account:generate",
     "foundry:lint": "bun --filter @se-2/foundry lint",
     "foundry:seed": "bun --filter @se-2/foundry seed",
+    "foundry:seed-balcao": "bun --filter @se-2/foundry seed:balcao",
+    "foundry:seed-recompensas": "bun --filter @se-2/foundry seed:recompensas",
     "foundry:test": "bun --filter @se-2/foundry test",
     "foundry:verify": "bun --filter @se-2/foundry verify",
     "generate": "bun run foundry:generate",
@@ -44,15 +47,15 @@
     "postinstall": "husky",
     "precommit": "lint-staged",
     "seed": "bun run foundry:seed",
+    "seed:balcao": "bun run foundry:seed-balcao",
+    "seed:recompensas": "bun run foundry:seed-recompensas",
+    "seed:tudo": "bun run seed && bun run seed:balcao && bun run seed:recompensas",
     "start": "bun --filter @se-2/nextjs dev",
     "test": "bun run foundry:test",
     "vercel": "bun --filter @se-2/nextjs vercel",
     "vercel:login": "bun --filter @se-2/nextjs vercel:login",
     "vercel:yolo": "bun --filter @se-2/nextjs vercel:yolo",
     "verify": "bun run foundry:verify"
-  },
-  "resolutions": {
-    "@coinbase/cdp-sdk": "1.52.0"
   },
   "devDependencies": {
     "husky": "~9.1.6",

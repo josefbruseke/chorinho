@@ -442,6 +442,14 @@ export type Database = {
     };
     Views: { [_ in never]: never };
     Functions: {
+      definir_posicao_do_estabelecimento: {
+        Args: { id_loja: string; latitude: number; longitude: number };
+        Returns: undefined;
+      };
+      posicao_do_estabelecimento: {
+        Args: { id_loja: string };
+        Returns: { lat: number; lng: number }[];
+      };
       establishments_in_bounds: {
         Args: { cats?: number[]; lim?: number; max_lat: number; max_lng: number; min_lat: number; min_lng: number };
         Returns: {

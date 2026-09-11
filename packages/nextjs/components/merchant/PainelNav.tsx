@@ -9,7 +9,7 @@ import {
   ClipboardDocumentCheckIcon,
   DevicePhoneMobileIcon,
   GiftIcon,
-  ShoppingBagIcon,
+  ScaleIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
 import { BrandLogo } from "~~/components/BrandLogo";
@@ -18,7 +18,7 @@ import { ContaDoUsuario } from "~~/components/ContaDoUsuario";
 const ITENS = [
   { href: "/painel", label: "Visão geral", Icon: ChartBarIcon },
   { href: "/painel/loja", label: "Minha loja", Icon: BuildingStorefrontIcon },
-  { href: "/painel/produtos", label: "Produtos", Icon: ShoppingBagIcon },
+  { href: "/painel/regras", label: "Regra de carimbo", Icon: ScaleIcon },
   { href: "/painel/recompensas", label: "Recompensas", Icon: GiftIcon },
   { href: "/painel/pdv", label: "Terminais", Icon: DevicePhoneMobileIcon },
   { href: "/painel/auditoria", label: "Auditoria", Icon: ClipboardDocumentCheckIcon },

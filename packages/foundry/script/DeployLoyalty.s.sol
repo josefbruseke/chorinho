@@ -8,6 +8,7 @@ import { PointsVault } from "../contracts/PointsVault.sol";
 import { StampLedger } from "../contracts/StampLedger.sol";
 import { DiscountNFT } from "../contracts/DiscountNFT.sol";
 import { BonusNFT } from "../contracts/BonusNFT.sol";
+import { RewardCatalog } from "../contracts/RewardCatalog.sol";
 
 /**
  * @notice Sobe a plataforma inteira e liga os papeis entre os contratos.
@@ -33,10 +34,20 @@ contract DeployLoyalty is ScaffoldETHDeploy {
 
         DiscountNFT discount = new DiscountNFT(registry);
         BonusNFT bonus = new BonusNFT(registry);
+        RewardCatalog catalog = new RewardCatalog(registry, ledger, points);
 
-        // O ledger e quem credita e queima ponto; ninguem mais.
+        // Quem credita ponto e o ledger; quem queima e o catalogo, na entrega
+        // da recompensa. Papeis separados para que nenhum dos dois possa fazer
+        // o trabalho do outro.
         points.grantRole(points.MINTER_ROLE(), address(ledger));
-        points.grantRole(points.BURNER_ROLE(), address(ledger));
+        points.grantRole(points.BURNER_ROLE(), address(catalog));
+
+        // O catalogo precisa queimar selo pelo ledger na hora do resgate.
+        registry.grantRole(registry.RELAYER_ROLE(), address(catalog));
+
+        // A peca de tempo de casa confere o total de carimbos antes de subir
+        // de nivel -- por isso precisa saber onde o ledger mora.
+        bonus.setStampLedger(ledger);
 
         points.createPointType(PONTO_CIDADE, "Ponto da Cidade", PointsVault.Scope.City, 1);
 
@@ -53,5 +64,6 @@ contract DeployLoyalty is ScaffoldETHDeploy {
         deployments.push(Deployment("StampLedger", address(ledger)));
         deployments.push(Deployment("DiscountNFT", address(discount)));
         deployments.push(Deployment("BonusNFT", address(bonus)));
+        deployments.push(Deployment("RewardCatalog", address(catalog)));
     }
 }

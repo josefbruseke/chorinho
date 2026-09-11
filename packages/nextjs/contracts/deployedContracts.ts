@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     EstablishmentRegistry: {
-      address: "0x196dbcbb54b8ec4958c959d8949ebfe87ac2aaaf",
+      address: "0x49b8e3b089d4ebf9f37b1da9b839ec013c2cd8c9",
       abi: [
         {
           type: "constructor",
@@ -704,10 +704,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 6,
+      deployedOnBlock: 11,
     },
     DiscountNFT: {
-      address: "0xd04ff4a75edd737a73e92b2f2274cb887d96e110",
+      address: "0xdbd296711ec8ef9aacb623ee3f1c0922dce0d7b2",
       abi: [
         {
           type: "constructor",
@@ -1942,10 +1942,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 10,
+      deployedOnBlock: 13,
     },
     BonusNFT: {
-      address: "0xc6b8fbf96cf7bbe45576417ec2163acecfa88ecc",
+      address: "0xdfd787c807dea8d7e53311b779bc0c6a4704d286",
       abi: [
         {
           type: "constructor",
@@ -1957,6 +1957,19 @@ const deployedContracts = {
             },
           ],
           stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "MAX_TIER",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint8",
+              internalType: "uint8",
+            },
+          ],
+          stateMutability: "view",
         },
         {
           type: "function",
@@ -1975,6 +1988,30 @@ const deployedContracts = {
           ],
           outputs: [],
           stateMutability: "pure",
+        },
+        {
+          type: "function",
+          name: "badgeOf",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "customer",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
         },
         {
           type: "function",
@@ -2007,6 +2044,25 @@ const deployedContracts = {
           ],
           outputs: [],
           stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "establishmentIdOf",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
         },
         {
           type: "function",
@@ -2064,6 +2120,40 @@ const deployedContracts = {
               name: "routeId",
               type: "uint256",
               internalType: "uint256",
+            },
+            {
+              name: "uri",
+              type: "string",
+              internalType: "string",
+            },
+          ],
+          outputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "mintOrUpgrade",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "to",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "tier",
+              type: "uint8",
+              internalType: "uint8",
             },
             {
               name: "uri",
@@ -2215,6 +2305,50 @@ const deployedContracts = {
         },
         {
           type: "function",
+          name: "setStampLedger",
+          inputs: [
+            {
+              name: "ledger",
+              type: "address",
+              internalType: "contract StampLedger",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "setTierThresholds",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "thresholds",
+              type: "uint256[6]",
+              internalType: "uint256[6]",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "stampLedger",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "contract StampLedger",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
           name: "supportsInterface",
           inputs: [
             {
@@ -2241,6 +2375,73 @@ const deployedContracts = {
               name: "",
               type: "string",
               internalType: "string",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "tierDoCliente",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "customer",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint8",
+              internalType: "uint8",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "tierOf",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint8",
+              internalType: "uint8",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "tierThresholds",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "thresholds",
+              type: "uint256",
+              internalType: "uint256",
             },
           ],
           stateMutability: "view",
@@ -2339,6 +2540,62 @@ const deployedContracts = {
         },
         {
           type: "event",
+          name: "BadgeMinted",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "to",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "tier",
+              type: "uint8",
+              indexed: false,
+              internalType: "uint8",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "BadgeUpgraded",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "fromTier",
+              type: "uint8",
+              indexed: false,
+              internalType: "uint8",
+            },
+            {
+              name: "toTier",
+              type: "uint8",
+              indexed: false,
+              internalType: "uint8",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
           name: "BatchMetadataUpdate",
           inputs: [
             {
@@ -2390,6 +2647,38 @@ const deployedContracts = {
               type: "uint256",
               indexed: false,
               internalType: "uint256",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "StampLedgerSet",
+          inputs: [
+            {
+              name: "ledger",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "TierThresholdsSet",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "thresholds",
+              type: "uint256[6]",
+              indexed: false,
+              internalType: "uint256[6]",
             },
           ],
           anonymous: false,
@@ -2524,6 +2813,42 @@ const deployedContracts = {
         },
         {
           type: "error",
+          name: "InvalidTier",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "LedgerNotSet",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NotAdmin",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NotAnUpgrade",
+          inputs: [
+            {
+              name: "currentTier",
+              type: "uint8",
+              internalType: "uint8",
+            },
+            {
+              name: "requestedTier",
+              type: "uint8",
+              internalType: "uint8",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "NotEstablishmentOwner",
+          inputs: [],
+        },
+        {
+          type: "error",
           name: "NotRelayer",
           inputs: [],
         },
@@ -2537,12 +2862,28 @@ const deployedContracts = {
           name: "SoulboundTransferNotAllowed",
           inputs: [],
         },
+        {
+          type: "error",
+          name: "TierNotEarned",
+          inputs: [
+            {
+              name: "lifetimeStamps",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "required",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+        },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 10,
+      deployedOnBlock: 15,
     },
     SubscriptionManager: {
-      address: "0x82c6d3ed4cd33d8ec1e51d0b5cc1d822eaa0c3dc",
+      address: "0x067c804bb006836469379d4a2a69a81803bd1f45",
       abi: [
         {
           type: "constructor",
@@ -2963,10 +3304,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 7,
+      deployedOnBlock: 12,
     },
     PointsVault: {
-      address: "0x05b4cb126885fb10464fdd12666feb25e2563b76",
+      address: "0x45009dd3abbe29db54fc5d893ceaa98a624882df",
       abi: [
         {
           type: "constructor",
@@ -3879,10 +4220,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 10,
+      deployedOnBlock: 15,
     },
     StampLedger: {
-      address: "0x2a264f26859166c5bf3868a54593ee716aebc848",
+      address: "0xf56aa3aceddf88ab12e494d0b96da3c09a5d264e",
       abi: [
         {
           type: "constructor",
@@ -4683,7 +5024,444 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 7,
+      deployedOnBlock: 15,
+    },
+    RewardCatalog: {
+      address: "0x6d014319e0f36651997697c98da594c7cf235fa4",
+      abi: [
+        {
+          type: "constructor",
+          inputs: [
+            {
+              name: "_registry",
+              type: "address",
+              internalType: "contract EstablishmentRegistry",
+            },
+            {
+              name: "_stampLedger",
+              type: "address",
+              internalType: "contract StampLedger",
+            },
+            {
+              name: "_pointsVault",
+              type: "address",
+              internalType: "contract PointsVault",
+            },
+          ],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "canClaim",
+          inputs: [
+            {
+              name: "rewardId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "customer",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "claim",
+          inputs: [
+            {
+              name: "rewardId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "customer",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "claimRef",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "createReward",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "stampCost",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "pointTypeId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "pointCost",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "startTime",
+              type: "uint64",
+              internalType: "uint64",
+            },
+            {
+              name: "endTime",
+              type: "uint64",
+              internalType: "uint64",
+            },
+            {
+              name: "maxRedemptions",
+              type: "uint32",
+              internalType: "uint32",
+            },
+            {
+              name: "metadataHash",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          outputs: [
+            {
+              name: "rewardId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "pointsVault",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "contract PointsVault",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "registry",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "contract EstablishmentRegistry",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "remainingRedemptions",
+          inputs: [
+            {
+              name: "rewardId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "rewards",
+          inputs: [
+            {
+              name: "rewardId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "stampCost",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "pointTypeId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "pointCost",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "startTime",
+              type: "uint64",
+              internalType: "uint64",
+            },
+            {
+              name: "endTime",
+              type: "uint64",
+              internalType: "uint64",
+            },
+            {
+              name: "maxRedemptions",
+              type: "uint32",
+              internalType: "uint32",
+            },
+            {
+              name: "redeemed",
+              type: "uint32",
+              internalType: "uint32",
+            },
+            {
+              name: "active",
+              type: "bool",
+              internalType: "bool",
+            },
+            {
+              name: "metadataHash",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "setRewardActive",
+          inputs: [
+            {
+              name: "rewardId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "active",
+              type: "bool",
+              internalType: "bool",
+            },
+            {
+              name: "maxRedemptions",
+              type: "uint32",
+              internalType: "uint32",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "stampLedger",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "contract StampLedger",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "usedClaimRef",
+          inputs: [
+            {
+              name: "claimRef",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "event",
+          name: "RewardClaimed",
+          inputs: [
+            {
+              name: "rewardId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "customer",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "stampCost",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+            {
+              name: "pointCost",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+            {
+              name: "claimRef",
+              type: "bytes32",
+              indexed: false,
+              internalType: "bytes32",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "RewardCreated",
+          inputs: [
+            {
+              name: "rewardId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "stampCost",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+            {
+              name: "pointCost",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "RewardUpdated",
+          inputs: [
+            {
+              name: "rewardId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "active",
+              type: "bool",
+              indexed: false,
+              internalType: "bool",
+            },
+            {
+              name: "maxRedemptions",
+              type: "uint32",
+              indexed: false,
+              internalType: "uint32",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "error",
+          name: "ClaimAlreadyProcessed",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "FreeRewardNotAllowed",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NotEstablishmentOwner",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NotOperator",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "RewardEnded",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "RewardInactive",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "RewardNotStarted",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "RewardSoldOut",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "UnknownReward",
+          inputs: [],
+        },
+      ],
+      inheritedFunctions: {},
+      deployedOnBlock: 15,
     },
   },
 } as const;

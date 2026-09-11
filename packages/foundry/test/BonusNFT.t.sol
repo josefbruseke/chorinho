@@ -36,18 +36,19 @@ contract BonusNFTTest is Test {
     function test_MintByRelayer() public {
         vm.prank(relayer);
         vm.expectEmit(true, true, true, false);
-        emit BonusMinted(0, user, ROUTE_ID);
+        emit BonusMinted(1, user, ROUTE_ID);
         uint256 tokenId = bonus.mintBonus(user, ROUTE_ID, "ipfs://route-7-badge");
 
-        assertEq(tokenId, 0);
+        // Os ids comecam em 1 para que zero signifique "sem peca" em badgeOf.
+        assertEq(tokenId, 1);
         assertEq(bonus.ownerOf(tokenId), user);
         assertEq(bonus.tokenURI(tokenId), "ipfs://route-7-badge");
         assertEq(bonus.routeIdOf(tokenId), ROUTE_ID);
         assertEq(bonus.balanceOf(user), 1);
 
-        // ids are sequential
+        // ids sao sequenciais
         vm.prank(relayer);
-        assertEq(bonus.mintBonus(other, ROUTE_ID, "ipfs://x"), 1);
+        assertEq(bonus.mintBonus(other, ROUTE_ID, "ipfs://x"), 2);
     }
 
     function test_Mint_RevertsForNonRelayer() public {

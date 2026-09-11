@@ -78,19 +78,19 @@ const CouponDetail: NextPage = () => {
       <StatusPill status={status} large />
 
       {/* QR area: white card no matter the theme so scanners always read it */}
-      <div className="relative bg-white rounded-box p-6 shadow-md border border-base-300">
+      <div className="relative bg-white rounded-3xl p-7 shadow-xs border border-base-300">
         <QRCodeSVG value={encodeCouponQr({ owner: address, tokenId: campaign.id })} size={260} marginSize={1} />
         {status !== "valid" && (
-          <div className="absolute inset-0 rounded-box bg-white/95 flex flex-col items-center justify-center gap-2 text-center p-6">
+          <div className="absolute inset-0 rounded-3xl bg-white/95 flex flex-col items-center justify-center gap-2 text-center p-6">
             {status === "used" ? (
               <>
                 <MinusCircleIcon className="h-14 w-14 text-neutral opacity-60" />
-                <p className="m-0 font-bold text-neutral">Este cupom já foi usado.</p>
+                <p className="m-0 font-bold text-neutral">Este passe já foi utilizado.</p>
               </>
             ) : (
               <>
                 <XCircleIcon className="h-14 w-14 text-error" />
-                <p className="m-0 font-bold text-error">Este cupom expirou.</p>
+                <p className="m-0 font-bold text-error">Este passe expirou.</p>
               </>
             )}
           </div>
@@ -99,17 +99,18 @@ const CouponDetail: NextPage = () => {
 
       {status === "valid" ? (
         <p className="m-0 text-center opacity-70 text-sm max-w-xs">
-          Mostre esta tela no caixa do restaurante na hora de pedir. O atendente escaneia e confirma na hora.
+          Apresente esta tela no balcão ou caixa do estabelecimento na hora de pedir. O atendente escaneia e valida na
+          hora.
         </p>
       ) : (
-        <Link href="/" className="btn btn-primary">
-          Ver outras ofertas
+        <Link href="/" className="btn btn-primary rounded-xl">
+          Ver outros estabelecimentos
         </Link>
       )}
 
       {owned && owned.balance > 1n && status === "valid" && (
-        <span className="badge badge-ghost">
-          Você tem {owned.balance.toString()} cupons desta oferta — cada uso desconta um.
+        <span className="badge badge-neutral font-semibold">
+          Você tem {owned.balance.toString()} passes desta oferta — cada uso desconta um.
         </span>
       )}
     </div>

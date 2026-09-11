@@ -7,6 +7,7 @@ import type { NextPage } from "next";
 import { QrCodeIcon, ShoppingBagIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { ArrowLeftIcon, BoltIcon, GiftIcon, MapPinIcon } from "@heroicons/react/24/solid";
 import { CampaignImage } from "~~/components/vitrine/CampaignImage";
+import { CategoryIcon } from "~~/components/vitrine/CategoryIcon";
 import { Countdown } from "~~/components/vitrine/Countdown";
 import { MintPanel } from "~~/components/vitrine/MintPanel";
 import { VerifiedBadge } from "~~/components/vitrine/VerifiedBadge";
@@ -21,9 +22,9 @@ import {
 } from "~~/utils/vitrine";
 
 const HOW_IT_WORKS = [
-  { Icon: ShoppingBagIcon, title: "Compre o cupom", text: "Ele fica salvo em Meus cupons, na sua conta." },
-  { Icon: QrCodeIcon, title: "Mostre o QR code", text: "Na hora de pedir, apresente a tela do cupom no caixa." },
-  { Icon: SparklesIcon, title: "Leve em dobro", text: "O restaurante confirma na hora e você aproveita 2x." },
+  { Icon: ShoppingBagIcon, title: "Adquira o passe", text: "Ele fica salvo em Meus passes, na sua conta ou carteira." },
+  { Icon: QrCodeIcon, title: "Apresente no balcão", text: "Na hora de pagar ou pedir, mostre o QR code na tela." },
+  { Icon: SparklesIcon, title: "Receba o chorinho", text: "O atendente valida na hora e você aproveita sua cortesia." },
 ];
 
 const CampaignDetail: NextPage = () => {
@@ -49,7 +50,7 @@ const CampaignDetail: NextPage = () => {
       <div className="text-center py-24 flex flex-col items-center gap-4">
         <p className="text-lg opacity-70 m-0">Esta oferta não existe ou ainda não foi publicada.</p>
         <Link href="/" className="btn btn-primary btn-sm">
-          Ver restaurantes
+          Ver estabelecimentos
         </Link>
       </div>
     );
@@ -64,15 +65,16 @@ const CampaignDetail: NextPage = () => {
     <div className="max-w-5xl w-full mx-auto px-5 py-8">
       <Link href="/" className="btn btn-ghost btn-sm gap-1 mb-4 -ml-2">
         <ArrowLeftIcon className="h-4 w-4" />
-        Restaurantes
+        Ver estabelecimentos
       </Link>
 
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Artwork */}
-        <div className="relative h-72 lg:h-96 rounded-box border border-base-300 overflow-hidden">
+        <div className="relative h-72 lg:h-96 rounded-xl border border-base-300 overflow-hidden">
           <CampaignImage campaign={campaign} />
-          <div className="absolute bottom-3 right-3 w-12 h-12 rounded-full bg-primary text-primary-content flex items-center justify-center font-black shadow-md">
-            2x
+          <div className="absolute bottom-3 right-3 px-3 py-1.5 rounded-lg bg-base-100/95 text-base-content border border-base-300 flex items-center gap-1.5 font-bold text-xs uppercase tracking-wider backdrop-blur-xs shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-primary" />
+            Chorinho
           </div>
         </div>
 
@@ -97,8 +99,9 @@ const CampaignDetail: NextPage = () => {
                 </span>
               </>
             ) : (
-              <span className="text-xs uppercase tracking-wide opacity-60">
-                {cat.emoji} {cat.label}
+              <span className="text-xs uppercase tracking-wide opacity-60 inline-flex items-center gap-1">
+                <CategoryIcon iconKey={cat.iconKey} className="w-3.5 h-3.5" />
+                <span>{cat.label}</span>
               </span>
             )}
             <h1 className="text-3xl font-extrabold mt-2 mb-0 text-balance">{campaignDisplayName(campaign)}</h1>
@@ -167,7 +170,7 @@ const CampaignDetail: NextPage = () => {
           {HOW_IT_WORKS.map(({ Icon, title, text }, i) => (
             <div
               key={title}
-              className="card bg-base-100 border border-base-300 p-5 flex-row sm:flex-col gap-4 items-start"
+              className="card bg-base-100 border border-base-300 rounded-2xl shadow-xs p-5 flex-row sm:flex-col gap-4 items-start"
             >
               <div className="relative shrink-0">
                 <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">

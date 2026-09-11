@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { useFetchNativeCurrencyPrice } from "@scaffold-ui/hooks";
 import { hardhat } from "viem/chains";
-import { CurrencyDollarIcon, HeartIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { CurrencyDollarIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { BrandLogo } from "~~/components/BrandLogo";
 import { SwitchTheme } from "~~/components/SwitchTheme";
 import { Faucet } from "~~/components/scaffold-eth";
@@ -43,17 +43,19 @@ export const Footer = () => {
         </div>
       </div>
       <div className="w-full max-w-5xl mx-auto px-5">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-sm border-t border-base-300 pt-5">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm border-t border-base-300 pt-6">
+          <div className="flex items-center gap-2.5">
             <BrandLogo className="w-6 h-6" />
-            <span className="font-bold">Floripa em Dobro</span>
+            <div className="flex flex-col">
+              <span className="font-extrabold tracking-tight">Chorinho</span>
+              <span className="text-[11px] opacity-65">Aquele agrado que só o comércio de bairro sabe dar</span>
+            </div>
           </div>
-          <p className="m-0 flex items-center gap-1 opacity-70">
-            Feito com <HeartIcon className="inline-block h-4 w-4" /> em Florianópolis
-          </p>
-          <Link href="/parceiro" className="link font-semibold">
-            Quero cadastrar meu restaurante
-          </Link>
+          <div className="flex items-center gap-4 text-xs">
+            <Link href="/parceiro" className="font-semibold hover:text-primary transition-colors">
+              Cadastrar meu estabelecimento
+            </Link>
+          </div>
         </div>
       </div>
     </div>

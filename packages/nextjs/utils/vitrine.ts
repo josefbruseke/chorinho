@@ -6,12 +6,19 @@ import { formatEther } from "viem";
  * has no image, so every card looks intentional without any hosted assets.
  */
 export const CATEGORIES = [
-  { id: 0, label: "Gastronomia", emoji: "🍽️", gradient: "bg-linear-to-br from-orange-400 to-rose-500" },
-  { id: 1, label: "Lazer e Turismo", emoji: "⛵", gradient: "bg-linear-to-br from-sky-400 to-blue-600" },
-  { id: 2, label: "Esportes", emoji: "🏄", gradient: "bg-linear-to-br from-emerald-400 to-teal-600" },
-  { id: 3, label: "Cultura", emoji: "🎶", gradient: "bg-linear-to-br from-violet-400 to-purple-600" },
-  { id: 4, label: "Vestuário", emoji: "👕", gradient: "bg-linear-to-br from-amber-400 to-orange-600" },
+  { id: 0, label: "Cafés & Gastronomia", iconKey: "cafe", gradient: "bg-linear-to-br from-amber-800 to-stone-900" },
+  { id: 1, label: "Lazer & Experiências", iconKey: "lazer", gradient: "bg-linear-to-br from-orange-800 to-amber-950" },
+  {
+    id: 2,
+    label: "Barbearias & Estética",
+    iconKey: "barbearia",
+    gradient: "bg-linear-to-br from-stone-800 to-stone-950",
+  },
+  { id: 3, label: "Cultura & Livros", iconKey: "cultura", gradient: "bg-linear-to-br from-amber-900 to-stone-900" },
+  { id: 4, label: "Mercados & Lojas", iconKey: "mercado", gradient: "bg-linear-to-br from-amber-800 to-orange-950" },
 ] as const;
+
+export type CategoryIconKey = (typeof CATEGORIES)[number]["iconKey"];
 
 export const categoryInfo = (id: number) => CATEGORIES[id] ?? CATEGORIES[0];
 

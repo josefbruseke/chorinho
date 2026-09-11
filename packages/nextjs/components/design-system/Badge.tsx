@@ -19,10 +19,10 @@ export const Badge: React.FC<BadgeProps> = ({
   }[size];
 
   const variantStyles = {
-    chorinho: "bg-[#fef3c7] text-[#92400e] border border-[#fde68a]",
-    verified: "bg-[#dcfce7] text-[#15803d] border border-[#bbf7d0]",
-    terracotta: "bg-[#ffedd5] text-[#c2410c] border border-[#fed7aa]",
-    neutral: "bg-[#f4ede2] text-[#695343] border border-[#ebe3d5]",
+    chorinho: "bg-honey-soft text-honey-ink border border-honey-edge",
+    verified: "bg-success/12 text-success border border-success/30",
+    terracotta: "bg-primary/10 text-primary border border-primary/25",
+    neutral: "bg-craft text-base-content/70 border border-base-300",
     warning: "bg-red-50 text-red-700 border border-red-200",
   }[variant];
 

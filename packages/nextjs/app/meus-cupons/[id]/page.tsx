@@ -78,10 +78,10 @@ const CouponDetail: NextPage = () => {
       <StatusPill status={status} large />
 
       {/* QR area: white card no matter the theme so scanners always read it */}
-      <div className="relative bg-white rounded-3xl p-7 shadow-xs border border-base-300">
+      <div className="relative bg-base-100 rounded-3xl p-7 shadow-xs border border-base-300">
         <QRCodeSVG value={encodeCouponQr({ owner: address, tokenId: campaign.id })} size={260} marginSize={1} />
         {status !== "valid" && (
-          <div className="absolute inset-0 rounded-3xl bg-white/95 flex flex-col items-center justify-center gap-2 text-center p-6">
+          <div className="absolute inset-0 rounded-3xl bg-base-100/95 flex flex-col items-center justify-center gap-2 text-center p-6">
             {status === "used" ? (
               <>
                 <MinusCircleIcon className="h-14 w-14 text-neutral opacity-60" />

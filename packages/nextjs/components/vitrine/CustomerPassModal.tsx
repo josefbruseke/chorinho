@@ -47,7 +47,7 @@ export const CustomerPassModal: React.FC = () => {
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="btn btn-primary shadow-xl rounded-full px-5 py-3 h-auto gap-2.5 font-extrabold text-sm border-2 border-white/20 hover:scale-105 active:scale-95 transition-all flex items-center"
+          className="btn btn-primary shadow-xl rounded-full px-5 py-3 h-auto gap-2.5 font-extrabold text-sm border-2 border-primary-content/25 hover:scale-105 active:scale-95 transition-all flex items-center"
         >
           <QrCodeIcon className="w-5 h-5 stroke-[2.5]" />
           <span>Meu Passe de Balcão</span>
@@ -62,9 +62,9 @@ export const CustomerPassModal: React.FC = () => {
       {/* Modal Interativo do Passe do Cliente */}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-          <div className="relative w-full max-w-sm bg-white rounded-3xl border border-[#ebe3d5] shadow-2xl overflow-hidden animate-scale-up">
+          <div className="relative w-full max-w-sm bg-base-100 rounded-3xl border border-base-300 shadow-2xl overflow-hidden animate-scale-up">
             {/* Header do Bilhete */}
-            <div className="p-5 bg-[#fdfbf7] border-b border-[#ebe3d5] flex items-center justify-between">
+            <div className="p-5 bg-kraft border-b border-base-300 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
                   <TicketIcon className="w-5 h-5" />
@@ -100,12 +100,12 @@ export const CustomerPassModal: React.FC = () => {
                   </p>
 
                   {/* QR Code de Alta Legibilidade com Moldura Clara */}
-                  <div className="p-4 bg-white rounded-2xl border-2 border-dashed border-[#ebe3d5] shadow-xs">
+                  <div className="p-4 bg-base-100 rounded-2xl border-2 border-dashed border-base-300 shadow-xs">
                     <QRCodeSVG value={qrValue} size={180} level="M" marginSize={1} />
                   </div>
 
                   {/* Código Numérico Alternativo (PIN) */}
-                  <div className="w-full bg-[#fdfbf7] p-3 rounded-2xl border border-[#ebe3d5] flex items-center justify-between">
+                  <div className="w-full bg-kraft p-3 rounded-2xl border border-base-300 flex items-center justify-between">
                     <div className="text-left">
                       <span className="text-[10px] font-bold uppercase tracking-wider text-secondary/50 block">
                         Código do Balcão
@@ -133,7 +133,7 @@ export const CustomerPassModal: React.FC = () => {
                   </div>
 
                   {/* Status das Cartelas Ativas */}
-                  <div className="w-full text-left pt-2 border-t border-[#ebe3d5]">
+                  <div className="w-full text-left pt-2 border-t border-base-300">
                     <div className="flex items-center justify-between text-xs font-bold text-secondary mb-2">
                       <span className="flex items-center gap-1">
                         <CheckBadgeIcon className="w-4 h-4 text-primary" />
@@ -143,7 +143,7 @@ export const CustomerPassModal: React.FC = () => {
                     </div>
 
                     {coupons.length === 0 ? (
-                      <div className="p-3 rounded-xl bg-[#fbf8f2] text-xs text-secondary/70 text-center">
+                      <div className="p-3 rounded-xl bg-base-200 text-xs text-secondary/70 text-center">
                         Você ainda não possui carimbos. Escolha um estabelecimento e inicie sua primeira cartela!
                       </div>
                     ) : (
@@ -151,7 +151,7 @@ export const CustomerPassModal: React.FC = () => {
                         {coupons.map(c => (
                           <div
                             key={c.campaign.id.toString()}
-                            className="p-2 rounded-xl bg-[#fdfbf7] border border-[#ebe3d5] flex items-center justify-between text-xs"
+                            className="p-2 rounded-xl bg-kraft border border-base-300 flex items-center justify-between text-xs"
                           >
                             <span className="font-bold text-secondary truncate max-w-[170px]">
                               {c.campaign.metadata?.establishment ?? "Comércio Local"}
@@ -169,7 +169,7 @@ export const CustomerPassModal: React.FC = () => {
             </div>
 
             {/* Rodapé */}
-            <div className="p-4 bg-[#fdfbf7] border-t border-[#ebe3d5] text-center">
+            <div className="p-4 bg-kraft border-t border-base-300 text-center">
               <span className="text-[11px] font-medium text-secondary/60 flex items-center justify-center gap-1">
                 <SparklesIcon className="w-3.5 h-3.5 text-accent" />
                 Válido em todos os balcões credenciados do bairro

@@ -25,7 +25,7 @@ export const CampaignImage = ({ campaign, className = "" }: { campaign: Campaign
 
   return (
     <div className={`${cat.gradient} w-full h-full flex items-center justify-center ${className}`}>
-      <CategoryIcon iconKey={cat.iconKey} className="w-14 h-14 text-[#fbf8f2]/70" />
+      <CategoryIcon iconKey={cat.iconKey} className="w-14 h-14 text-white/70" />
     </div>
   );
 };

@@ -21,7 +21,7 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseStyles =
-    "inline-flex items-center justify-center font-bold rounded-2xl transition-all duration-150 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-[#c2410c] focus:ring-offset-2";
+    "inline-flex items-center justify-center font-bold rounded-2xl transition-all duration-150 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2";
 
   const sizeStyles = {
     sm: "px-3 py-1.5 text-xs gap-1.5",
@@ -31,15 +31,15 @@ export const Button: React.FC<ButtonProps> = ({
 
   const variantStyles = {
     // Terracota acolhedor
-    primary: "bg-[#c2410c] hover:bg-[#9a3412] text-white shadow-sm hover:shadow-md",
+    primary: "bg-primary hover:brightness-90 text-primary-content shadow-sm hover:shadow-md",
     // Espresso torrado escuro
-    secondary: "bg-[#261c14] hover:bg-[#38291e] text-[#fbf8f2] shadow-sm",
+    secondary: "bg-secondary hover:brightness-125 text-secondary-content shadow-sm",
     // Âmbar / Mel do agrado
-    accent: "bg-[#d97706] hover:bg-[#b45309] text-white shadow-sm",
+    accent: "bg-accent hover:brightness-90 text-accent-content shadow-sm",
     // Borda artesanal suave
-    outline: "border-2 border-[#ebe3d5] hover:border-[#c2410c] bg-transparent text-[#261c14] hover:bg-[#f4ede2]/40",
+    outline: "border-2 border-base-300 hover:border-primary bg-transparent text-secondary hover:bg-craft/40",
     // Ghost sem fundo
-    ghost: "bg-transparent hover:bg-[#ebe3d5]/40 text-[#261c14]",
+    ghost: "bg-transparent hover:bg-base-300/40 text-secondary",
   }[variant];
 
   return (

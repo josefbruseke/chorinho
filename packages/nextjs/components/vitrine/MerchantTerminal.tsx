@@ -7,7 +7,6 @@ import {
   BuildingStorefrontIcon,
   CheckBadgeIcon,
   CheckCircleIcon,
-  ClockIcon,
   SparklesIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
@@ -27,19 +26,13 @@ export const MerchantTerminal: React.FC = () => {
   const [selectedTokenId, setSelectedTokenId] = useState<bigint>(0n);
   const [redeemedStatus, setRedeemedStatus] = useState<string | null>(null);
 
-  // Simulated attendants log
-  const [recentLogs, setRecentLogs] = useState<Array<{ name: string; action: string; time: string }>>([
-    { name: "Café do Bairro", action: "+1 Carimbo registrado", time: "Há 4 min" },
-    { name: "Padaria Trigo Santo", action: "Chorinho da Casa resgatado", time: "Há 18 min" },
-  ]);
-
   const targetCampaign = campaigns.find(c => c.id === selectedTokenId) ?? campaigns[0];
 
-  // Resolve customer address: if input is a hex address use it; if it is a PIN or empty in test mode, fallback to user address or test anvil address
+  // Sem fallback: um endereco invalido nao pode virar silenciosamente uma carteira
+  // qualquer. Antes caia num endereco fixo do anvil, o que em producao creditaria
+  // o carimbo para a pessoa errada. Undefined mantem as leituras desabilitadas.
   const resolvedCustomerAddress =
-    customerInput.startsWith("0x") && customerInput.length === 42
-      ? (customerInput as `0x${string}`)
-      : (address ?? "0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
+    customerInput.startsWith("0x") && customerInput.length === 42 ? (customerInput as `0x${string}`) : undefined;
 
   const { data: customerBalance, refetch: refetchBalance } = useScaffoldReadContract({
     contractName: "DiscountNFT",
@@ -62,14 +55,6 @@ export const MerchantTerminal: React.FC = () => {
         value: targetCampaign.price,
       });
       await refetchBalance();
-      setRecentLogs(prev => [
-        {
-          name: targetCampaign.metadata?.establishment ?? "Balcão Local",
-          action: `+1 Carimbo creditado para ${resolvedCustomerAddress.slice(0, 6)}...`,
-          time: "Agora",
-        },
-        ...prev.slice(0, 4),
-      ]);
       setRedeemedStatus("+1 Carimbo adicionado na cartela do cliente com sucesso!");
     } catch (e) {
       console.error(e);
@@ -78,7 +63,7 @@ export const MerchantTerminal: React.FC = () => {
 
   // Action 2: Redeem the courtesy reward (burn 1 unit on-chain)
   const handleRedeem = async () => {
-    if (!targetCampaign) return;
+    if (!targetCampaign || !resolvedCustomerAddress) return;
     const ref = keccak256(stringToHex(`${resolvedCustomerAddress}-${targetCampaign.id}-${Date.now()}`));
     try {
       await writeDiscount({
@@ -86,32 +71,22 @@ export const MerchantTerminal: React.FC = () => {
         args: [resolvedCustomerAddress, targetCampaign.id, 1n, ref],
       });
       await refetchBalance();
-      setRecentLogs(prev => [
-        {
-          name: targetCampaign.metadata?.establishment ?? "Balcão Local",
-          action: `Chorinho entregue: ${campaignDisplayName(targetCampaign)}`,
-          time: "Agora",
-        },
-        ...prev.slice(0, 4),
-      ]);
       setRedeemedStatus(`Chorinho entregue e baixado na blockchain: ${campaignDisplayName(targetCampaign)}!`);
     } catch (e) {
       console.error(e);
     }
   };
 
+  // Preenche com a propria carteira do lojista para teste de balcao. Sem carteira
+  // conectada nao ha o que preencher -- nunca um endereco fixo de rede local.
   const handleTestClient = () => {
-    if (address) {
-      setCustomerInput(address);
-    } else {
-      setCustomerInput("0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
-    }
+    if (address) setCustomerInput(address);
   };
 
   return (
     <div className="w-full max-w-4xl mx-auto py-6 px-4">
       {/* Header do Terminal do Balcão */}
-      <div className="bg-gradient-to-r from-secondary to-[#38291e] text-secondary-content rounded-3xl p-6 sm:p-8 shadow-md mb-6">
+      <div className="bg-gradient-to-r from-secondary to-neutral text-secondary-content rounded-3xl p-6 sm:p-8 shadow-md mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/20 text-accent border border-accent/30 text-xs font-black uppercase tracking-wider mb-2">
@@ -146,7 +121,7 @@ export const MerchantTerminal: React.FC = () => {
         {/* Coluna da Esquerda: Seleção de Balcão e Digitação do Cliente */}
         <div className="md:col-span-7 space-y-5">
           {/* Seletor de Estabelecimento */}
-          <div className="bg-white rounded-3xl border border-[#ebe3d5] p-5 shadow-xs">
+          <div className="bg-base-100 rounded-3xl border border-base-300 p-5 shadow-xs">
             <label className="block text-xs font-black uppercase tracking-wider text-secondary/60 mb-2">
               1. Selecione o Seu Balcão:
             </label>
@@ -166,7 +141,7 @@ export const MerchantTerminal: React.FC = () => {
                     className={`p-3 rounded-2xl border text-left transition-all flex items-center justify-between ${
                       isSelected
                         ? "border-primary bg-primary/10 text-secondary font-bold shadow-xs"
-                        : "border-[#ebe3d5] bg-[#fdfbf7] hover:border-primary/40 text-secondary/80"
+                        : "border-base-300 bg-kraft hover:border-primary/40 text-secondary/80"
                     }`}
                   >
                     <div className="truncate pr-2">
@@ -183,7 +158,7 @@ export const MerchantTerminal: React.FC = () => {
           </div>
 
           {/* Identificação do Cliente */}
-          <div className="bg-white rounded-3xl border border-[#ebe3d5] p-5 shadow-xs space-y-4">
+          <div className="bg-base-100 rounded-3xl border border-base-300 p-5 shadow-xs space-y-4">
             <div className="flex items-center justify-between">
               <label className="text-xs font-black uppercase tracking-wider text-secondary/60">
                 2. Código do Cliente no Balcão:
@@ -207,7 +182,7 @@ export const MerchantTerminal: React.FC = () => {
                 className={`flex-1 py-2 text-xs font-bold rounded-xl border transition-all ${
                   inputMode === "keypad"
                     ? "bg-primary text-primary-content border-primary"
-                    : "bg-[#fdfbf7] border-[#ebe3d5] text-secondary/70"
+                    : "bg-kraft border-base-300 text-secondary/70"
                 }`}
               >
                 Teclado Numérico Rápido
@@ -218,7 +193,7 @@ export const MerchantTerminal: React.FC = () => {
                 className={`flex-1 py-2 text-xs font-bold rounded-xl border transition-all ${
                   inputMode === "direct"
                     ? "bg-primary text-primary-content border-primary"
-                    : "bg-[#fdfbf7] border-[#ebe3d5] text-secondary/70"
+                    : "bg-kraft border-base-300 text-secondary/70"
                 }`}
               >
                 Endereço / Carteira
@@ -245,7 +220,7 @@ export const MerchantTerminal: React.FC = () => {
                     setCustomerInput(e.target.value);
                     setRedeemedStatus(null);
                   }}
-                  className="input input-bordered w-full rounded-2xl text-xs font-mono bg-[#fdfbf7] border-[#ebe3d5]"
+                  className="input input-bordered w-full rounded-2xl text-xs font-mono bg-kraft border-base-300"
                 />
               </div>
             )}
@@ -255,14 +230,14 @@ export const MerchantTerminal: React.FC = () => {
         {/* Coluna da Direita: Painel de Ações do Balcão */}
         <div className="md:col-span-5 space-y-5">
           {/* Status do Cliente Selecionado */}
-          <div className="bg-white rounded-3xl border border-[#ebe3d5] p-5 shadow-xs space-y-4">
-            <h3 className="font-serif font-black text-lg text-secondary m-0 border-b border-[#ebe3d5] pb-3">
+          <div className="bg-base-100 rounded-3xl border border-base-300 p-5 shadow-xs space-y-4">
+            <h3 className="font-serif font-black text-lg text-secondary m-0 border-b border-base-300 pb-3">
               Cartela do Cliente
             </h3>
 
             {targetCampaign && (
               <div className="space-y-3 text-xs">
-                <div className="p-3 rounded-2xl bg-[#fdfbf7] border border-[#ebe3d5] space-y-1">
+                <div className="p-3 rounded-2xl bg-kraft border border-base-300 space-y-1">
                   <div className="flex justify-between">
                     <span className="text-secondary/60">Local:</span>
                     <span className="font-bold text-secondary">
@@ -319,28 +294,9 @@ export const MerchantTerminal: React.FC = () => {
             )}
           </div>
 
-          {/* Histórico Recente de Atendimentos */}
-          <div className="bg-white rounded-3xl border border-[#ebe3d5] p-5 shadow-xs space-y-3">
-            <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-secondary/60">
-              <ClockIcon className="w-4 h-4" />
-              <span>Atendimentos de Hoje:</span>
-            </div>
-
-            <div className="space-y-2">
-              {recentLogs.map((log, i) => (
-                <div
-                  key={i}
-                  className="p-2.5 rounded-2xl bg-[#fdfbf7] border border-[#ebe3d5] text-xs flex items-center justify-between"
-                >
-                  <div>
-                    <span className="font-bold text-secondary block">{log.name}</span>
-                    <span className="text-[11px] text-primary font-semibold">{log.action}</span>
-                  </div>
-                  <span className="text-[10px] text-secondary/50 font-mono">{log.time}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* O historico de atendimentos foi removido: listava duas vendas fixas no
+              codigo ("Cafe do Bairro, ha 4 min") como se fossem de hoje. Volta lendo
+              a tabela `sales` do Supabase quando o PDV real existir (M4). */}
         </div>
       </div>
     </div>

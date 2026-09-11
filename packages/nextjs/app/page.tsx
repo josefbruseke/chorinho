@@ -6,13 +6,11 @@ import {
   BuildingStorefrontIcon,
   CheckIcon,
   MagnifyingGlassIcon,
-  MapPinIcon,
   PlusIcon,
   QrCodeIcon,
   ShoppingBagIcon,
   SparklesIcon,
   TicketIcon,
-  UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import { CheckBadgeIcon, SparklesIcon as SparklesSolidIcon } from "@heroicons/react/24/solid";
 import { CampaignCard } from "~~/components/vitrine/CampaignCard";
@@ -49,13 +47,6 @@ const HERO_STEPS = [
     title: "Ganhe o chorinho",
     text: "Completou a cartela? Resgate aquele agrado especial que só quem é de casa merece.",
   },
-];
-
-const HERO_METRICS = [
-  { label: "Comércios no bairro", value: "40+", Icon: BuildingStorefrontIcon },
-  { label: "Carimbos no balcão", value: "1.840+", Icon: CheckBadgeIcon },
-  { label: "100% Presencial", value: "Físico", Icon: MapPinIcon },
-  { label: "Vizinhos fiéis", value: "980+", Icon: UserGroupIcon },
 ];
 
 const Home: NextPage = () => {
@@ -107,10 +98,10 @@ const Home: NextPage = () => {
   return (
     <div className="flex flex-col items-center grow w-full pb-16">
       {/* Barra Superior de Modo do Aplicativo (App Navigation Control) */}
-      <div className="sticky top-16 z-30 w-full bg-white/95 backdrop-blur-md border-b border-[#ebe3d5] shadow-xs">
+      <div className="sticky top-16 z-30 w-full bg-base-100/95 backdrop-blur-md border-b border-base-300 shadow-xs">
         <div className="max-w-6xl mx-auto px-4 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-3">
           {/* Seletor de Abas Principais do App */}
-          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#fbf8f2] border border-[#ebe3d5] w-full sm:w-auto">
+          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-base-200 border border-base-300 w-full sm:w-auto">
             <button
               type="button"
               onClick={() => setActiveTab("store")}
@@ -172,7 +163,7 @@ const Home: NextPage = () => {
       {activeTab === "store" && (
         <>
           {/* Warm, Visual & Humanist Hero */}
-          <section className="w-full bg-gradient-to-b from-[#fbf8f2] via-white to-[#fbf8f2] border-b border-base-300 relative overflow-hidden">
+          <section className="w-full bg-gradient-to-b from-base-200 via-base-100 to-base-200 border-b border-base-300 relative overflow-hidden">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-b from-primary/10 via-accent/5 to-transparent rounded-full blur-3xl pointer-events-none" />
 
             <div className="max-w-5xl mx-auto px-5 pt-10 pb-14 text-center flex flex-col items-center relative z-10">
@@ -193,7 +184,7 @@ const Home: NextPage = () => {
               </p>
 
               {/* Interactive Hero Stamp Card Showcase */}
-              <div className="w-full max-w-xl mt-10 rounded-3xl border-2 border-[#ebe3d5] bg-gradient-to-br from-[#ffffff] via-[#fdfbf7] to-[#fbf8f2] p-6 sm:p-7 shadow-md text-left">
+              <div className="w-full max-w-xl mt-10 rounded-3xl border-2 border-base-300 bg-gradient-to-br from-base-100 via-kraft to-base-200 p-6 sm:p-7 shadow-md text-left">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-base-300/80 pb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shadow-xs border border-primary/20">
@@ -269,32 +260,16 @@ const Home: NextPage = () => {
                 )}
               </div>
 
-              {/* Metrics / Trust Bar */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-8 w-full max-w-3xl">
-                {HERO_METRICS.map(({ label, value, Icon }) => (
-                  <div
-                    key={label}
-                    className="flex items-center gap-3 p-3.5 rounded-2xl border border-base-300 bg-white/80 backdrop-blur-sm text-left shadow-2xs"
-                  >
-                    <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <span className="block font-serif font-black text-base sm:text-lg text-secondary leading-tight">
-                        {value}
-                      </span>
-                      <span className="text-[11px] text-base-content/70 font-semibold">{label}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              {/* A barra de numeros foi removida: exibia 40+ comercios, 1.840+ carimbos
+                  e 980+ vizinhos com valores fixos no codigo, enquanto o numero real e
+                  zero. Volta como dado de verdade quando /api/stats existir (M5). */}
 
               {/* 3 Steps Ribbon */}
               <div className="grid sm:grid-cols-3 gap-4 mt-10 w-full max-w-3xl">
                 {HERO_STEPS.map(({ step, Icon, title, text }) => (
                   <div
                     key={title}
-                    className="flex flex-col items-start text-left gap-1.5 p-5 rounded-2xl border border-base-300 bg-white shadow-xs hover:border-primary/40 transition-colors"
+                    className="flex flex-col items-start text-left gap-1.5 p-5 rounded-2xl border border-base-300 bg-base-100 shadow-xs hover:border-primary/40 transition-colors"
                   >
                     <div className="flex items-center justify-between w-full mb-1">
                       <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold">
@@ -418,7 +393,7 @@ const Home: NextPage = () => {
       {/* ABA 2: MINHAS CARTELAS & CARTEIRA DE FIDELIDADE */}
       {activeTab === "wallet" && (
         <section className="max-w-5xl w-full mx-auto px-5 py-8 space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#ebe3d5] pb-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-base-300 pb-5">
             <div>
               <span className="text-xs font-black uppercase tracking-wider text-primary">Minha Carteira</span>
               <h2 className="text-3xl font-serif font-black text-secondary m-0">
@@ -440,7 +415,7 @@ const Home: NextPage = () => {
           </div>
 
           {coupons.length === 0 ? (
-            <div className="text-center py-16 p-8 rounded-3xl border-2 border-dashed border-[#ebe3d5] bg-white space-y-3">
+            <div className="text-center py-16 p-8 rounded-3xl border-2 border-dashed border-base-300 bg-base-100 space-y-3">
               <TicketIcon className="w-12 h-12 text-primary/60 mx-auto" />
               <h3 className="font-serif font-bold text-xl text-secondary m-0">Você ainda não possui cartelas ativas</h3>
               <p className="text-xs text-secondary/70 max-w-sm mx-auto">
@@ -469,7 +444,7 @@ const Home: NextPage = () => {
           )}
 
           {redeemed.length > 0 && (
-            <div className="pt-6 border-t border-[#ebe3d5] space-y-3">
+            <div className="pt-6 border-t border-base-300 space-y-3">
               <h3 className="font-serif font-extrabold text-xl text-secondary m-0">
                 Chorinhos Já Resgatados no Balcão
               </h3>

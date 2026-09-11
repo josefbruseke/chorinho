@@ -1,4 +1,4 @@
-import { ABI_LEDGER } from "./abi";
+import { ABI_CATALOGO, ABI_LEDGER, ABI_PONTOS } from "./abi";
 import "server-only";
 import {
   BaseError,
@@ -205,3 +205,56 @@ export const erroDoContrato = (e: unknown) => {
   if (!(revert instanceof ContractFunctionRevertedError)) return undefined;
   return { nome: revert.data?.errorName, args: revert.data?.args as readonly unknown[] | undefined };
 };
+
+/** Saldo de uma classe de ponto da rede — o "ponto da cidade" é o id 1. */
+export const lerPontos = async (carteira: `0x${string}`, tipo = 1n) => {
+  const saldo = await clientePublico().readContract({
+    address: enderecoDoContrato("PointsVault"),
+    abi: ABI_PONTOS,
+    functionName: "balanceOf",
+    args: [carteira, tipo],
+  });
+  return Number(saldo);
+};
+
+/**
+ * Entrega a recompensa: queima o que ela custa e registra na rede.
+ *
+ * Quem envia é o relayer, que tem RELAYER_ROLE — o contrato aceita relayer ou
+ * operador da loja. O cliente não assina nada: ele está no balcão recebendo o
+ * produto na mão.
+ */
+export const resgatarRecompensa = async (rewardId: bigint, cliente: `0x${string}`, claimRef: `0x${string}`) => {
+  const endereco = enderecoDoContrato("RewardCatalog");
+  const publico = clientePublico();
+  const carteira = clienteRelayer();
+
+  const { request } = await publico.simulateContract({
+    account: carteira.account,
+    address: endereco,
+    abi: ABI_CATALOGO,
+    functionName: "claim",
+    args: [rewardId, cliente, claimRef],
+  });
+
+  const hash = await carteira.writeContract(request);
+  const recibo = await publico.waitForTransactionReceipt({ hash, confirmations: 1 });
+  if (recibo.status !== "success") throw new Error("a transação reverteu na rede");
+
+  const [evento] = parseEventLogs({ abi: ABI_CATALOGO, eventName: "RewardClaimed", logs: recibo.logs });
+
+  return {
+    hash,
+    selos: Number(evento?.args.stampCost ?? 0n),
+    pontos: Number(evento?.args.pointCost ?? 0n),
+  };
+};
+
+/** Se o cliente consegue resgatar agora — o que o balcão consulta antes de oferecer o botão. */
+export const podeResgatar = async (rewardId: bigint, cliente: `0x${string}`) =>
+  clientePublico().readContract({
+    address: enderecoDoContrato("RewardCatalog"),
+    abi: ABI_CATALOGO,
+    functionName: "canClaim",
+    args: [rewardId, cliente],
+  });

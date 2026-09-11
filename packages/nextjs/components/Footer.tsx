@@ -9,13 +9,17 @@ import { BrandLogo } from "~~/components/BrandLogo";
 import { SwitchTheme } from "~~/components/SwitchTheme";
 import { Faucet } from "~~/components/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
+import { emDesenvolvimento } from "~~/utils/desenvolvimento";
 
 /**
  * Site footer
  */
 export const Footer = () => {
   const { targetNetwork } = useTargetNetwork();
-  const isLocalNetwork = targetNetwork.id === hardhat.id;
+  // Ferramenta de desenvolvimento nao depende da rede alvo: um deploy
+  // apontado para o anvil por engano nao pode publicar torneira de ETH e link
+  // de explorador de blocos para o mundo.
+  const isLocalNetwork = emDesenvolvimento() && targetNetwork.id === hardhat.id;
   const { price: nativeCurrencyPrice } = useFetchNativeCurrencyPrice();
 
   return (

@@ -16,6 +16,7 @@ import { BrandLogo } from "~~/components/BrandLogo";
 import { ContaDoUsuario } from "~~/components/ContaDoUsuario";
 import { FaucetButton } from "~~/components/scaffold-eth";
 import { useOutsideClick, useTargetNetwork } from "~~/hooks/scaffold-eth";
+import { emDesenvolvimento } from "~~/utils/desenvolvimento";
 
 type HeaderMenuLink = {
   label: string;
@@ -57,7 +58,10 @@ export const menuLinks: HeaderMenuLink[] = [
 export const HeaderMenuLinks = ({ links = menuLinks }: { links?: HeaderMenuLink[] }) => {
   const pathname = usePathname();
   const { targetNetwork } = useTargetNetwork();
-  const isLocalNetwork = targetNetwork.id === hardhat.id;
+  // Ferramenta de desenvolvimento nao depende da rede alvo: um deploy
+  // apontado para o anvil por engano nao pode publicar torneira de ETH e link
+  // de explorador de blocos para o mundo.
+  const isLocalNetwork = emDesenvolvimento() && targetNetwork.id === hardhat.id;
 
   return (
     <>
@@ -91,7 +95,10 @@ export const HeaderMenuLinks = ({ links = menuLinks }: { links?: HeaderMenuLink[
  */
 export const Header = ({ links = menuLinks, homeHref = "/" }: { links?: HeaderMenuLink[]; homeHref?: string }) => {
   const { targetNetwork } = useTargetNetwork();
-  const isLocalNetwork = targetNetwork.id === hardhat.id;
+  // Ferramenta de desenvolvimento nao depende da rede alvo: um deploy
+  // apontado para o anvil por engano nao pode publicar torneira de ETH e link
+  // de explorador de blocos para o mundo.
+  const isLocalNetwork = emDesenvolvimento() && targetNetwork.id === hardhat.id;
 
   const burgerMenuRef = useRef<HTMLDetailsElement>(null);
   useOutsideClick(burgerMenuRef, () => {

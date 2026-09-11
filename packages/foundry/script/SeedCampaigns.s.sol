@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import {Script} from "forge-std/Script.sol";
-import {console} from "forge-std/console.sol";
-import {DiscountNFT} from "../contracts/DiscountNFT.sol";
-import {EstablishmentRegistry} from "../contracts/EstablishmentRegistry.sol";
+import { Script } from "forge-std/Script.sol";
+import { console } from "forge-std/console.sol";
+import { DiscountNFT } from "../contracts/DiscountNFT.sol";
+import { EstablishmentRegistry } from "../contracts/EstablishmentRegistry.sol";
 
 /**
  * @notice Seeds the local chain with example campaigns so the storefront has

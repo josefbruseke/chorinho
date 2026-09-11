@@ -8,7 +8,9 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/meus-cupons", destination: "/carteira", permanent: true },
-      { source: "/meus-cupons/:id", destination: "/carteira/:id", permanent: true },
+      // O cupom antigo era identificado por tokenId; a cartela e por loja.
+      // Nao ha traducao possivel de um para o outro -- cai na lista.
+      { source: "/meus-cupons/:id", destination: "/carteira", permanent: true },
       { source: "/parceiro", destination: "/pdv", permanent: true },
       // O scanner deixou de ser rota propria no M4: escanear e uma etapa da
       // venda, nao um destino.

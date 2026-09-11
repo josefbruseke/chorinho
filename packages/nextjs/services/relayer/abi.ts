@@ -126,3 +126,69 @@ export const ABI_LEDGER = [
   },
   { type: "error", name: "NothingToIssue", inputs: [] },
 ] as const;
+
+/** O pedaço do PointsVault que o servidor lê: só o saldo de uma classe de ponto. */
+export const ABI_PONTOS = [
+  {
+    type: "function",
+    name: "balanceOf",
+    stateMutability: "view",
+    inputs: [
+      { name: "account", type: "address" },
+      { name: "id", type: "uint256" },
+    ],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+] as const;
+
+/** O pedaço do RewardCatalog que o balcão usa na entrega. */
+export const ABI_CATALOGO = [
+  {
+    type: "function",
+    name: "claim",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "rewardId", type: "uint256" },
+      { name: "customer", type: "address" },
+      { name: "claimRef", type: "bytes32" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "canClaim",
+    stateMutability: "view",
+    inputs: [
+      { name: "rewardId", type: "uint256" },
+      { name: "customer", type: "address" },
+    ],
+    outputs: [{ name: "", type: "bool" }],
+  },
+  {
+    type: "event",
+    name: "RewardClaimed",
+    inputs: [
+      { name: "rewardId", type: "uint256", indexed: true },
+      { name: "establishmentId", type: "uint256", indexed: true },
+      { name: "customer", type: "address", indexed: true },
+      { name: "stampCost", type: "uint256", indexed: false },
+      { name: "pointCost", type: "uint256", indexed: false },
+      { name: "claimRef", type: "bytes32", indexed: false },
+    ],
+  },
+  { type: "error", name: "UnknownReward", inputs: [] },
+  { type: "error", name: "RewardInactive", inputs: [] },
+  { type: "error", name: "RewardNotStarted", inputs: [] },
+  { type: "error", name: "RewardEnded", inputs: [] },
+  { type: "error", name: "RewardSoldOut", inputs: [] },
+  { type: "error", name: "ClaimAlreadyProcessed", inputs: [] },
+  { type: "error", name: "NotOperator", inputs: [] },
+  {
+    type: "error",
+    name: "InsufficientStamps",
+    inputs: [
+      { name: "balance", type: "uint256" },
+      { name: "requested", type: "uint256" },
+    ],
+  },
+] as const;

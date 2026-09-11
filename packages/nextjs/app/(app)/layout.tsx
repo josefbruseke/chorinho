@@ -17,7 +17,10 @@ export const viewport: Viewport = { themeColor: "#c2410c", viewportFit: "cover" 
  */
 const AppLayout = ({ children }: { children: React.ReactNode }) => (
   <FlavorTheme flavor="cliente" className="flex flex-col min-h-screen bg-base-200">
-    <main className="flex flex-col flex-1 pb-2">{children}</main>
+    {/* O flavor do cliente e desenhado para o polegar. Num monitor, a coluna
+        estreita continua sendo a leitura certa -- esticar cartela ate 1500px
+        so afasta o numero do nome da loja. */}
+    <main className="flex w-full max-w-2xl flex-1 flex-col self-center pb-2">{children}</main>
     <TabBar />
   </FlavorTheme>
 );

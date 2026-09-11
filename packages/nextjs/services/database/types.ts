@@ -190,6 +190,114 @@ export type Database = {
         };
         Relationships: [];
       };
+      redemptions: {
+        Row: {
+          claim_ref: string;
+          confirmed_at: string | null;
+          created_at: string;
+          customer_profile_id: string | null;
+          customer_wallet: string;
+          erro: string | null;
+          establishment_id: string;
+          id: string;
+          operator_profile_id: string | null;
+          points_burned: number | null;
+          reward_id: string;
+          stamps_burned: number | null;
+          status: Database["public"]["Enums"]["status_venda"];
+          tx_hash: string | null;
+        };
+        Insert: {
+          claim_ref: string;
+          confirmed_at?: string | null;
+          created_at?: string;
+          customer_profile_id?: string | null;
+          customer_wallet: string;
+          erro?: string | null;
+          establishment_id: string;
+          id?: string;
+          operator_profile_id?: string | null;
+          points_burned?: number | null;
+          reward_id: string;
+          stamps_burned?: number | null;
+          status?: Database["public"]["Enums"]["status_venda"];
+          tx_hash?: string | null;
+        };
+        Update: {
+          claim_ref?: string;
+          confirmed_at?: string | null;
+          created_at?: string;
+          customer_profile_id?: string | null;
+          customer_wallet?: string;
+          erro?: string | null;
+          establishment_id?: string;
+          id?: string;
+          operator_profile_id?: string | null;
+          points_burned?: number | null;
+          reward_id?: string;
+          stamps_burned?: number | null;
+          status?: Database["public"]["Enums"]["status_venda"];
+          tx_hash?: string | null;
+        };
+        Relationships: [];
+      };
+      rewards: {
+        Row: {
+          active: boolean;
+          created_at: string;
+          description: string | null;
+          ends_at: string | null;
+          establishment_id: string;
+          id: string;
+          image_path: string | null;
+          max_redemptions: number;
+          onchain_id: number | null;
+          point_cost: number;
+          point_type_id: number;
+          redeemed: number;
+          stamp_cost: number;
+          starts_at: string | null;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          active?: boolean;
+          created_at?: string;
+          description?: string | null;
+          ends_at?: string | null;
+          establishment_id: string;
+          id?: string;
+          image_path?: string | null;
+          max_redemptions?: number;
+          onchain_id?: number | null;
+          point_cost?: number;
+          point_type_id?: number;
+          redeemed?: number;
+          stamp_cost?: number;
+          starts_at?: string | null;
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          active?: boolean;
+          created_at?: string;
+          description?: string | null;
+          ends_at?: string | null;
+          establishment_id?: string;
+          id?: string;
+          image_path?: string | null;
+          max_redemptions?: number;
+          onchain_id?: number | null;
+          point_cost?: number;
+          point_type_id?: number;
+          redeemed?: number;
+          stamp_cost?: number;
+          starts_at?: string | null;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       sales: {
         Row: {
           amount_cents: number;

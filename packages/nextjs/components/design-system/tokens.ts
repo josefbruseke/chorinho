@@ -1,6 +1,15 @@
 /**
  * CHORINHO DESIGN SYSTEM — TOKENS
  *
+ * Este arquivo documenta a RAMPA DE COR da marca. Ele não é referência para
+ * className: a interface usa os tokens semânticos do daisyUI (primary,
+ * base-100, base-300, accent, success...) e os tokens próprios declarados em
+ * `styles/globals.css` (kraft, craft, kraft-ink, kraft-edge, honey-*), que têm
+ * valor distinto em cada tema. Cor fixa em className quebra o tema escuro e é
+ * barrada pelo ESLint.
+ *
+ * Ao mexer num valor aqui, espelhe em `styles/globals.css` — e vice-versa.
+ *
  * Filosofia: "Calor humano, comércio de bairro e artesanato moderno".
  * Focado em uso sob luz do dia em balcões de lojas reais (cafés, padarias,
  * barbearias, empórios). Evita o cinismo 'hightech' ou 'crypto-cyberpunk',

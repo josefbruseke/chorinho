@@ -35,14 +35,14 @@ export const CounterPad: React.FC<CounterPadProps> = ({
   };
 
   return (
-    <div className="w-full max-w-sm mx-auto bg-white rounded-3xl border border-[#ebe3d5] p-5 shadow-sm space-y-4">
+    <div className="w-full max-w-sm mx-auto bg-base-100 rounded-3xl border border-base-300 p-5 shadow-sm space-y-4">
       {/* Display do Código digitado */}
-      <div className="rounded-2xl bg-[#fdfbf7] border border-[#ebe3d5] p-4 text-center">
-        <span className="text-[11px] font-bold uppercase tracking-wider text-[#856d5c] block mb-1">
+      <div className="rounded-2xl bg-kraft border border-base-300 p-4 text-center">
+        <span className="text-[11px] font-bold uppercase tracking-wider text-kraft-ink block mb-1">
           Código do Cliente
         </span>
-        <div className="font-mono text-3xl font-black tracking-widest text-[#261c14] min-h-[40px] flex items-center justify-center">
-          {value || <span className="text-[#ccaebc]/50">{placeholder}</span>}
+        <div className="font-mono text-3xl font-black tracking-widest text-secondary min-h-[40px] flex items-center justify-center">
+          {value || <span className="text-base-content/40">{placeholder}</span>}
         </div>
       </div>
 
@@ -53,7 +53,7 @@ export const CounterPad: React.FC<CounterPadProps> = ({
             key={digit}
             type="button"
             onClick={() => handleDigit(digit)}
-            className="h-14 rounded-2xl bg-[#fbf8f2] hover:bg-[#f4ede2] border border-[#ebe3d5] text-xl font-black text-[#261c14] transition-all active:scale-95 flex items-center justify-center shadow-xs"
+            className="h-14 rounded-2xl bg-base-200 hover:bg-craft border border-base-300 text-xl font-black text-secondary transition-all active:scale-95 flex items-center justify-center shadow-xs"
           >
             {digit}
           </button>
@@ -61,21 +61,21 @@ export const CounterPad: React.FC<CounterPadProps> = ({
         <button
           type="button"
           onClick={handleClear}
-          className="h-14 rounded-2xl bg-[#fbf8f2] hover:bg-[#f4ede2] border border-[#ebe3d5] text-xs font-bold text-[#856d5c] uppercase tracking-wider transition-all active:scale-95 flex items-center justify-center"
+          className="h-14 rounded-2xl bg-base-200 hover:bg-craft border border-base-300 text-xs font-bold text-kraft-ink uppercase tracking-wider transition-all active:scale-95 flex items-center justify-center"
         >
           Limpar
         </button>
         <button
           type="button"
           onClick={() => handleDigit("0")}
-          className="h-14 rounded-2xl bg-[#fbf8f2] hover:bg-[#f4ede2] border border-[#ebe3d5] text-xl font-black text-[#261c14] transition-all active:scale-95 flex items-center justify-center shadow-xs"
+          className="h-14 rounded-2xl bg-base-200 hover:bg-craft border border-base-300 text-xl font-black text-secondary transition-all active:scale-95 flex items-center justify-center shadow-xs"
         >
           0
         </button>
         <button
           type="button"
           onClick={handleBackspace}
-          className="h-14 rounded-2xl bg-[#fbf8f2] hover:bg-[#f4ede2] border border-[#ebe3d5] text-[#856d5c] transition-all active:scale-95 flex items-center justify-center"
+          className="h-14 rounded-2xl bg-base-200 hover:bg-craft border border-base-300 text-kraft-ink transition-all active:scale-95 flex items-center justify-center"
         >
           <BackspaceIcon className="w-6 h-6" />
         </button>
@@ -87,7 +87,7 @@ export const CounterPad: React.FC<CounterPadProps> = ({
           type="button"
           disabled={!value || isLoading}
           onClick={onSubmit}
-          className="w-full py-4 rounded-2xl bg-[#c2410c] hover:bg-[#9a3412] text-white font-extrabold text-base shadow-md disabled:opacity-40 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+          className="w-full py-4 rounded-2xl bg-primary hover:brightness-90 text-primary-content font-extrabold text-base shadow-md disabled:opacity-40 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
         >
           {isLoading ? (
             <span className="loading loading-spinner loading-sm" />

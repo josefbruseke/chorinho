@@ -16,10 +16,10 @@ export const Card: React.FC<CardProps> = ({
   ...props
 }) => {
   const variantStyles = {
-    default: "bg-white border-[#ebe3d5]",
-    warm: "bg-[#fdfbf7] border-[#ebe3d5]",
-    craft: "bg-[#f4ede2] border-[#e2d5c3]",
-    highlight: "bg-[#fff7ed] border-[#fed7aa]",
+    default: "bg-base-100 border-base-300",
+    warm: "bg-kraft border-base-300",
+    craft: "bg-craft border-kraft-edge",
+    highlight: "bg-primary/5 border-primary/25",
   }[variant];
 
   const interactiveStyles = interactive
@@ -33,8 +33,8 @@ export const Card: React.FC<CardProps> = ({
     >
       {notched && (
         <>
-          <div className="absolute top-1/2 -left-3 -translate-y-1/2 w-6 h-6 rounded-full bg-[#fbf8f2] border-r border-[#ebe3d5] z-10" />
-          <div className="absolute top-1/2 -right-3 -translate-y-1/2 w-6 h-6 rounded-full bg-[#fbf8f2] border-l border-[#ebe3d5] z-10" />
+          <div className="absolute top-1/2 -left-3 -translate-y-1/2 w-6 h-6 rounded-full bg-base-200 border-r border-base-300 z-10" />
+          <div className="absolute top-1/2 -right-3 -translate-y-1/2 w-6 h-6 rounded-full bg-base-200 border-l border-base-300 z-10" />
         </>
       )}
       {children}
@@ -43,7 +43,7 @@ export const Card: React.FC<CardProps> = ({
 };
 
 export const CardHeader: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className = "", children, ...props }) => (
-  <div className={`p-4 md:p-6 border-b border-[#ebe3d5]/60 ${className}`} {...props}>
+  <div className={`p-4 md:p-6 border-b border-base-300/60 ${className}`} {...props}>
     {children}
   </div>
 );
@@ -55,7 +55,7 @@ export const CardBody: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ class
 );
 
 export const CardFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className = "", children, ...props }) => (
-  <div className={`p-4 md:p-6 border-t border-[#ebe3d5]/60 bg-black/[0.02] ${className}`} {...props}>
+  <div className={`p-4 md:p-6 border-t border-base-300/60 bg-base-content/[0.03] ${className}`} {...props}>
     {children}
   </div>
 );

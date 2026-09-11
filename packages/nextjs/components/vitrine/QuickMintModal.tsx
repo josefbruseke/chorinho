@@ -59,9 +59,9 @@ export const QuickMintModal: React.FC<QuickMintModalProps> = ({ campaign, onClos
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-      <div className="relative w-full max-w-md bg-white rounded-3xl border border-[#ebe3d5] shadow-2xl overflow-hidden animate-scale-up">
+      <div className="relative w-full max-w-md bg-base-100 rounded-3xl border border-base-300 shadow-2xl overflow-hidden animate-scale-up">
         {/* Header com Categoria e Fechar */}
-        <div className="p-5 bg-[#fdfbf7] border-b border-[#ebe3d5] flex items-center justify-between">
+        <div className="p-5 bg-kraft border-b border-base-300 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-base-200 border border-base-300 text-secondary">
               <CategoryIcon iconKey={cat.iconKey} className="w-3.5 h-3.5" />
@@ -94,7 +94,7 @@ export const QuickMintModal: React.FC<QuickMintModalProps> = ({ campaign, onClos
                 </p>
               </div>
 
-              <div className="w-full p-4 rounded-2xl bg-[#fdfbf7] border border-[#ebe3d5] text-left text-xs space-y-1">
+              <div className="w-full p-4 rounded-2xl bg-kraft border border-base-300 text-left text-xs space-y-1">
                 <div className="flex justify-between">
                   <span className="text-secondary/60">Estabelecimento:</span>
                   <span className="font-bold text-secondary">{meta?.establishment ?? "Comércio Local"}</span>
@@ -134,13 +134,13 @@ export const QuickMintModal: React.FC<QuickMintModalProps> = ({ campaign, onClos
               </div>
 
               {meta?.description && (
-                <p className="text-xs text-secondary/70 m-0 leading-relaxed bg-[#fdfbf7] p-3 rounded-xl border border-[#ebe3d5]">
+                <p className="text-xs text-secondary/70 m-0 leading-relaxed bg-kraft p-3 rounded-xl border border-base-300">
                   {meta.description}
                 </p>
               )}
 
               {/* Destaque do Preço e Quantidade */}
-              <div className="p-4 rounded-2xl bg-[#fdfbf7] border border-[#ebe3d5] flex items-center justify-between">
+              <div className="p-4 rounded-2xl bg-kraft border border-base-300 flex items-center justify-between">
                 <div>
                   <span className="text-[11px] font-bold uppercase tracking-wider text-secondary/50 block">
                     Valor da Adesão
@@ -154,7 +154,7 @@ export const QuickMintModal: React.FC<QuickMintModalProps> = ({ campaign, onClos
                     type="button"
                     disabled={quantity <= 1}
                     onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                    className="w-8 h-8 rounded-xl border border-[#ebe3d5] bg-white font-bold text-sm text-secondary disabled:opacity-30 active:scale-95"
+                    className="w-8 h-8 rounded-xl border border-base-300 bg-base-100 font-bold text-sm text-secondary disabled:opacity-30 active:scale-95"
                   >
                     -
                   </button>
@@ -162,7 +162,7 @@ export const QuickMintModal: React.FC<QuickMintModalProps> = ({ campaign, onClos
                   <button
                     type="button"
                     onClick={() => setQuantity(q => q + 1)}
-                    className="w-8 h-8 rounded-xl border border-[#ebe3d5] bg-white font-bold text-sm text-secondary active:scale-95"
+                    className="w-8 h-8 rounded-xl border border-base-300 bg-base-100 font-bold text-sm text-secondary active:scale-95"
                   >
                     +
                   </button>

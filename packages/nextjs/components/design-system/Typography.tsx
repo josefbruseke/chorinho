@@ -28,9 +28,9 @@ export const Heading: React.FC<HeadingProps> = ({
   }[as];
 
   const toneStyles = {
-    espresso: "text-[#261c14]",
-    terracotta: "text-[#c2410c]",
-    honey: "text-[#d97706]",
+    espresso: "text-secondary",
+    terracotta: "text-primary",
+    honey: "text-accent",
   }[tone];
 
   const fontStyle = variant === "serif" ? "font-serif tracking-normal" : "font-sans";
@@ -65,11 +65,11 @@ export const Text: React.FC<TextProps> = ({
   }[size];
 
   const toneStyles = {
-    espresso: "text-[#261c14]",
-    muted: "text-[#856d5c]",
-    terracotta: "text-[#c2410c]",
-    honey: "text-[#d97706]",
-    sage: "text-[#15803d]",
+    espresso: "text-secondary",
+    muted: "text-kraft-ink",
+    terracotta: "text-primary",
+    honey: "text-accent",
+    sage: "text-success",
   }[tone];
 
   const weightStyles = {

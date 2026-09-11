@@ -70,9 +70,9 @@ export const CreateProgramModal: React.FC<CreateProgramModalProps> = ({ isOpen, 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-      <div className="relative w-full max-w-lg bg-white rounded-3xl border border-[#ebe3d5] shadow-2xl overflow-hidden animate-scale-up">
+      <div className="relative w-full max-w-lg bg-base-100 rounded-3xl border border-base-300 shadow-2xl overflow-hidden animate-scale-up">
         {/* Header */}
-        <div className="p-5 bg-[#fdfbf7] border-b border-[#ebe3d5] flex items-center justify-between">
+        <div className="p-5 bg-kraft border-b border-base-300 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
               <BuildingStorefrontIcon className="w-5 h-5" />
@@ -136,7 +136,7 @@ export const CreateProgramModal: React.FC<CreateProgramModalProps> = ({ isOpen, 
                         placeholder="Ex: Padaria Trigo Santo"
                         value={establishment}
                         onChange={e => setEstablishment(e.target.value)}
-                        className="input input-bordered w-full rounded-xl text-xs bg-[#fdfbf7] border-[#ebe3d5]"
+                        className="input input-bordered w-full rounded-xl text-xs bg-kraft border-base-300"
                       />
                     </div>
 
@@ -148,7 +148,7 @@ export const CreateProgramModal: React.FC<CreateProgramModalProps> = ({ isOpen, 
                         placeholder="Ex: Centro Histórico"
                         value={neighborhood}
                         onChange={e => setNeighborhood(e.target.value)}
-                        className="input input-bordered w-full rounded-xl text-xs bg-[#fdfbf7] border-[#ebe3d5]"
+                        className="input input-bordered w-full rounded-xl text-xs bg-kraft border-base-300"
                       />
                     </div>
                   </div>
@@ -163,7 +163,7 @@ export const CreateProgramModal: React.FC<CreateProgramModalProps> = ({ isOpen, 
                       placeholder="Ex: 1 Café Filtrado Especial + Pão de Queijo"
                       value={rewardName}
                       onChange={e => setRewardName(e.target.value)}
-                      className="input input-bordered w-full rounded-xl text-xs bg-[#fdfbf7] border-[#ebe3d5]"
+                      className="input input-bordered w-full rounded-xl text-xs bg-kraft border-base-300"
                     />
                   </div>
 
@@ -174,7 +174,7 @@ export const CreateProgramModal: React.FC<CreateProgramModalProps> = ({ isOpen, 
                       placeholder="Ex: A cada 5 compras no balcão, ganhe um chorinho especial da casa."
                       value={description}
                       onChange={e => setDescription(e.target.value)}
-                      className="textarea textarea-bordered w-full rounded-xl text-xs bg-[#fdfbf7] border-[#ebe3d5]"
+                      className="textarea textarea-bordered w-full rounded-xl text-xs bg-kraft border-base-300"
                     />
                   </div>
 
@@ -184,7 +184,7 @@ export const CreateProgramModal: React.FC<CreateProgramModalProps> = ({ isOpen, 
                       <select
                         value={category}
                         onChange={e => setCategory(Number(e.target.value))}
-                        className="select select-bordered w-full rounded-xl text-xs bg-[#fdfbf7] border-[#ebe3d5]"
+                        className="select select-bordered w-full rounded-xl text-xs bg-kraft border-base-300"
                       >
                         {CATEGORIES.map(cat => (
                           <option key={cat.id} value={cat.id}>
@@ -201,7 +201,7 @@ export const CreateProgramModal: React.FC<CreateProgramModalProps> = ({ isOpen, 
                         placeholder="0 para Grátis"
                         value={priceEth}
                         onChange={e => setPriceEth(e.target.value)}
-                        className="input input-bordered w-full rounded-xl text-xs bg-[#fdfbf7] border-[#ebe3d5]"
+                        className="input input-bordered w-full rounded-xl text-xs bg-kraft border-base-300"
                       />
                     </div>
                   </div>

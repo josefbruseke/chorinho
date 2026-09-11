@@ -1,5 +1,6 @@
 "use client";
 
+import { CategoryIcon } from "./CategoryIcon";
 import { CATEGORIES } from "~~/utils/vitrine";
 
 /**
@@ -18,7 +19,7 @@ export const CategoryFilter = ({
 }) => (
   <div className="flex flex-wrap gap-2">
     <button
-      className={`btn btn-sm ${selected === null ? "btn-primary" : "btn-ghost border-base-300"}`}
+      className={`btn btn-sm rounded-xl ${selected === null ? "btn-primary" : "btn-ghost border-base-300"}`}
       onClick={() => onSelect(null)}
     >
       Todas
@@ -26,10 +27,11 @@ export const CategoryFilter = ({
     {CATEGORIES.filter(cat => !only || only.includes(cat.id)).map(cat => (
       <button
         key={cat.id}
-        className={`btn btn-sm ${selected === cat.id ? "btn-primary" : "btn-ghost border-base-300"}`}
+        className={`btn btn-sm rounded-xl gap-1.5 ${selected === cat.id ? "btn-primary" : "btn-ghost border-base-300"}`}
         onClick={() => onSelect(cat.id)}
       >
-        {cat.emoji} {cat.label}
+        <CategoryIcon iconKey={cat.iconKey} className="w-4 h-4" />
+        <span>{cat.label}</span>
       </button>
     ))}
   </div>

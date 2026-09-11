@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import { Script } from "forge-std/Script.sol";
-import { console } from "forge-std/console.sol";
-import { DiscountNFT } from "../contracts/DiscountNFT.sol";
-import { EstablishmentRegistry } from "../contracts/EstablishmentRegistry.sol";
+import {Script} from "forge-std/Script.sol";
+import {console} from "forge-std/console.sol";
+import {DiscountNFT} from "../contracts/DiscountNFT.sol";
+import {EstablishmentRegistry} from "../contracts/EstablishmentRegistry.sol";
 
 /**
  * @notice Seeds the local chain with example campaigns so the storefront has
  *         something to show. Local/testnet tooling only — never part of a
  *         production deploy.
  *
- *         Restaurant-first ("Floripa em Dobro"): most campaigns are gastronomy
- *         offers from fictional Floripa restaurants, with metadata carrying
- *         establishment/neighborhood/cuisine for the frontend cards. A couple
- *         of non-food campaigns feed the "Outras experiências" section.
+ *         Physical commerce ("Chorinho"): campaigns from authentic local
+ *         businesses (cafes, bakeries, barbershops, emporiums, bookstores),
+ *         with metadata carrying establishment/neighborhood/cuisine for the
+ *         frontend cards.
  *
  *         Metadata is embedded as `data:` URIs (plain JSON) so the demo works
  *         fully offline: no IPFS, no metadata server. Campaigns without an
@@ -23,7 +23,7 @@ import { EstablishmentRegistry } from "../contracts/EstablishmentRegistry.sol";
  *         Idempotent: campaigns that already exist are skipped, so re-running
  *         after adding a new entry is safe.
  *
- *         Usage: yarn seed   (chain running + contracts deployed first)
+ *         Usage: bun seed   (chain running + contracts deployed first)
  */
 contract SeedCampaigns is Script {
     // Anvil's default account #1 — granted ESTABLISHMENT_ROLE on local chains
@@ -41,41 +41,40 @@ contract SeedCampaigns is Script {
             console.log("Granted establishment role to anvil account #1");
         }
 
-        // Non-gastronomy first: campaign 10 is the combo target of campaign 1,
-        // and createCampaign requires combo references to already exist.
+        // Culture / Care local business: Barbershop loyalty voucher
         _create(
             discount,
             10,
             _simple(
                 0.008 ether,
-                15, // small supply on purpose: lets the demo show "combo skipped when gift sold out"
-                DiscountNFT.Category.Sports,
-                unicode'data:application/json,{"name":"Aula de surf na Joaquina — 30% off","description":"Desconto de 30% em aula de surf para iniciantes na praia da Joaquina. Prancha e roupa de borracha incluídas.","establishment":"Joaquina Surf School","neighborhood":"Joaquina","cuisine":"Aula de surf"}'
+                20,
+                DiscountNFT.Category.Culture,
+                unicode'data:application/json,{"name":"Corte com barba alinhada de cortesia","description":"Corte de cabelo completo na navalha com direito a barba alinhada e toalha quente como chorinho de cortesia no balcão.","establishment":"Barbearia Navalha de Ouro","neighborhood":"Centro","cuisine":"Barbearia & Cuidados"}'
             )
         );
 
+        // Leisure / Bookstore local business
         _create(
             discount,
             11,
             _simple(
-                0.01 ether,
+                0.006 ether,
                 50,
-                DiscountNFT.Category.LeisureTourism,
-                unicode'data:application/json,{"name":"Passeio de escuna 2x1","description":"Dois ingressos pelo preço de um no passeio de escuna pela Baía Norte, com parada na Ilha de Anhatomirim.","establishment":"Floripa Boat Tours","neighborhood":"Centro","cuisine":"Passeio de barco"}'
+                DiscountNFT.Category.Culture,
+                unicode'data:application/json,{"name":"Livro Selecionado + Café no Balcão","description":"Na compra de qualquer livro da seleção especial de clássicos, ganhe um café filtrado especial servido no balcão da livraria.","establishment":"Livraria & Sebo Central","neighborhood":"Centro Histórico","cuisine":"Livraria & Café"}'
             )
         );
 
-        // Gastronomy — the heart of the product. Campaign 1 carries a combo:
-        // buying the shrimp sequence also mints the surf coupon (id 10).
-        DiscountNFT.CampaignParams memory ostradamus = _simple(
-            0.004 ether,
+        // Gastronomy — Local coffee shop loyalty with combo
+        DiscountNFT.CampaignParams memory cafe = _simple(
+            0.003 ether,
             100,
             DiscountNFT.Category.Gastronomy,
-            unicode'data:application/json,{"name":"Sequência de camarão em dobro","description":"Peça uma sequência de camarão e leve duas: entrada, camarão à milanesa, ao alho e óleo e casquinha de siri, para duas pessoas pelo preço de uma. De brinde, um cupom de aula de surf na Joaquina.","establishment":"Ostradamus","neighborhood":"Ribeirão da Ilha","cuisine":"Frutos do mar"}'
+            unicode'data:application/json,{"name":"Café Filtrado Especial + Pão de Queijo","description":"Peça um café coado especial no método V60 e ganhe um pão de queijo artesanal da serra como chorinho da casa. De brinde, um vale-cuidado na Barbearia Navalha de Ouro.","establishment":"Café do Bairro","neighborhood":"Centro Histórico","cuisine":"Cafeteria Artesanal"}'
         );
-        ostradamus.comboTokenIds = new uint256[](1);
-        ostradamus.comboTokenIds[0] = 10;
-        _create(discount, 1, ostradamus);
+        cafe.comboTokenIds = new uint256[](1);
+        cafe.comboTokenIds[0] = 10;
+        _create(discount, 1, cafe);
 
         _create(
             discount,
@@ -84,7 +83,7 @@ contract SeedCampaigns is Script {
                 0.003 ether,
                 0, // unlimited
                 DiscountNFT.Category.Gastronomy,
-                unicode'data:application/json,{"name":"Rodízio de pizza: pague 1, leve 2","description":"Um rodízio pago, dois comensais servidos. Válido de terça a quinta no salão, mediante reserva.","establishment":"Forno da Lagoa","neighborhood":"Lagoa da Conceição","cuisine":"Pizzaria"}'
+                unicode'data:application/json,{"name":"Pão de Fermentação Natural + Focaccia","description":"Leve um sourdough de fermentação lenta de 24h e ganhe uma fatia de focaccia fresca com alecrim e azeite de oliva como chorinho.","establishment":"Padaria Trigo Santo","neighborhood":"Vila Verde","cuisine":"Panificação Artesanal"}'
             )
         );
 
@@ -92,10 +91,10 @@ contract SeedCampaigns is Script {
             discount,
             3,
             _simple(
-                0.002 ether,
+                0.005 ether,
                 0, // unlimited
                 DiscountNFT.Category.Gastronomy,
-                unicode'data:application/json,{"name":"Café colonial em dobro","description":"Pague um café colonial e leve dois, de terça a quinta, no nosso salão do Mercado Público.","establishment":"Casa da Ilha","neighborhood":"Centro","cuisine":"Cafeteria"}'
+                unicode'data:application/json,{"name":"Vinho Regional + Queijo Canastra","description":"Na compra de uma garrafa de vinho colonial selecionado, ganhe uma porção degustação de queijo Canastra meia cura artesanal.","establishment":"Empório da Terra","neighborhood":"Jardim das Flores","cuisine":"Empório & Delicatessen"}'
             )
         );
 
@@ -103,19 +102,19 @@ contract SeedCampaigns is Script {
             discount,
             4,
             _simple(
-                0.0035 ether,
-                40,
+                0.0025 ether,
+                60,
                 DiscountNFT.Category.Gastronomy,
-                unicode'data:application/json,{"name":"Tainha na taquara em dobro","description":"Na temporada da tainha, cada porção pedida vem em dobro — acompanha pirão e salada para dividir.","establishment":"Rancho do Seu Nino","neighborhood":"Barra da Lagoa","cuisine":"Cozinha açoriana"}'
+                unicode'data:application/json,{"name":"Gelato Artesanal com Casquinha Trufada","description":"2 bolas do autêntico gelato italiano na casquinha artesanal com recheio de brigadeiro belga como chorinho cortesia.","establishment":"Gelato da Praça","neighborhood":"Praça Central","cuisine":"Gelateria Artesanal"}'
             )
         );
 
         // Flash promotion: limited supply + 2h window + per-wallet cap.
         DiscountNFT.CampaignParams memory flashPromo = _simple(
-            0.0025 ether,
+            0.003 ether,
             10,
             DiscountNFT.Category.Gastronomy,
-            unicode'data:application/json,{"name":"Só hoje: combo burger em dobro","description":"Só 10 cupons, válidos por 2 horas: peça um combo burger + fritas + bebida e leve dois.","establishment":"Braseiro 48","neighborhood":"Trindade","cuisine":"Hamburgueria"}'
+            unicode'data:application/json,{"name":"Só hoje: Burger Artesanal + Batata com Chorinho de Cheddar","description":"Apenas 10 passes válidos por 2 horas: burger smash na brasa com batatas crocantes e chorinho extra de cheddar cremoso.","establishment":"Braseiro do Bairro","neighborhood":"Centro","cuisine":"Hamburgueria"}'
         );
         flashPromo.flash = true;
         flashPromo.startTime = uint64(block.timestamp);
@@ -160,6 +159,6 @@ contract SeedCampaigns is Script {
                 return vm.parseAddress(keys[i]);
             }
         }
-        revert(string.concat(contractName, " not found in deployments json; run `yarn deploy` first"));
+        revert(string.concat(contractName, " not found in deployments json; run `bun deploy` first"));
     }
 }

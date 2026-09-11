@@ -19,16 +19,16 @@ const MyCoupons: NextPage = () => {
       <div>
         <h1 className="text-3xl font-extrabold m-0 flex items-center gap-2">
           <TicketIcon className="h-8 w-8 text-primary" />
-          Meus cupons
+          Meus Passes & Chorinhos
         </h1>
         <p className="opacity-70 mt-2 mb-0">
-          Toque num cupom para abrir o QR code e mostre a tela no caixa do restaurante.
+          Toque num passe para abrir o QR code e apresentar no balcão ou caixa do estabelecimento.
         </p>
       </div>
 
       {!isConnected ? (
         <div className="flex flex-col items-start gap-3 py-10">
-          <p className="m-0 opacity-70">Entre para ver seus cupons:</p>
+          <p className="m-0 opacity-70">Entre para ver seus passes e chorinhos:</p>
           <RainbowKitCustomConnectButton />
         </div>
       ) : isLoading ? (
@@ -36,19 +36,19 @@ const MyCoupons: NextPage = () => {
           <span className="loading loading-spinner loading-lg" />
         </div>
       ) : coupons.length === 0 && redeemed.length === 0 ? (
-        <div className="text-center py-16 flex flex-col items-center gap-4">
-          <p className="text-lg opacity-70 m-0">Você ainda não tem cupons.</p>
+        <div className="text-center py-16 flex flex-col items-center gap-4 border border-dashed border-base-300 rounded-xl p-8">
+          <p className="text-lg opacity-70 m-0">Você ainda não possui nenhum passe ou chorinho.</p>
           <Link href="/" className="btn btn-primary">
-            Ver restaurantes participantes
+            Explorar estabelecimentos participantes
           </Link>
         </div>
       ) : (
         <>
           {coupons.length === 0 ? (
             <div className="text-center py-10 flex flex-col items-center gap-4">
-              <p className="opacity-70 m-0">Nenhum cupom disponível para usar agora.</p>
+              <p className="opacity-70 m-0">Nenhum passe disponível para usar agora.</p>
               <Link href="/" className="btn btn-primary btn-sm">
-                Ver restaurantes participantes
+                Explorar comércios parceiros
               </Link>
             </div>
           ) : (

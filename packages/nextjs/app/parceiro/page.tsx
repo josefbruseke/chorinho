@@ -74,9 +74,9 @@ const ScanResult = ({ payload, onReset }: { payload: CouponQrPayload; onReset: (
       <div className="flex flex-col gap-4 w-full items-center">
         <ResultFrame tone="success">
           <CheckCircleIcon className="h-20 w-20 text-success" />
-          <p className="m-0 text-2xl font-extrabold">Cupom usado com sucesso!</p>
+          <p className="m-0 text-2xl font-extrabold">Chorinho validado com sucesso!</p>
           <p className="m-0 opacity-70">
-            {redeemedName} — pode liberar o pedido em dobro. O cupom já saiu da conta do cliente.
+            {redeemedName} — benefício confirmado na blockchain. Pode entregar o chorinho ou cortesia ao cliente.
           </p>
         </ResultFrame>
         {scanNext}
@@ -141,21 +141,25 @@ const ScanResult = ({ payload, onReset }: { payload: CouponQrPayload; onReset: (
     <div className="flex flex-col gap-4 w-full items-center">
       <ResultFrame tone="success">
         <CheckCircleIcon className="h-20 w-20 text-success" />
-        <p className="m-0 text-2xl font-extrabold text-success">Cupom válido</p>
+        <p className="m-0 text-2xl font-extrabold text-success">Chorinho Válido</p>
         <p className="m-0 font-semibold text-lg">{campaignDisplayName(campaign)}</p>
         {campaign.metadata?.establishment && <p className="m-0 opacity-70">{campaign.metadata.establishment}</p>}
         {balance > 1n && (
-          <span className="badge badge-ghost">cliente tem {balance.toString()} cupons desta oferta</span>
+          <span className="badge badge-neutral">cliente tem {balance.toString()} chorinhos desta oferta</span>
         )}
       </ResultFrame>
-      <button className="btn btn-success btn-lg w-full" onClick={handleConfirm} disabled={isMining}>
+      <button
+        className="btn btn-primary btn-lg w-full rounded-2xl font-bold"
+        onClick={handleConfirm}
+        disabled={isMining}
+      >
         {isMining ? (
           <>
             <span className="loading loading-spinner loading-sm" />
-            Confirmando…
+            Confirmando no balcão…
           </>
         ) : (
-          "Confirmar uso do cupom"
+          "Confirmar Entrega do Chorinho"
         )}
       </button>
       <button className="btn btn-ghost btn-sm" onClick={onReset} disabled={isMining}>
@@ -184,16 +188,16 @@ const Partner: NextPage = () => {
   return (
     <div className="max-w-md w-full mx-auto px-5 py-8 flex flex-col gap-6 items-center">
       <div className="text-center">
-        <h1 className="text-3xl font-extrabold m-0 flex items-center justify-center gap-2">
+        <h1 className="text-3xl font-extrabold m-0 flex items-center justify-center gap-2 text-secondary">
           <QrCodeIcon className="h-8 w-8 text-primary" />
-          Validar cupom
+          Área do Lojista
         </h1>
-        <p className="opacity-70 mt-2 mb-0">Área do restaurante parceiro</p>
+        <p className="opacity-70 mt-2 mb-0">Validação de balcão rápida e acolhedora</p>
       </div>
 
       {!address ? (
         <div className="flex flex-col items-center gap-3 py-10">
-          <p className="m-0 opacity-70">Entre com a conta do restaurante:</p>
+          <p className="m-0 opacity-70">Entre com a conta do estabelecimento:</p>
           <RainbowKitCustomConnectButton />
         </div>
       ) : roleLoading || isEstablishment === undefined ? (
@@ -202,10 +206,10 @@ const Partner: NextPage = () => {
         </div>
       ) : !isEstablishment ? (
         <div className="rounded-box border border-base-300 bg-base-100 p-8 text-center flex flex-col gap-3">
-          <p className="m-0 text-lg font-bold">Este acesso é só para restaurantes parceiros.</p>
+          <p className="m-0 text-lg font-bold">Acesso restrito para estabelecimentos parceiros.</p>
           <p className="m-0 opacity-70">
-            Tem um restaurante e quer participar do Floripa em Dobro? Fale com a gente em{" "}
-            <span className="font-semibold">parceiros@floripaemdobro.com.br</span> para fazer seu cadastro.
+            Tem uma loja, café, barbearia ou comércio físico e quer participar do Chorinho? Fale com a gente em{" "}
+            <span className="font-semibold">parceiros@chorinho.app</span> para cadastrar sua empresa.
           </p>
         </div>
       ) : scan.kind === "result" && scan.payload ? (
@@ -215,7 +219,7 @@ const Partner: NextPage = () => {
           <ResultFrame tone="error">
             <XCircleIcon className="h-20 w-20 text-error" />
             <p className="m-0 text-2xl font-extrabold text-error">Cupom inválido</p>
-            <p className="m-0 opacity-70">Este QR code não é um cupom do Floripa em Dobro.</p>
+            <p className="m-0 opacity-70">Este QR code não é um passe ou cupom do Chorinho.</p>
           </ResultFrame>
           <button className="btn btn-primary btn-lg w-full" onClick={() => setScan({ kind: "idle" })}>
             <CameraIcon className="h-6 w-6" />
@@ -240,11 +244,11 @@ const Partner: NextPage = () => {
                 </div>
               )}
               <button
-                className="btn btn-primary btn-lg w-full h-24 text-xl"
+                className="btn btn-primary btn-lg w-full h-24 text-xl rounded-2xl font-bold shadow-xs"
                 onClick={() => setScan({ kind: "scanning" })}
               >
                 <CameraIcon className="h-8 w-8" />
-                Escanear cupom do cliente
+                Escanear passe do cliente
               </button>
               <div className="divider text-xs opacity-60 my-0">ou</div>
               <form

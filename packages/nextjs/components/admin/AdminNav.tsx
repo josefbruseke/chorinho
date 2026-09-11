@@ -11,7 +11,7 @@ import {
   Squares2X2Icon,
 } from "@heroicons/react/24/outline";
 import { BrandLogo } from "~~/components/BrandLogo";
-import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
+import { ContaDoUsuario } from "~~/components/ContaDoUsuario";
 
 const ITENS = [
   { href: "/admin", label: "Visão geral", Icon: Squares2X2Icon },
@@ -35,11 +35,13 @@ export const AdminNav = () => {
               Chorinho <span className="font-medium text-base-content/60">Plataforma</span>
             </span>
           </Link>
-          <RainbowKitCustomConnectButton />
+          <ContaDoUsuario entrarEm="/entrar?proximo=/admin" />
         </div>
 
+        {/* Alvo de toque de 48px em cada aba — mesma regra do painel do
+            lojista, aplicada aqui para consistência entre os dois flavors. */}
         <nav aria-label="Administração" className="-mx-4 px-4 overflow-x-auto">
-          <ul className="flex gap-1 pb-2 w-max min-w-full">
+          <ul className="flex gap-1.5 pb-2.5 w-max min-w-full">
             {ITENS.map(({ href, label, Icon }) => {
               const ativo = pathname === href;
               return (
@@ -47,13 +49,13 @@ export const AdminNav = () => {
                   <Link
                     href={href}
                     aria-current={ativo ? "page" : undefined}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-field text-sm whitespace-nowrap transition-colors ${
+                    className={`flex items-center gap-2 px-4 min-h-12 rounded-2xl text-sm whitespace-nowrap transition-colors ${
                       ativo
                         ? "bg-primary/10 text-primary font-bold"
-                        : "text-base-content/70 hover:bg-base-200 hover:text-base-content"
+                        : "text-base-content/70 font-semibold hover:bg-base-200 hover:text-base-content"
                     }`}
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-5 h-5 shrink-0" />
                     <span>{label}</span>
                   </Link>
                 </li>

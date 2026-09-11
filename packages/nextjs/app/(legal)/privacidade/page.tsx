@@ -8,11 +8,27 @@ export const metadata = getMetadata({
   description: "Quais dados o Chorinho coleta, por quê, com quem compartilha e como você exerce seus direitos.",
 });
 
+// Espelha os <section id="..."> abaixo — usado pelo sumário navegável no topo do documento.
+const SUMARIO = [
+  { id: "em-resumo", titulo: "Em resumo" },
+  { id: "quem-e-o-controlador", titulo: "Quem é o controlador" },
+  { id: "que-dados-coletamos", titulo: "Que dados coletamos" },
+  { id: "por-que-tratamos-cada-dado", titulo: "Por que tratamos cada dado" },
+  { id: "localizacao", titulo: "Localização" },
+  { id: "compartilhamento", titulo: "Compartilhamento" },
+  { id: "o-que-vai-para-a-blockchain", titulo: "O que vai para a blockchain" },
+  { id: "por-quanto-tempo-guardamos", titulo: "Por quanto tempo guardamos" },
+  { id: "seus-direitos", titulo: "Seus direitos" },
+  { id: "criancas-e-adolescentes", titulo: "Crianças e adolescentes" },
+  { id: "mudancas-nesta-politica", titulo: "Mudanças nesta política" },
+];
+
 const Privacidade: NextPage = () => (
   <DocumentoLegal
     titulo="Política de Privacidade"
     resumo="O que a gente coleta, por que coleta, com quem compartilha e o que você pode exigir da gente. Escrito para ser entendido, não para se proteger atrás de jargão."
     vigenteDesde="11 de setembro de 2026"
+    sumario={SUMARIO}
   >
     <AvisoLegal titulo="Rascunho pendente de revisão jurídica">
       <p>
@@ -21,7 +37,7 @@ const Privacidade: NextPage = () => (
       </p>
     </AvisoLegal>
 
-    <section>
+    <section id="em-resumo">
       <h2>Em resumo</h2>
       <ul>
         <li>Coletamos o mínimo para o programa de fidelidade funcionar.</li>
@@ -31,7 +47,7 @@ const Privacidade: NextPage = () => (
       </ul>
     </section>
 
-    <section>
+    <section id="quem-e-o-controlador">
       <h2>Quem é o controlador</h2>
       <p>
         O Chorinho é o controlador dos dados pessoais tratados no aplicativo, nos termos da Lei Geral de Proteção de
@@ -40,7 +56,7 @@ const Privacidade: NextPage = () => (
       </p>
     </section>
 
-    <section>
+    <section id="que-dados-coletamos">
       <h2>Que dados coletamos</h2>
 
       <h3>Quando você cria a conta</h3>
@@ -73,7 +89,7 @@ const Privacidade: NextPage = () => (
       </ul>
     </section>
 
-    <section>
+    <section id="por-que-tratamos-cada-dado">
       <h2>Por que tratamos cada dado</h2>
       <ul>
         <li>
@@ -95,7 +111,7 @@ const Privacidade: NextPage = () => (
       </ul>
     </section>
 
-    <section>
+    <section id="localizacao">
       <h2>Localização</h2>
       <p>
         A permissão de localização só é pedida quando você toca no botão do mapa — nunca ao abrir o aplicativo. Usamos a
@@ -109,7 +125,7 @@ const Privacidade: NextPage = () => (
       </p>
     </section>
 
-    <section>
+    <section id="compartilhamento">
       <h2>Compartilhamento</h2>
       <p>Compartilhamos dados apenas com quem é necessário para o serviço funcionar:</p>
       <ul>
@@ -130,7 +146,7 @@ const Privacidade: NextPage = () => (
       <p>Não vendemos, alugamos nem cedemos dados pessoais para publicidade.</p>
     </section>
 
-    <section>
+    <section id="o-que-vai-para-a-blockchain">
       <h2>O que vai para a blockchain</h2>
       <p>
         Carimbos, pontos, resgates e recompensas são registrados numa blockchain pública, ligados ao endereço da sua
@@ -144,7 +160,7 @@ const Privacidade: NextPage = () => (
       </p>
     </section>
 
-    <section>
+    <section id="por-quanto-tempo-guardamos">
       <h2>Por quanto tempo guardamos</h2>
       <ul>
         <li>dados da conta: enquanto ela existir;</li>
@@ -154,7 +170,7 @@ const Privacidade: NextPage = () => (
       </ul>
     </section>
 
-    <section>
+    <section id="seus-direitos">
       <h2>Seus direitos</h2>
       <p>A LGPD garante que você possa, a qualquer momento:</p>
       <ul>
@@ -176,7 +192,7 @@ const Privacidade: NextPage = () => (
       </p>
     </AvisoLegal>
 
-    <section>
+    <section id="criancas-e-adolescentes">
       <h2>Crianças e adolescentes</h2>
       <p>
         O Chorinho não é destinado a menores de 16 anos. Se identificarmos uma conta nessa faixa sem autorização dos
@@ -184,7 +200,7 @@ const Privacidade: NextPage = () => (
       </p>
     </section>
 
-    <section>
+    <section id="mudancas-nesta-politica">
       <h2>Mudanças nesta política</h2>
       <p>
         Quando alterarmos algo relevante, avisamos no aplicativo antes de a mudança valer, e a data de vigência no topo

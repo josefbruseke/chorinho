@@ -8,13 +8,25 @@ export const metadata = getMetadata({
   description: "O que é a carteira do Chorinho, o que ela guarda e como você se protege.",
 });
 
+// Espelha os <section id="..."> abaixo — usado pelo sumário navegável no topo do documento.
+const SUMARIO = [
+  { id: "por-que-existe-uma-carteira", titulo: "Por que existe uma carteira" },
+  { id: "voce-nao-precisa-entender-nada-disso-para-usar", titulo: "Você não precisa entender nada disso" },
+  { id: "quem-tem-a-chave", titulo: "Quem tem a chave" },
+  { id: "o-que-fica-publico-na-blockchain", titulo: "O que fica público na blockchain" },
+  { id: "carimbos-e-pontos-nao-sao-dinheiro", titulo: "Carimbos e pontos não são dinheiro" },
+  { id: "usar-a-sua-propria-carteira", titulo: "Usar a sua própria carteira" },
+  { id: "duvidas", titulo: "Dúvidas" },
+];
+
 const CarteiraSeguranca: NextPage = () => (
   <DocumentoLegal
     titulo="Carteira e segurança"
     resumo="O Chorinho registra seus carimbos numa blockchain. Isso traz garantias reais, mas também responsabilidades que você precisa conhecer antes de usar."
     vigenteDesde="11 de setembro de 2026"
+    sumario={SUMARIO}
   >
-    <section>
+    <section id="por-que-existe-uma-carteira">
       <h2>Por que existe uma carteira</h2>
       <p>
         Seus carimbos, pontos e recompensas não ficam guardados num banco de dados que a gente pode apagar ou alterar
@@ -27,7 +39,7 @@ const CarteiraSeguranca: NextPage = () => (
       </p>
     </section>
 
-    <section>
+    <section id="voce-nao-precisa-entender-nada-disso-para-usar">
       <h2>Você não precisa entender nada disso para usar</h2>
       <p>
         Ao criar sua conta com e-mail ou Google, uma carteira é criada para você automaticamente. Não existe frase
@@ -37,7 +49,7 @@ const CarteiraSeguranca: NextPage = () => (
       <p>Você entra e sai do aplicativo como em qualquer outro. A carteira fica trabalhando por baixo.</p>
     </section>
 
-    <section>
+    <section id="quem-tem-a-chave">
       <h2>Quem tem a chave</h2>
       <p>
         A chave da sua carteira é fragmentada: nem o Chorinho nem o provedor de carteira possuem as partes necessárias
@@ -50,7 +62,7 @@ const CarteiraSeguranca: NextPage = () => (
       </p>
     </section>
 
-    <AvisoLegal titulo="Proteja a conta de entrada">
+    <AvisoLegal titulo="Proteja a conta de entrada" tone="critico">
       <p>
         Ative a verificação em duas etapas no e-mail ou na conta Google que você usa no Chorinho. É esse acesso que
         protege sua carteira.
@@ -61,7 +73,7 @@ const CarteiraSeguranca: NextPage = () => (
       </p>
     </AvisoLegal>
 
-    <section>
+    <section id="o-que-fica-publico-na-blockchain">
       <h2>O que fica público na blockchain</h2>
       <p>
         Registro em blockchain é público por natureza. Qualquer pessoa que descubra o endereço da sua carteira consegue
@@ -82,7 +94,7 @@ const CarteiraSeguranca: NextPage = () => (
       </p>
     </section>
 
-    <section>
+    <section id="carimbos-e-pontos-nao-sao-dinheiro">
       <h2>Carimbos e pontos não são dinheiro</h2>
       <p>
         Os carimbos e pontos do Chorinho são intransferíveis por construção: não podem ser vendidos, trocados entre
@@ -95,7 +107,7 @@ const CarteiraSeguranca: NextPage = () => (
       </p>
     </section>
 
-    <section>
+    <section id="usar-a-sua-propria-carteira">
       <h2>Usar a sua própria carteira</h2>
       <p>
         Se você já usa uma carteira de criptomoedas e prefere conectar a sua, isso será possível no perfil. Nesse caso a
@@ -104,7 +116,7 @@ const CarteiraSeguranca: NextPage = () => (
       </p>
     </section>
 
-    <section>
+    <section id="duvidas">
       <h2>Dúvidas</h2>
       <p>
         A <Link href="/ajuda">seção de ajuda</Link> responde as perguntas mais comuns em linguagem simples. Se algo aqui

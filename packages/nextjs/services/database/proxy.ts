@@ -1,8 +1,17 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
-/** Rotas que exigem alguém logado. O papel é conferido depois, no servidor. */
-const PRECISA_SESSAO = ["/carteira", "/passe", "/perfil", "/recompensas", "/painel", "/pdv", "/admin", "/cadastro"];
+/**
+ * Rotas que exigem alguém logado. O papel é conferido depois, no servidor.
+ *
+ * `/pdv` fica de fora de propósito: o tablet do caixa não tem sessão da
+ * Supabase, ele opera por um terminal pareado guardado em cookie httpOnly.
+ * Mandar o balcão para a tela de login seria trancá-lo fora da própria casa —
+ * o atendente veria um formulário de e-mail e senha que ninguém ali tem. Quem
+ * barra acesso indevido é o `balcaoDoOperador`, em cada rota de API, e a tela
+ * de pareamento.
+ */
+const PRECISA_SESSAO = ["/carteira", "/passe", "/perfil", "/recompensas", "/painel", "/admin", "/cadastro"];
 
 /** Rotas do próprio fluxo de entrada — nunca podem redirecionar para si mesmas. */
 const LIVRES = ["/entrar", "/auth", "/sem-acesso"];

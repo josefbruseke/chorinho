@@ -1,6 +1,7 @@
 import "server-only";
 import { supabaseAdmin } from "~~/services/database/admin";
 import { assinaturaConfere, passeConfigurado } from "~~/services/passe/servidor";
+import { type Terminal, terminalDoAparelho } from "~~/services/pdv/acesso";
 import {
   type CarimbosEmitidos,
   type VendaOnchain,
@@ -62,7 +63,7 @@ export type ResultadoVenda = {
   txHash?: string;
 };
 
-export type Balcao = { id: string; onchainId: number; nome: string };
+export type Balcao = { id: string; onchainId: number; nome: string; terminal?: Terminal };
 
 export class ErroDePdv extends Error {
   constructor(
@@ -79,22 +80,38 @@ export class ErroDePdv extends Error {
  * Vem da sessão, nunca do corpo da requisição: senão um operador do café
  * carimbaria em nome da padaria do lado só trocando um número no JSON.
  */
-export const balcaoDoOperador = async (userId: string): Promise<Balcao> => {
+export const balcaoDoOperador = async (userId?: string): Promise<Balcao> => {
   const admin = supabaseAdmin();
-  const { data: vinculo } = await admin
-    .from("establishment_members")
-    .select("establishment_id")
-    .eq("profile_id", userId)
-    .eq("active", true)
-    .limit(1)
-    .maybeSingle();
 
-  if (!vinculo) throw new ErroDePdv(403, "esta conta não opera nenhum balcão");
+  // O aparelho pareado vem primeiro: no balcão real é o caminho normal, e
+  // resolvê-lo antes evita uma consulta de vínculo que quase sempre falharia.
+  const terminal = await terminalDoAparelho();
+
+  let establishmentId = terminal?.establishmentId;
+
+  if (!establishmentId) {
+    if (!userId) throw new ErroDePdv(401, "este aparelho ainda não foi pareado com nenhum balcão");
+
+    const { data: vinculo } = await admin
+      .from("establishment_members")
+      .select("establishment_id")
+      .eq("profile_id", userId)
+      .eq("active", true)
+      .limit(1)
+      .maybeSingle();
+
+    // 401 e não 403: do ponto de vista do aparelho, "não tenho terminal" e
+    // "esta conta não trabalha em loja nenhuma" são a mesma situação — este
+    // aparelho ainda não é um balcão. E as duas se resolvem do mesmo jeito,
+    // com o código de pareamento.
+    if (!vinculo) throw new ErroDePdv(401, "este aparelho ainda não foi pareado com nenhum balcão");
+    establishmentId = vinculo.establishment_id;
+  }
 
   const { data: loja } = await admin
     .from("establishments")
     .select("id, name, onchain_id, status")
-    .eq("id", vinculo.establishment_id)
+    .eq("id", establishmentId)
     .maybeSingle();
 
   if (!loja) throw new ErroDePdv(403, "estabelecimento não encontrado");
@@ -103,13 +120,13 @@ export const balcaoDoOperador = async (userId: string): Promise<Balcao> => {
     throw new ErroDePdv(409, "o estabelecimento ainda não foi registrado na rede");
   }
 
-  return { id: loja.id, onchainId: loja.onchain_id, nome: loja.name };
+  return { id: loja.id, onchainId: loja.onchain_id, nome: loja.name, terminal };
 };
 
-type Cliente = { carteira: string; profileId: string; nome: string | null };
+export type Cliente = { carteira: string; profileId: string; nome: string | null };
 
 /** Troca o passe lido no balcão pela carteira do cliente, queimando o nonce. */
-const resolverCliente = async (entrada: VendaEntrada, janelaSegundos: number): Promise<Cliente> => {
+export const resolverCliente = async (entrada: VendaEntrada, janelaSegundos: number): Promise<Cliente> => {
   const admin = supabaseAdmin();
   const agora = new Date();
 
@@ -190,7 +207,7 @@ const valorValido = (centavos: unknown): centavos is number =>
  * dez vendas, uma com passe já usado não pode impedir as nove boas de entrarem.
  */
 export const processarVendas = async (
-  userId: string,
+  userId: string | undefined,
   entradas: VendaEntrada[],
   { janelaSegundos = JANELA_DA_FILA_SEGUNDOS } = {},
 ): Promise<{ balcao: Balcao; resultados: ResultadoVenda[] }> => {
@@ -266,7 +283,8 @@ export const processarVendas = async (
       const { error } = await admin.from("sales").insert({
         sale_ref: saleRef,
         establishment_id: balcao.id,
-        operator_profile_id: userId,
+        operator_profile_id: userId ?? null,
+        pos_terminal_id: balcao.terminal?.id ?? null,
         customer_profile_id: cliente.profileId,
         customer_wallet: cliente.carteira,
         amount_cents: entrada.valorCentavos,

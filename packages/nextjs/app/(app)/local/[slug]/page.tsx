@@ -41,8 +41,8 @@ const Local: NextPage<Props> = async ({ params }) => {
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4 py-5 flex flex-col gap-5">
-      <Link href="/mapa" className="btn btn-ghost btn-sm rounded-xl gap-1.5 self-start -ml-2">
-        <ArrowLeftIcon className="w-4 h-4" />
+      <Link href="/mapa" className="btn btn-ghost h-12 rounded-2xl gap-1.5 self-start -ml-2">
+        <ArrowLeftIcon className="w-5 h-5" />
         Voltar ao mapa
       </Link>
 
@@ -67,24 +67,29 @@ const Local: NextPage<Props> = async ({ params }) => {
         {(local.address_line || local.neighborhood) && (
           <div className="flex gap-3 p-4">
             <MapPinIcon className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-            <div className="text-sm">
+            <div className="text-base">
               {local.address_line && <span className="block">{local.address_line}</span>}
-              <span className="opacity-70">
+              <span className="text-sm opacity-70">
                 {[local.neighborhood, local.city, local.state].filter(Boolean).join(" · ")}
               </span>
             </div>
           </div>
         )}
 
+        {/* Telefone é a ação principal desta seção — quem abre a ficha do local geralmente
+            quer ligar ou confirmar algo, então o número ganha peso e a linha toda é tocável. */}
         {local.phone && (
-          <a href={`tel:${local.phone}`} className="flex gap-3 p-4 hover:bg-base-200 transition-colors">
+          <a
+            href={`tel:${local.phone}`}
+            className="flex items-center gap-3 p-4 min-h-12 hover:bg-base-200 active:bg-base-200 transition-colors"
+          >
             <PhoneIcon className="w-5 h-5 text-primary shrink-0" />
-            <span className="text-sm">{local.phone}</span>
+            <span className="text-base font-bold text-secondary">{local.phone}</span>
           </a>
         )}
       </section>
 
-      <p className="m-0 text-xs opacity-65 leading-relaxed">
+      <p className="m-0 text-xs opacity-70 leading-relaxed">
         A cartela de carimbos, o catálogo e as recompensas deste local aparecem aqui quando o programa de fidelidade for
         publicado pelo comerciante.
       </p>

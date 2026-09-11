@@ -14,11 +14,12 @@ const MapaPage: NextPage = () => (
   <div className="flex flex-col flex-1 min-h-0">
     <header className="flex items-center justify-between gap-3 px-4 py-3 shrink-0">
       <div>
-        <h1 className="text-xl font-serif font-black m-0 tracking-tight text-secondary">Perto de você</h1>
-        <p className="m-0 text-xs opacity-70">Toque num pino para conhecer o lugar</p>
+        <h1 className="text-2xl font-serif font-black m-0 tracking-tight text-secondary">Perto de você</h1>
+        <p className="m-0 text-sm opacity-70">Toque num pino para conhecer o lugar</p>
       </div>
-      <Link href="/explorar" className="btn btn-ghost btn-sm rounded-xl gap-1.5" aria-label="Ver em lista">
-        <ListBulletIcon className="w-4 h-4" />
+      {/* Alvo de toque de 48px mesmo sendo ação secundária desta tela — o mapa é o protagonista. */}
+      <Link href="/explorar" className="btn btn-ghost h-12 rounded-2xl gap-1.5 shrink-0" aria-label="Ver em lista">
+        <ListBulletIcon className="w-5 h-5" />
         <span className="hidden xs:inline">Lista</span>
       </Link>
     </header>

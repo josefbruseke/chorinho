@@ -12,14 +12,20 @@ export const runtime = "nodejs";
  * conta errada, em vez de descobrir depois de carimbar o cliente.
  */
 export async function GET() {
+  // Sem sessão não é erro: o tablet do balcão opera pelo cookie do terminal
+  // pareado. Quem decide se este pedido tem balcão é o `balcaoDoOperador`.
   const supabase = await supabaseServer();
   const { data: claims } = await supabase.auth.getClaims();
   const userId = claims?.claims?.sub;
-  if (!userId) return NextResponse.json({ erro: "sem sessão" }, { status: 401 });
 
   try {
     const balcao = await balcaoDoOperador(userId);
-    return NextResponse.json({ id: balcao.id, nome: balcao.nome, onchainId: balcao.onchainId });
+    return NextResponse.json({
+      id: balcao.id,
+      nome: balcao.nome,
+      onchainId: balcao.onchainId,
+      terminal: balcao.terminal ? { id: balcao.terminal.id, nome: balcao.terminal.nome } : null,
+    });
   } catch (e) {
     if (e instanceof ErroDePdv) return NextResponse.json({ erro: e.message }, { status: e.status });
     return NextResponse.json({ erro: "falha ao identificar o balcão" }, { status: 500 });

@@ -26,12 +26,16 @@
 @theme {
   --color-kraft: #fdfbf7;
   --color-craft: #f4ede2;
-  --color-kraft-ink: #856d5c;
+  /* kraft-ink escurecido (era #856d5c, 4.68:1) para vencer 7:1 no pos-light,
+     que reusa este mesmo token -- ainda assim so ajusta L em oklch, matiz e
+     croma da tinta espresso preservados. */
+  --color-kraft-ink: #695242;
   --color-kraft-edge: #d8c7b0;
 
   --color-honey-soft: #fef3c7;
   --color-honey-edge: #fde68a;
-  --color-honey-ink: #92400e;
+  /* honey-ink escurecido (era #92400e, 6.37:1) para vencer 7:1 no pos-light. */
+  --color-honey-ink: #8b3903;
 
   /* A tela do QR e a unica superficie que NAO acompanha o tema: camera de
      celular barato le muito mais rapido codigo escuro sobre fundo claro, e no
@@ -39,7 +43,8 @@
      Por isso estes tres nao tem contraparte no bloco escuro. */
   --color-qr-surface: #ffffff;
   --color-qr-ink: #261c14;
-  --color-qr-muted: #856d5c;
+  /* qr-muted escurecido (era #856d5c, 4.84:1) para vencer 7:1 no pos-light. */
+  --color-qr-muted: #6b5444;
 }
 
 /*
@@ -62,7 +67,9 @@
   --color-primary-content: #fffdfa;
   --color-secondary: #1c1410;
   --color-secondary-content: #fdfbf7;
-  --color-accent: #b45309;
+  /* accent escurecido (era #b45309, accent-content so alcancava 4.95:1) --
+     balcao sob luz do dia exige 7:1, matiz mel preservada. */
+  --color-accent: #983a00;
   --color-accent-content: #fffdfa;
   --color-neutral: #2b211a;
   --color-neutral-content: #fffdfa;
@@ -71,9 +78,14 @@
   --color-base-300: #ddd2bf;
   --color-base-content: #1c1410;
   --color-info: #1e40af;
-  --color-success: #15803d;
-  --color-warning: #b45309;
+  /* success/warning escurecidos (eram #15803d e #b45309, so alcancavam
+     4.94:1 e 4.95:1 com tinta branca) para vencer 7:1 no balcao. */
+  --color-success: #006624;
+  --color-warning: #983a00;
   --color-error: #991b1b;
+  --color-success-content: #fffdfa;
+  --color-warning-content: #fffdfa;
+  --color-error-content: #fffdfa;
 
   --radius-field: 0.5rem;
   --radius-box: 0.75rem;
@@ -84,7 +96,8 @@
   name: "pos-dark";
 
   --color-primary: #f97316;
-  --color-primary-content: #140c06;
+  /* primary-content escurecido (era #140c06, 6.91:1) para vencer 7:1. */
+  --color-primary-content: #110a04;
   --color-secondary: #faf6ef;
   --color-secondary-content: #1c1410;
   --color-accent: #fbbf24;
@@ -99,6 +112,11 @@
   --color-success: #4ade80;
   --color-warning: #fbbf24;
   --color-error: #f87171;
+  /* reaproveita a tinta escura de primary-content: ja testada contra fundos
+     claros/saturados e bate 7:1 nos tres. */
+  --color-success-content: #110a04;
+  --color-warning-content: #110a04;
+  --color-error-content: #110a04;
 
   --radius-field: 0.5rem;
   --radius-box: 0.75rem;
@@ -124,6 +142,12 @@
   --color-success: #15803d;
   --color-warning: #d97706;
   --color-error: #b91c1c;
+  /* daisyUI calcula -content automaticamente quando ausente; fixamos aqui
+     para garantir >= 4.5:1 (warning usa tinta escura, mais forte contra o
+     laranja medio de fundo do que a tinta branca). */
+  --color-success-content: #fffdfa;
+  --color-warning-content: #281d16;
+  --color-error-content: #fffdfa;
 
   --radius-field: 0.5rem;
   --radius-box: 0.875rem;
@@ -149,6 +173,11 @@
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
+  /* tinta escura (mesma de primary-content) ja testada contra fundos
+     claros/saturados de tema escuro -- bate >= 4.5:1 nos tres. */
+  --color-success-content: #1e130b;
+  --color-warning-content: #1e130b;
+  --color-error-content: #1e130b;
 
   --radius-field: 0.5rem;
   --radius-box: 0.875rem;
@@ -174,6 +203,9 @@
   --color-success: #15803d;
   --color-warning: #a16207;
   --color-error: #b91c1c;
+  --color-success-content: #fffdfa;
+  --color-warning-content: #fffdfa;
+  --color-error-content: #fffdfa;
 
   --radius-field: 0.375rem;
   --radius-box: 0.75rem;
@@ -199,6 +231,9 @@
   --color-success: #22c55e;
   --color-warning: #d9a441;
   --color-error: #ef4444;
+  --color-success-content: #170f09;
+  --color-warning-content: #170f09;
+  --color-error-content: #170f09;
 
   --radius-field: 0.375rem;
   --radius-box: 0.75rem;
@@ -209,7 +244,9 @@
   [data-theme$="dark"] {
     --color-kraft: #2a201a;
     --color-craft: #201a14;
-    --color-kraft-ink: #b9a897;
+    /* kraft-ink clareado (era #b9a897, 6.90:1) para vencer 7:1 no pos-dark,
+       que reusa este mesmo token -- so L em oklch mudou, matiz preservada. */
+    --color-kraft-ink: #bba998;
     --color-kraft-edge: #4a3a2e;
 
     --color-honey-soft: #3a2c12;
@@ -224,7 +261,7 @@
     :root:not([data-theme]) {
       --color-kraft: #2a201a;
       --color-craft: #201a14;
-      --color-kraft-ink: #b9a897;
+      --color-kraft-ink: #bba998;
       --color-kraft-edge: #4a3a2e;
 
       --color-honey-soft: #3a2c12;
@@ -271,6 +308,9 @@
   --color-success: #15803d;
   --color-warning: #d97706;
   --color-error: #b91c1c;
+  --color-success-content: #fffdfa;
+  --color-warning-content: #281d16;
+  --color-error-content: #fffdfa;
 
   --radius-field: 0.75rem;
   --radius-box: 1.25rem;
@@ -298,6 +338,9 @@
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
+  --color-success-content: #1e130b;
+  --color-warning-content: #1e130b;
+  --color-error-content: #1e130b;
 
   --radius-field: 0.75rem;
   --radius-box: 1.25rem;

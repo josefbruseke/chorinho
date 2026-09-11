@@ -125,7 +125,7 @@ const Bloco = ({ titulo, Icon, perguntas }: { titulo: string; Icon: typeof UserI
     <div className="flex flex-col gap-2">
       {perguntas.map(({ q, a }) => (
         <details key={q} className="group rounded-box border border-base-300 bg-base-100 overflow-hidden">
-          <summary className="cursor-pointer list-none px-4 py-3 font-bold text-sm flex items-center justify-between gap-3 hover:bg-base-200 transition-colors">
+          <summary className="cursor-pointer list-none px-4 min-h-12 font-bold text-sm flex items-center justify-between gap-3 hover:bg-base-200 transition-colors">
             <span>{q}</span>
             <span className="text-primary text-lg leading-none shrink-0 transition-transform group-open:rotate-45">
               +
@@ -153,9 +153,10 @@ const Ajuda: NextPage = () => (
     <Bloco titulo="Carteira e segurança" Icon={ShieldCheckIcon} perguntas={CARTEIRA} />
     <Bloco titulo="Tenho um comércio" Icon={BuildingStorefrontIcon} perguntas={COMERCIANTE} />
 
-    <aside className="rounded-box border border-base-300 bg-base-100 p-5 flex flex-col gap-2">
-      <strong className="font-serif font-extrabold text-secondary">Cuidado com golpes</strong>
-      <p className="m-0 text-sm text-base-content/80 leading-relaxed">
+    {/* Aviso crítico — mesmo tratamento visual de /carteira-e-seguranca, para golpes contra o usuário saltarem aos olhos. */}
+    <aside className="rounded-box border-2 border-warning bg-warning/10 p-5 flex flex-col gap-2">
+      <strong className="font-serif font-extrabold text-base sm:text-lg text-secondary">Cuidado com golpes</strong>
+      <p className="m-0 text-sm text-base-content/85 leading-relaxed">
         Ninguém do Chorinho vai pedir sua senha, um código de verificação ou a chave da sua carteira — nem por e-mail,
         nem por WhatsApp, nem no balcão. Qualquer pedido assim é golpe, mesmo que pareça vir da gente.
       </p>

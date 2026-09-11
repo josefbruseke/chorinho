@@ -91,7 +91,7 @@ const Passe: NextPage = () => {
         <ExclamationTriangleIcon className="w-12 h-12 text-warning" />
         <h1 className="text-xl font-serif font-black m-0 text-secondary">Não deu para gerar seu passe</h1>
         <p className="m-0 text-sm opacity-75 max-w-xs leading-relaxed">{erro}</p>
-        <button type="button" onClick={renovar} className="btn btn-primary rounded-2xl font-bold gap-2">
+        <button type="button" onClick={renovar} className="btn btn-primary h-14 rounded-2xl font-black gap-2 px-8">
           <ArrowPathIcon className="w-5 h-5" />
           Tentar de novo
         </button>
@@ -129,15 +129,15 @@ const Passe: NextPage = () => {
       {/* Saída para quando a câmera do balcão não coopera. Dígitos grandes e
           espaçados: alguém vai ler em voz alta, com fila esperando. */}
       <div className="w-full max-w-xs rounded-box border border-base-300 bg-base-100 p-4 text-center">
-        <span className="text-xs font-bold uppercase tracking-wider opacity-60">Câmera não funciona?</span>
-        <p className="m-0 mt-1.5 font-mono text-3xl font-black tracking-[0.3em] text-secondary">
+        <span className="text-xs font-bold uppercase tracking-wider opacity-70">Câmera não funciona?</span>
+        <p className="m-0 mt-1.5 font-mono text-4xl font-black tracking-[0.3em] text-secondary">
           {passe?.codigoCurto ?? "······"}
         </p>
-        <span className="text-xs opacity-65">Dite este código para o atendente</span>
+        <span className="text-xs opacity-70">Dite este código para o atendente</span>
       </div>
 
-      <Link href="/carteira" className="btn btn-ghost btn-sm rounded-xl gap-1.5">
-        <TicketIcon className="w-4 h-4" />
+      <Link href="/carteira" className="btn btn-ghost h-12 rounded-2xl gap-1.5">
+        <TicketIcon className="w-5 h-5" />
         Ver minhas cartelas
       </Link>
     </div>

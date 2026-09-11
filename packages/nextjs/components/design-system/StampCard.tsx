@@ -33,7 +33,9 @@ export const StampCard: React.FC<StampCardProps> = ({
       <div className="flex items-center justify-between pb-4 border-b border-base-300">
         <div>
           <span className="text-[11px] font-bold uppercase tracking-wider text-kraft-ink">{category}</span>
-          <h3 className="text-lg md:text-xl font-extrabold text-secondary tracking-tight">{establishmentName}</h3>
+          <h3 className="font-serif text-lg md:text-xl font-extrabold text-secondary tracking-tight">
+            {establishmentName}
+          </h3>
         </div>
         <span className="text-xs font-bold px-3 py-1 rounded-full bg-base-300 text-base-content">
           {punchedSlots} de {totalSlots} carimbos
@@ -55,7 +57,7 @@ export const StampCard: React.FC<StampCardProps> = ({
                     ? "bg-primary text-primary-content shadow-md scale-105 rotate-[-3deg]"
                     : isRewardSlot
                       ? "border-2 border-dashed border-accent bg-honey-soft/60 text-accent"
-                      : "border-2 border-dashed border-kraft-edge bg-base-100/70 text-base-content/40"
+                      : "border-2 border-dashed border-kraft-edge bg-base-100/70 text-base-content/70"
                 }`}
               >
                 {isPunched ? (
@@ -88,7 +90,7 @@ export const StampCard: React.FC<StampCardProps> = ({
           <button
             type="button"
             onClick={onStamp}
-            className="btn btn-sm btn-primary rounded-xl font-bold gap-1.5 shadow-sm active:scale-95"
+            className="btn btn-sm btn-primary min-h-12 rounded-xl font-bold gap-1.5 shadow-sm active:scale-95"
           >
             {isComplete ? "Reiniciar Cartela" : "+ Carimbar Balcão"}
           </button>

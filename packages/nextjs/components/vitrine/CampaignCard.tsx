@@ -75,7 +75,7 @@ export const CampaignCard = ({
               {meta.establishment}
               <VerifiedBadge compact />
             </span>
-            <span className="text-xs opacity-60 flex items-center gap-1">
+            <span className="text-xs opacity-70 flex items-center gap-1">
               {meta.cuisine ?? cat.label}
               {meta.neighborhood && (
                 <>
@@ -87,18 +87,19 @@ export const CampaignCard = ({
             </span>
           </>
         ) : (
-          <span className="text-xs uppercase tracking-wide opacity-60 inline-flex items-center gap-1">
+          <span className="text-xs uppercase tracking-wide opacity-70 inline-flex items-center gap-1">
             <CategoryIcon iconKey={cat.iconKey} className="w-3.5 h-3.5" />
             <span>{cat.label}</span>
           </span>
         )}
-        <h3 className="card-title text-base leading-snug mt-0.5">{campaignDisplayName(campaign)}</h3>
+        <h3 className="card-title font-serif text-base leading-snug mt-0.5">{campaignDisplayName(campaign)}</h3>
         <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-base-200">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider opacity-60 block">Adesão</span>
-            <span className="font-serif font-black text-primary text-base">{formatPrice(campaign.price)}</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider opacity-70 block">Adesão</span>
+            <span className="font-mono font-black text-primary text-base">{formatPrice(campaign.price)}</span>
           </div>
           {onQuickJoin ? (
+            // Alvo de toque de 48px mesmo dentro do card compacto da grade.
             <button
               type="button"
               onClick={e => {
@@ -106,9 +107,9 @@ export const CampaignCard = ({
                 e.stopPropagation();
                 onQuickJoin(campaign);
               }}
-              className="btn btn-primary btn-xs rounded-xl font-bold gap-1 px-3 shadow-xs active:scale-95"
+              className="btn btn-primary h-12 rounded-xl font-bold gap-1 px-4 shadow-xs active:scale-95"
             >
-              <TicketIcon className="w-3.5 h-3.5" />
+              <TicketIcon className="w-4 h-4" />
               <span>Participar</span>
             </button>
           ) : (

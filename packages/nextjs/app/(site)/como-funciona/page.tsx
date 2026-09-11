@@ -74,11 +74,11 @@ const ComoFunciona: NextPage = () => (
     </ol>
 
     <div className="flex flex-col sm:flex-row gap-3">
-      <Link href="/mapa" className="btn btn-primary rounded-2xl font-bold gap-2">
+      <Link href="/mapa" className="btn btn-primary min-h-14 rounded-2xl font-black gap-2">
         <MapIcon className="w-5 h-5" />
         Ver comércios perto de mim
       </Link>
-      <Link href="/ajuda" className="btn btn-ghost rounded-2xl font-bold">
+      <Link href="/ajuda" className="btn btn-ghost min-h-12 rounded-2xl font-bold">
         Tirar uma dúvida
       </Link>
     </div>

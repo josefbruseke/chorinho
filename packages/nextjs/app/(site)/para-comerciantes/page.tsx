@@ -97,16 +97,16 @@ const ParaComerciantes: NextPage = () => (
           </div>
         ))}
       </div>
-      <p className="m-0 text-center text-xs opacity-65">
+      <p className="m-0 text-center text-xs opacity-75">
         Os preços ainda estão sendo definidos e serão publicados antes da abertura para cadastro.
       </p>
     </section>
 
     <div className="flex flex-col sm:flex-row gap-3 justify-center">
-      <Link href="/cadastro" className="btn btn-primary rounded-2xl font-bold">
+      <Link href="/cadastro" className="btn btn-primary min-h-14 rounded-2xl font-black">
         Quero cadastrar meu comércio
       </Link>
-      <Link href="/ajuda" className="btn btn-ghost rounded-2xl font-bold">
+      <Link href="/ajuda" className="btn btn-ghost min-h-12 rounded-2xl font-bold">
         Tenho dúvidas
       </Link>
     </div>

@@ -42,7 +42,7 @@ export const CounterPad: React.FC<CounterPadProps> = ({
           Código do Cliente
         </span>
         <div className="font-mono text-3xl font-black tracking-widest text-secondary min-h-[40px] flex items-center justify-center">
-          {value || <span className="text-base-content/40">{placeholder}</span>}
+          {value || <span className="text-base-content/70">{placeholder}</span>}
         </div>
       </div>
 
@@ -53,7 +53,7 @@ export const CounterPad: React.FC<CounterPadProps> = ({
             key={digit}
             type="button"
             onClick={() => handleDigit(digit)}
-            className="h-14 rounded-2xl bg-base-200 hover:bg-craft border border-base-300 text-xl font-black text-secondary transition-all active:scale-95 flex items-center justify-center shadow-xs"
+            className="h-14 rounded-2xl bg-base-200 hover:bg-craft border border-base-300 font-mono text-xl font-black text-secondary transition-all active:scale-95 flex items-center justify-center shadow-xs"
           >
             {digit}
           </button>
@@ -68,7 +68,7 @@ export const CounterPad: React.FC<CounterPadProps> = ({
         <button
           type="button"
           onClick={() => handleDigit("0")}
-          className="h-14 rounded-2xl bg-base-200 hover:bg-craft border border-base-300 text-xl font-black text-secondary transition-all active:scale-95 flex items-center justify-center shadow-xs"
+          className="h-14 rounded-2xl bg-base-200 hover:bg-craft border border-base-300 font-mono text-xl font-black text-secondary transition-all active:scale-95 flex items-center justify-center shadow-xs"
         >
           0
         </button>
@@ -87,7 +87,7 @@ export const CounterPad: React.FC<CounterPadProps> = ({
           type="button"
           disabled={!value || isLoading}
           onClick={onSubmit}
-          className="w-full py-4 rounded-2xl bg-primary hover:brightness-90 text-primary-content font-extrabold text-base shadow-md disabled:opacity-40 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+          className="w-full min-h-14 py-4 rounded-2xl bg-primary hover:brightness-90 text-primary-content font-extrabold text-base shadow-md disabled:opacity-70 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
         >
           {isLoading ? (
             <span className="loading loading-spinner loading-sm" />

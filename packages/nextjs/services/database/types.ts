@@ -60,6 +60,7 @@ export type Database = {
           opening_hours: Json;
           owner_profile_id: string | null;
           phone: string | null;
+          pos_limit: number;
           postal_code: string | null;
           slug: string;
           state: string | null;
@@ -86,6 +87,7 @@ export type Database = {
           opening_hours?: Json;
           owner_profile_id?: string | null;
           phone?: string | null;
+          pos_limit?: number;
           postal_code?: string | null;
           slug: string;
           state?: string | null;
@@ -112,6 +114,7 @@ export type Database = {
           opening_hours?: Json;
           owner_profile_id?: string | null;
           phone?: string | null;
+          pos_limit?: number;
           postal_code?: string | null;
           slug?: string;
           state?: string | null;
@@ -152,6 +155,51 @@ export type Database = {
         Row: { created_at: string; profile_id: string };
         Insert: { created_at?: string; profile_id: string };
         Update: { created_at?: string; profile_id?: string };
+        Relationships: [];
+      };
+      pos_terminals: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          device_label: string | null;
+          establishment_id: string;
+          id: string;
+          last_seen_at: string | null;
+          name: string;
+          paired_at: string | null;
+          pairing_code: string | null;
+          pairing_expires_at: string | null;
+          revoked_at: string | null;
+          token_hash: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          device_label?: string | null;
+          establishment_id: string;
+          id?: string;
+          last_seen_at?: string | null;
+          name: string;
+          paired_at?: string | null;
+          pairing_code?: string | null;
+          pairing_expires_at?: string | null;
+          revoked_at?: string | null;
+          token_hash?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          device_label?: string | null;
+          establishment_id?: string;
+          id?: string;
+          last_seen_at?: string | null;
+          name?: string;
+          paired_at?: string | null;
+          pairing_code?: string | null;
+          pairing_expires_at?: string | null;
+          revoked_at?: string | null;
+          token_hash?: string | null;
+        };
         Relationships: [];
       };
       profiles: {
@@ -202,6 +250,7 @@ export type Database = {
           id: string;
           operator_profile_id: string | null;
           points_burned: number | null;
+          pos_terminal_id: string | null;
           reward_id: string;
           stamps_burned: number | null;
           status: Database["public"]["Enums"]["status_venda"];
@@ -218,6 +267,7 @@ export type Database = {
           id?: string;
           operator_profile_id?: string | null;
           points_burned?: number | null;
+          pos_terminal_id?: string | null;
           reward_id: string;
           stamps_burned?: number | null;
           status?: Database["public"]["Enums"]["status_venda"];
@@ -234,6 +284,7 @@ export type Database = {
           id?: string;
           operator_profile_id?: string | null;
           points_burned?: number | null;
+          pos_terminal_id?: string | null;
           reward_id?: string;
           stamps_burned?: number | null;
           status?: Database["public"]["Enums"]["status_venda"];
@@ -310,6 +361,7 @@ export type Database = {
           id: string;
           operator_profile_id: string | null;
           points_issued: number | null;
+          pos_terminal_id: string | null;
           products: Json;
           sale_ref: string;
           stamps_issued: number | null;
@@ -327,6 +379,7 @@ export type Database = {
           id?: string;
           operator_profile_id?: string | null;
           points_issued?: number | null;
+          pos_terminal_id?: string | null;
           products?: Json;
           sale_ref: string;
           stamps_issued?: number | null;
@@ -344,6 +397,7 @@ export type Database = {
           id?: string;
           operator_profile_id?: string | null;
           points_issued?: number | null;
+          pos_terminal_id?: string | null;
           products?: Json;
           sale_ref?: string;
           stamps_issued?: number | null;

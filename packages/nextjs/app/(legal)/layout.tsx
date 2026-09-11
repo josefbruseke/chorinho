@@ -9,8 +9,8 @@ import { FlavorTheme } from "~~/components/FlavorTheme";
 const LegalLayout = ({ children }: { children: React.ReactNode }) => (
   <FlavorTheme flavor="cliente" className="flex flex-col min-h-screen bg-base-100">
     <header className="border-b border-base-300 print:hidden">
-      <div className="max-w-3xl mx-auto px-5 py-4 flex items-center gap-2.5">
-        <Link href="/" className="flex items-center gap-2.5 group">
+      <div className="max-w-3xl mx-auto px-5 py-3 flex items-center gap-2.5">
+        <Link href="/" className="flex items-center gap-2.5 min-h-12 group">
           <BrandLogo className="w-8 h-8 group-hover:scale-105 transition-transform" />
           <span className="font-black tracking-tight">Chorinho</span>
         </Link>
@@ -20,17 +20,30 @@ const LegalLayout = ({ children }: { children: React.ReactNode }) => (
     <main className="flex-1 w-full max-w-3xl mx-auto px-5 py-10">{children}</main>
 
     <footer className="border-t border-base-300 print:hidden">
-      <div className="max-w-3xl mx-auto px-5 py-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-base-content/70">
-        <Link href="/privacidade" className="hover:text-primary transition-colors">
+      {/* min-h-12 em cada link: rodapé é a navegação legal inteira num celular na mão de alguém — não pode exigir precisão de mira. */}
+      <div className="max-w-3xl mx-auto px-5 py-3 flex flex-wrap gap-x-2 gap-y-1 text-sm font-semibold text-base-content/70">
+        <Link
+          href="/privacidade"
+          className="flex items-center min-h-12 px-2 rounded-xl hover:bg-base-200 hover:text-primary transition-colors"
+        >
           Privacidade
         </Link>
-        <Link href="/termos" className="hover:text-primary transition-colors">
+        <Link
+          href="/termos"
+          className="flex items-center min-h-12 px-2 rounded-xl hover:bg-base-200 hover:text-primary transition-colors"
+        >
           Termos de uso
         </Link>
-        <Link href="/carteira-e-seguranca" className="hover:text-primary transition-colors">
+        <Link
+          href="/carteira-e-seguranca"
+          className="flex items-center min-h-12 px-2 rounded-xl hover:bg-base-200 hover:text-primary transition-colors"
+        >
           Carteira e segurança
         </Link>
-        <Link href="/cookies" className="hover:text-primary transition-colors">
+        <Link
+          href="/cookies"
+          className="flex items-center min-h-12 px-2 rounded-xl hover:bg-base-200 hover:text-primary transition-colors"
+        >
           Cookies
         </Link>
       </div>

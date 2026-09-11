@@ -25,7 +25,7 @@ export const SwitchTheme = ({ className }: { className?: string }) => {
   if (!mounted) return null;
 
   return (
-    <div className={`flex space-x-2 h-8 items-center justify-center text-sm ${className}`}>
+    <div className={`flex space-x-2 min-h-12 items-center justify-center text-sm ${className}`}>
       {/* [--depth:0] removes DaisyUI's glossy top highlight so the indicator is a single flat color */}
       <input
         id="theme-toggle"

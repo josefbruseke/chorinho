@@ -26,6 +26,15 @@ type Saude = {
  * do balcão — por isso o saldo baixo é a única coisa nesta tela que aparece
  * em vermelho antes de qualquer outra informação.
  */
+/**
+ * Quatro casas bastam para a pergunta que esta tela responde.
+ *
+ * `formatEther` devolve os dezoito dígitos inteiros, e "9999.988756814960796216"
+ * não é um número que alguém lê — é um número que alguém ignora.
+ */
+const emEth = (valor?: string) =>
+  valor === undefined ? "—" : Number(valor).toLocaleString("pt-BR", { maximumFractionDigits: 4 });
+
 export const SaudeDoRelayer = () => {
   const [dados, setDados] = useState<Saude>();
   const [erro, setErro] = useState<string>();
@@ -93,7 +102,7 @@ export const SaudeDoRelayer = () => {
               <span
                 className={`mt-1 block font-mono text-2xl font-black leading-none ${dados.saldoBaixo ? "text-error" : "text-secondary"}`}
               >
-                {dados.saldoEth} ETH
+                {emEth(dados.saldoEth)} ETH
               </span>
             </div>
             <div className="rounded-2xl border border-base-300 bg-base-100 p-4">

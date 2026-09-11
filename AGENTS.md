@@ -26,30 +26,30 @@ Commands work the same for both flavors unless noted otherwise:
 
 ```bash
 # Development workflow (run each in separate terminal)
-yarn chain          # Start local blockchain (Hardhat or Anvil)
-yarn deploy         # Deploy contracts to local network
-yarn start          # Start Next.js frontend at http://localhost:3000
+bun chain          # Start local blockchain (Hardhat or Anvil)
+bun deploy         # Deploy contracts to local network
+bun start          # Start Next.js frontend at http://localhost:3000
 
 # Code quality
-yarn lint           # Lint both packages
-yarn format         # Format both packages
+bun lint           # Lint both packages
+bun format         # Format both packages
 
 # Building
-yarn next:build     # Build frontend
-yarn compile        # Compile Solidity contracts
+bun next:build     # Build frontend
+bun compile        # Compile Solidity contracts
 
 # Contract verification (works for both)
-yarn verify --network <network>
+bun verify --network <network>
 
 # Account management (works for both)
-yarn generate            # Generate new deployer account
-yarn account:import      # Import existing private key
-yarn account             # View current account info
+bun generate            # Generate new deployer account
+bun account:import      # Import existing private key
+bun account             # View current account info
 
 # Deploy to live network
-yarn deploy --network <network>   # e.g., sepolia, mainnet, base
+bun deploy --network <network>   # e.g., sepolia, mainnet, base
 
-yarn vercel:yolo --prod # for deployment of frontend
+bun vercel:yolo --prod # for deployment of frontend
 ```
 
 ## Architecture
@@ -68,7 +68,7 @@ yarn vercel:yolo --prod # for deployment of frontend
     // In packages/hardhat/deploy/01_deploy_my_contract.ts
     deployMyContract.tags = ["MyContract"];
     ```
-  - `yarn deploy --tags MyContract`
+  - `bun deploy --tags MyContract`
   - **Gas limit in deploy scripts**: Manual post-deploy calls (e.g. `transferOwnership`, `grantRole`, `initialize`) can silently inherit `blockGasLimit` as their gas cap, causing failures. **Fix at the call site, not in `hardhat.config.ts`:**
     ```typescript
     // Preferred: estimateGas + 20% margin
@@ -87,11 +87,11 @@ yarn vercel:yolo --prod # for deployment of frontend
 - Tests: `packages/foundry/test/`
 - Config: `packages/foundry/foundry.toml`
 - Deploying a specific contract:
-  - Create a separate deployment script and run `yarn deploy --file DeployYourContract.s.sol`
+  - Create a separate deployment script and run `bun deploy --file DeployYourContract.s.sol`
 
 #### Both Flavors
 
-- After `yarn deploy`, ABIs are auto-generated to `packages/nextjs/contracts/deployedContracts.ts`
+- After `bun deploy`, ABIs are auto-generated to `packages/nextjs/contracts/deployedContracts.ts`
 
 ### Frontend Contract Interaction
 

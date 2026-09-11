@@ -71,12 +71,12 @@ For querying Ponder's GraphQL API from the frontend, add to `packages/nextjs/`:
 
 ```json
 {
-  "ponder:dev": "yarn workspace @se-2/ponder dev",
-  "ponder:start": "yarn workspace @se-2/ponder start",
-  "ponder:codegen": "yarn workspace @se-2/ponder codegen",
-  "ponder:serve": "yarn workspace @se-2/ponder serve",
-  "ponder:lint": "yarn workspace @se-2/ponder lint",
-  "ponder:typecheck": "yarn workspace @se-2/ponder typecheck"
+  "ponder:dev": "bun workspace @se-2/ponder dev",
+  "ponder:start": "bun workspace @se-2/ponder start",
+  "ponder:codegen": "bun workspace @se-2/ponder codegen",
+  "ponder:serve": "bun workspace @se-2/ponder serve",
+  "ponder:lint": "bun workspace @se-2/ponder lint",
+  "ponder:typecheck": "bun workspace @se-2/ponder typecheck"
 }
 ```
 
@@ -228,5 +228,5 @@ const { data } = useQuery({
 
 ## Development & Production
 
-- `yarn ponder:dev` starts the dev server with hot reload. GraphiQL explorer available at `http://localhost:42069` for testing queries interactively.
+- `bun ponder:dev` starts the dev server with hot reload. GraphiQL explorer available at `http://localhost:42069` for testing queries interactively.
 - For production, set `PONDER_RPC_URL_{chainId}` with a production RPC, optionally configure `DATABASE_URL` for Postgres (defaults to PGlite in dev), and point `NEXT_PUBLIC_PONDER_URL` to the deployed Ponder URL. See [Ponder deployment docs](https://ponder.sh/docs/production/railway).

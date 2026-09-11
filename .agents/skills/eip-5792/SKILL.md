@@ -118,7 +118,7 @@ await showCallsStatusAsync({ id: batchId });
 
 ## How to Test
 
-1. Deploy the contract: `yarn deploy`
-2. Start the frontend: `yarn start`
+1. Deploy the contract: `bun deploy`
+2. Start the frontend: `bun start`
 3. For basic batching: use any wallet on localhost (SE-2's burner wallet works)
 4. For advanced capabilities (paymasters, atomic execution): deploy to a live testnet and connect with an [EIP-5792 compliant wallet](https://www.eip5792.xyz/ecosystem/wallets)

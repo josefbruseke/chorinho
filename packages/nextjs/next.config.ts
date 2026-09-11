@@ -10,6 +10,9 @@ const nextConfig: NextConfig = {
       { source: "/meus-cupons", destination: "/carteira", permanent: true },
       { source: "/meus-cupons/:id", destination: "/carteira/:id", permanent: true },
       { source: "/parceiro", destination: "/pdv", permanent: true },
+      // O scanner deixou de ser rota propria no M4: escanear e uma etapa da
+      // venda, nao um destino.
+      { source: "/pdv/escanear", destination: "/pdv", permanent: true },
     ];
   },
   typescript: {
@@ -27,4 +30,4 @@ if (isIpfs) {
   };
 }
 
-module.exports = nextConfig;
+export default nextConfig;

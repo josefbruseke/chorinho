@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "bun run lint && next build",
+    "build": "bun run lint && next build && serwist build",
     "check-types": "tsc --noEmit --incremental",
     "dev": "next dev",
     "format": "prettier --write . '!(node_modules|.next)/**/*'",
@@ -13,7 +13,8 @@
     "start": "next dev",
     "vercel": "vercel --build-env VERCEL_TELEMETRY_DISABLED=1",
     "vercel:login": "vercel login",
-    "vercel:yolo": "vercel --build-env NEXT_PUBLIC_IGNORE_BUILD_ERROR=true --build-env VERCEL_TELEMETRY_DISABLED=1"
+    "vercel:yolo": "vercel --build-env NEXT_PUBLIC_IGNORE_BUILD_ERROR=true --build-env VERCEL_TELEMETRY_DISABLED=1",
+    "sw:build": "serwist build"
   },
   "dependencies": {
     "@heroicons/react": "~2.2.0",
@@ -32,6 +33,7 @@
     "burner-connector": "0.0.21",
     "daisyui": "5.5.19",
     "html5-qrcode": "^2.3.8",
+    "idb-keyval": "~6.3.0",
     "kubo-rpc-client": "~6.1.0",
     "leaflet": "~1.9.4",
     "leaflet.markercluster": "~1.5.3",
@@ -49,6 +51,8 @@
     "zustand": "~5.0.12"
   },
   "devDependencies": {
+    "@serwist/cli": "~9.5.12",
+    "@serwist/next": "~9.5.12",
     "@tailwindcss/postcss": "4.2.4",
     "@trivago/prettier-plugin-sort-imports": "~6.0.2",
     "@types/leaflet": "~1.9.22",
@@ -58,12 +62,15 @@
     "@types/react-dom": "~19.2.0",
     "abitype": "1.2.4",
     "bgipfs": "~0.0.18",
+    "esbuild": "~0.28.2",
     "eslint": "~9.39.0",
     "eslint-config-next": "~16.2.4",
     "eslint-config-prettier": "~10.1.8",
     "eslint-plugin-prettier": "~5.5.5",
     "postcss": "~8.5.10",
     "prettier": "~3.8.3",
+    "server-only": "^0.0.1",
+    "serwist": "~9.5.12",
     "tailwindcss": "4.2.4",
     "type-fest": "~5.6.0",
     "typescript": "~5.8.2",

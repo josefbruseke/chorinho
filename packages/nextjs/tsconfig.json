@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": ["dom", "dom.iterable", "esnext", "webworker"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -11,6 +11,7 @@
     "module": "esnext",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
+    "types": ["node", "react", "react-dom", "@serwist/next/typings"],
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
@@ -24,5 +25,5 @@
     ]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", ".next/dev/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "public/sw.js"]
 }

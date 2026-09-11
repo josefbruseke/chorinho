@@ -5,6 +5,11 @@ import prettierPlugin from "eslint-plugin-prettier";
 import { defineConfig } from "eslint/config";
 
 export default defineConfig([
+  {
+    // Bloco proprio: no flat config, `ignores` junto de `rules` so vale para
+    // aquele bloco. Sozinho, vale para a execucao inteira.
+    ignores: [".next/**", "next-env.d.ts", "public/sw.js", "public/swe-worker-*.js"],
+  },
   ...nextCoreWebVitals,
   ...nextTypescript,
   prettierConfig,
@@ -24,7 +29,6 @@ export default defineConfig([
         },
       ],
     },
-    ignores: [".next", "next-env.d.ts"],
   },
   {
     files: ["**/*.ts", "**/*.tsx"],

@@ -5,10 +5,12 @@ import {
   type CarimbosEmitidos,
   type VendaOnchain,
   emitirCarimbos,
+  erroDoContrato,
   lerCartela,
   refDaVenda,
   relayerConfigurado,
 } from "~~/services/relayer/servidor";
+import { formatarCentavos } from "~~/utils/dinheiro";
 import { codigoCurtoValido, decodificarPasse } from "~~/utils/pass";
 
 /**
@@ -317,9 +319,9 @@ type Pendente = { saleRef: string; cliente: Cliente; venda: VendaOnchain };
 const enviarComRetentativaIndividual = async (pendentes: Pendente[]) => {
   const saida = new Map<string, ResultadoVenda>();
 
-  const aplicar = (lote: Pendente[], hash: string, porCarteira: Map<string, CarimbosEmitidos>) => {
+  const aplicar = (lote: Pendente[], hash: string, porVenda: Map<string, CarimbosEmitidos>) => {
     for (const p of lote) {
-      const creditado = porCarteira.get(p.cliente.carteira);
+      const creditado = porVenda.get(p.venda.saleRef.toLowerCase());
       saida.set(p.saleRef, {
         saleRef: p.saleRef,
         ok: true,
@@ -334,8 +336,8 @@ const enviarComRetentativaIndividual = async (pendentes: Pendente[]) => {
   };
 
   try {
-    const { hash, porCarteira } = await emitirCarimbos(pendentes.map(p => p.venda));
-    aplicar(pendentes, hash, porCarteira);
+    const { hash, porVenda } = await emitirCarimbos(pendentes.map(p => p.venda));
+    aplicar(pendentes, hash, porVenda);
     return saida;
   } catch (e) {
     if (pendentes.length === 1) {
@@ -346,8 +348,8 @@ const enviarComRetentativaIndividual = async (pendentes: Pendente[]) => {
 
   for (const p of pendentes) {
     try {
-      const { hash, porCarteira } = await emitirCarimbos([p.venda]);
-      aplicar([p], hash, porCarteira);
+      const { hash, porVenda } = await emitirCarimbos([p.venda]);
+      aplicar([p], hash, porVenda);
     } catch (e) {
       saida.set(p.saleRef, { saleRef: p.saleRef, ok: false, erro: mensagemDeRede(e) });
     }
@@ -418,16 +420,41 @@ const atualizarCache = async (balcao: Balcao, carteiras: string[]) => {
   );
 };
 
-/** Traduz o erro cru da rede para algo que o atendente consiga agir. */
+/** Traduz o erro da rede para algo que o atendente consiga agir. */
 const mensagemDeRede = (e: unknown) => {
   const cru = e instanceof Error ? e.message : String(e);
-  if (cru.includes("TicketBelowFloor")) return "valor abaixo do mínimo desta loja para gerar carimbo";
-  if (cru.includes("CooldownActive")) return "este cliente já recebeu carimbo há pouco";
-  if (cru.includes("SubscriptionInactive")) return "a assinatura da loja está vencida";
-  if (cru.includes("EstablishmentInactive")) return "esta loja está inativa na rede";
-  if (cru.includes("RuleInactive")) return "a loja ainda não configurou a regra de carimbos";
-  if (cru.includes("SaleAlreadyProcessed")) return "esta venda já tinha sido creditada";
-  if (cru.includes("NotOperator")) return "o relayer não tem permissão nesta loja";
-  if (cru.includes("BoostTooHigh")) return "bônus de produto acima do teto";
-  return "não foi possível enviar para a rede agora";
+  // O atendente recebe a versao curta; o log guarda a inteira. Sem isto, uma
+  // configuracao errada de relayer vira "nao foi possivel enviar" e ninguem
+  // descobre por que.
+  console.error("[pdv] falha ao emitir carimbos:", cru);
+
+  const contrato = erroDoContrato(e);
+  switch (contrato?.nome) {
+    case "TicketBelowFloor": {
+      const minimo = Number(contrato.args?.[1] ?? 0);
+      return minimo > 0
+        ? `esta loja so carimba a partir de ${formatarCentavos(minimo)}`
+        : "valor abaixo do minimo desta loja para gerar carimbo";
+    }
+    case "CooldownActive": {
+      const faltam = Number(contrato.args?.[0] ?? 0);
+      return faltam > 60
+        ? `este cliente ja recebeu carimbo ha pouco — volte em ${Math.ceil(faltam / 60)} min`
+        : "este cliente ja recebeu carimbo ha pouco";
+    }
+    case "SubscriptionInactive":
+      return "a assinatura da loja esta vencida — o resgate continua valendo, a emissao nao";
+    case "EstablishmentInactive":
+      return "esta loja esta inativa na rede";
+    case "RuleInactive":
+      return "a loja ainda nao configurou a regra de carimbos";
+    case "SaleAlreadyProcessed":
+      return "esta venda ja tinha sido creditada";
+    case "NotOperator":
+      return "o relayer nao tem permissao nesta loja";
+    case "BoostTooHigh":
+      return "bonus de produto acima do teto";
+    default:
+      return "nao foi possivel enviar para a rede agora";
+  }
 };

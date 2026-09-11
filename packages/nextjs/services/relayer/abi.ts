@@ -96,4 +96,33 @@ export const ABI_LEDGER = [
       { name: "streakCurrent", type: "uint32", indexed: false },
     ],
   },
+  // Os erros customizados precisam estar aqui: sem eles o viem devolve apenas
+  // o seletor cru (`0x1ef1e92d`) e o balcao mostra "nao foi possivel enviar"
+  // quando o problema era so a compra estar abaixo do piso da loja.
+  { type: "error", name: "NotAdmin", inputs: [] },
+  { type: "error", name: "NotOperator", inputs: [] },
+  { type: "error", name: "SubscriptionInactive", inputs: [] },
+  { type: "error", name: "EstablishmentInactive", inputs: [] },
+  { type: "error", name: "RuleInactive", inputs: [] },
+  { type: "error", name: "SaleAlreadyProcessed", inputs: [] },
+  {
+    type: "error",
+    name: "TicketBelowFloor",
+    inputs: [
+      { name: "amountCents", type: "uint64" },
+      { name: "minTicketCents", type: "uint64" },
+    ],
+  },
+  { type: "error", name: "CooldownActive", inputs: [{ name: "secondsRemaining", type: "uint64" }] },
+  { type: "error", name: "BoostTooHigh", inputs: [{ name: "boostBps", type: "uint16" }] },
+  { type: "error", name: "InvalidRule", inputs: [] },
+  {
+    type: "error",
+    name: "InsufficientStamps",
+    inputs: [
+      { name: "balance", type: "uint256" },
+      { name: "requested", type: "uint256" },
+    ],
+  },
+  { type: "error", name: "NothingToIssue", inputs: [] },
 ] as const;

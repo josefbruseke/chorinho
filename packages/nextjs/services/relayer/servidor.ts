@@ -1,6 +1,15 @@
 import { ABI_LEDGER } from "./abi";
 import "server-only";
-import { createPublicClient, createWalletClient, http, keccak256, parseEventLogs, stringToHex } from "viem";
+import {
+  BaseError,
+  ContractFunctionRevertedError,
+  createPublicClient,
+  createWalletClient,
+  http,
+  keccak256,
+  parseEventLogs,
+  stringToHex,
+} from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { base, baseSepolia, foundry } from "viem/chains";
 import deployedContracts from "~~/contracts/deployedContracts";
@@ -83,7 +92,13 @@ export type VendaOnchain = {
   saleRef: `0x${string}`;
 };
 
-export type CarimbosEmitidos = { carteira: string; carimbos: number; pontos: number; saldo: number; sequencia: number };
+export type CarimbosEmitidos = {
+  carteira: string;
+  carimbos: number;
+  pontos: number;
+  saldo: number;
+  sequencia: number;
+};
 
 /**
  * Envia as vendas para a rede e devolve o que o contrato de fato creditou.
@@ -129,9 +144,13 @@ export const emitirCarimbos = async (vendas: VendaOnchain[]) => {
   // evento em vez de confiar na previsão feita antes do envio.
   const eventos = parseEventLogs({ abi: ABI_LEDGER, eventName: "StampsIssued", logs: recibo.logs });
 
-  const porCarteira = new Map<string, CarimbosEmitidos>();
+  // Indexado por `saleRef`, nao por carteira: no lote da fila offline o mesmo
+  // cliente costuma aparecer em duas ou tres vendas, e chavear por carteira
+  // faria a ultima sobrescrever as anteriores -- todas as vendas do cliente
+  // acabariam gravadas com o numero de carimbos da ultima.
+  const porVenda = new Map<string, CarimbosEmitidos>();
   for (const evento of eventos) {
-    porCarteira.set(evento.args.customer.toLowerCase(), {
+    porVenda.set(evento.args.saleRef.toLowerCase(), {
       carteira: evento.args.customer.toLowerCase(),
       carimbos: Number(evento.args.stamps),
       pontos: Number(evento.args.points),
@@ -140,7 +159,7 @@ export const emitirCarimbos = async (vendas: VendaOnchain[]) => {
     });
   }
 
-  return { hash, porCarteira };
+  return { hash, porVenda };
 };
 
 /** Quantos carimbos a venda geraria — o número que o atendente vê antes de confirmar. */
@@ -171,4 +190,18 @@ export const lerCartela = async (establishmentId: bigint, carteira: `0x${string}
     visitas,
     ultimaVisita: Number(ultimaVisita),
   };
+};
+
+/**
+ * O nome do erro que o contrato lancou, quando houve um.
+ *
+ * Comparar pedaco de texto da mensagem funcionava ate alguem renomear um erro
+ * no contrato — e aí o balcao passaria a mostrar a mensagem generica sem que
+ * nenhum teste reclamasse. Aqui a leitura e estruturada.
+ */
+export const erroDoContrato = (e: unknown) => {
+  if (!(e instanceof BaseError)) return undefined;
+  const revert = e.walk(err => err instanceof ContractFunctionRevertedError);
+  if (!(revert instanceof ContractFunctionRevertedError)) return undefined;
+  return { nome: revert.data?.errorName, args: revert.data?.args as readonly unknown[] | undefined };
 };

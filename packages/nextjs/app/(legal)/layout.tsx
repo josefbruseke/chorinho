@@ -7,7 +7,7 @@ import { FlavorTheme } from "~~/components/FlavorTheme";
  * contraste, coluna estreita e sem distração, para ler e imprimir bem.
  */
 const LegalLayout = ({ children }: { children: React.ReactNode }) => (
-  <FlavorTheme flavor="cliente" className="flex flex-col min-h-screen bg-base-100">
+  <FlavorTheme flavor="cliente" className="flex flex-col min-h-[100dvh] bg-base-100">
     <header className="border-b border-base-300 print:hidden">
       <div className="max-w-3xl mx-auto px-5 py-3 flex items-center gap-2.5">
         <Link href="/" className="flex items-center gap-2.5 min-h-12 group">

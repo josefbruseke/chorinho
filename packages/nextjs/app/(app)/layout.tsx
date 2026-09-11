@@ -16,7 +16,7 @@ export const viewport: Viewport = { themeColor: "#c2410c", viewportFit: "cover" 
  * do polegar — sem cabeçalho de desktop, que só rouba altura no celular.
  */
 const AppLayout = ({ children }: { children: React.ReactNode }) => (
-  <FlavorTheme flavor="cliente" className="flex flex-col min-h-screen bg-base-200">
+  <FlavorTheme flavor="cliente" className="flex flex-col min-h-[100dvh] bg-base-200">
     {/* O flavor do cliente e desenhado para o polegar. Num monitor, a coluna
         estreita continua sendo a leitura certa -- esticar cartela ate 1500px
         so afasta o numero do nome da loja. */}

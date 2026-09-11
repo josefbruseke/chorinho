@@ -88,7 +88,7 @@ const Formulario = () => {
   };
 
   return (
-    <div className="w-full max-w-sm flex flex-col gap-5">
+    <div className="flex w-full flex-col gap-3.5">
       <button
         type="button"
         onClick={comGoogle}
@@ -115,7 +115,7 @@ const Formulario = () => {
             value={email}
             onChange={e => setEmail(e.target.value)}
             placeholder="voce@exemplo.com"
-            className="input input-bordered rounded-2xl bg-base-100"
+            className="input input-bordered h-12 rounded-2xl bg-base-100 text-base"
           />
         </label>
 
@@ -129,7 +129,7 @@ const Formulario = () => {
             value={senha}
             onChange={e => setSenha(e.target.value)}
             placeholder="pelo menos 8 caracteres"
-            className="input input-bordered rounded-2xl bg-base-100"
+            className="input input-bordered h-12 rounded-2xl bg-base-100 text-base"
           />
         </label>
 
@@ -177,17 +177,25 @@ const Formulario = () => {
   );
 };
 
+/**
+ * A entrada.
+ *
+ * Compacta de propósito: num celular de 360 por 640 a tela anterior exigia
+ * rolagem para chegar no botão de entrar, com a marca ocupando um quinto da
+ * altura. Aqui o formulário cabe inteiro, e o que é acessório — termos, voltar
+ * ao site — encolhe em vez de empurrar.
+ */
 const Entrar: NextPage = () => (
-  <div className="flex flex-col items-center justify-center grow px-5 py-12 gap-6">
-    <Link href="/" className="flex flex-col items-center gap-2 group">
-      <BrandLogo className="w-14 h-14 group-hover:scale-105 transition-transform" />
-      <span className="font-black text-xl tracking-tight">Chorinho</span>
+  <div className="mx-auto flex w-full max-w-sm grow flex-col items-center justify-center gap-4 px-5 py-6 sm:gap-6 sm:py-10">
+    <Link href="/" className="group flex items-center gap-2.5">
+      <BrandLogo className="h-10 w-10 transition-transform group-hover:scale-105 sm:h-12 sm:w-12" />
+      <span className="text-xl font-black tracking-tight">Chorinho</span>
     </Link>
 
-    <header className="text-center max-w-sm">
-      <h1 className="text-2xl font-serif font-black m-0 text-secondary">Entrar no Chorinho</h1>
-      <p className="m-0 mt-1.5 text-sm opacity-75 leading-relaxed">
-        Sua carteira é criada sozinha ao entrar. Você não precisa saber nada de blockchain — e nunca vai pagar taxa.
+    <header className="text-center">
+      <h1 className="m-0 font-serif text-2xl font-black text-secondary">Entrar no Chorinho</h1>
+      <p className="m-0 mt-1 text-sm leading-snug opacity-75">
+        Sua carteira é criada sozinha ao entrar. Você nunca vai pagar taxa.
       </p>
     </header>
 
@@ -195,7 +203,7 @@ const Entrar: NextPage = () => (
       <Formulario />
     </Suspense>
 
-    <p className="m-0 text-center text-sm opacity-75 max-w-xs leading-relaxed">
+    <p className="m-0 text-center text-xs leading-relaxed opacity-75">
       Ao entrar você concorda com os{" "}
       <Link href="/termos" className="text-primary underline underline-offset-2">
         Termos
@@ -207,8 +215,8 @@ const Entrar: NextPage = () => (
       .
     </p>
 
-    <Link href="/" className="btn btn-ghost min-h-12 rounded-xl gap-1.5">
-      <ArrowLeftIcon className="w-4 h-4" />
+    <Link href="/" className="btn btn-ghost min-h-12 gap-1.5 rounded-xl">
+      <ArrowLeftIcon className="h-4 w-4" />
       Voltar ao site
     </Link>
   </div>

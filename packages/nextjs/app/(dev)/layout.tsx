@@ -17,7 +17,7 @@ import { emDesenvolvimento } from "~~/utils/desenvolvimento";
  * rodar bun chain?" que não significa nada para ele.
  */
 const DevLayout = ({ children }: { children: React.ReactNode }) => (
-  <FlavorTheme flavor="cliente" className="flex flex-col min-h-screen bg-base-200">
+  <FlavorTheme flavor="cliente" className="flex flex-col min-h-[100dvh] bg-base-200">
     <Header />
     <main className="relative flex flex-col flex-1">
       {emDesenvolvimento() ? (

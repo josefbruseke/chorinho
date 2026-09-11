@@ -10,7 +10,7 @@ export const metadata = getMetadata({
 
 /** O que aparece quando a navegação falha e não há versão guardada da página. */
 const SemConexao: NextPage = () => (
-  <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-base-200 px-6 text-center">
+  <div className="flex min-h-[100dvh] flex-col items-center justify-center gap-4 bg-base-200 px-6 text-center">
     <SignalSlashIcon className="h-16 w-16 text-warning" />
     <h1 className="m-0 font-serif text-2xl font-black text-secondary">Você está sem internet</h1>
     <p className="m-0 max-w-xs text-sm opacity-75">

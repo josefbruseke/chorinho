@@ -16,7 +16,7 @@ export const viewport: Viewport = { themeColor: "#261c14", viewportFit: "cover" 
  * aparelho fica sob luz do dia e é operado com uma mão só, rápido.
  */
 const PosLayout = ({ children }: { children: React.ReactNode }) => (
-  <FlavorTheme flavor="pos" className="flex flex-col min-h-screen bg-base-200">
+  <FlavorTheme flavor="pos" className="flex flex-col min-h-[100dvh] bg-base-200">
     <main className="flex flex-col flex-1">{children}</main>
   </FlavorTheme>
 );

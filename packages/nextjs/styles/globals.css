@@ -372,7 +372,13 @@
   }
 
   body {
-    min-height: 100vh;
+    /* `dvh` e nao `vh`: no celular a barra de endereco entra na conta do `vh`,
+       entao `100vh` e maior que a area visivel -- sobra uma faixa de rolagem
+       que empurra a barra de navegacao inferior para fora da tela. */
+    min-height: 100dvh;
+    /* Nenhuma tela deve rolar na horizontal. Sem isto, um unico elemento largo
+       demais desalinha o aplicativo inteiro no aparelho. */
+    overflow-x: hidden;
   }
 
   h1,

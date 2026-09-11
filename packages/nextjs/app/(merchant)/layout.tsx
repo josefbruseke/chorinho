@@ -16,7 +16,7 @@ export const viewport: Viewport = { themeColor: "#261c14", viewportFit: "cover" 
  * dados que a experiência do cliente.
  */
 const MerchantLayout = ({ children }: { children: React.ReactNode }) => (
-  <FlavorTheme flavor="merchant" className="flex flex-col min-h-screen bg-base-200">
+  <FlavorTheme flavor="merchant" className="flex flex-col min-h-[100dvh] bg-base-200">
     <PainelNav />
     <main className="flex-1 w-full max-w-6xl mx-auto px-4 py-6">{children}</main>
   </FlavorTheme>

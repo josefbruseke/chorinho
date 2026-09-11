@@ -3,13 +3,64 @@
    Nao reintroduza um @import aqui: o Tailwind v4 injeta seu CSS acima desta linha, o
    @import passa a vir depois de regras e o CSS inteiro falha ao parsear (pagina 500). */
 
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+/* Casamento por sufixo para os temas de flavor do M2 (pos-dark, merchant-dark,
+   admin-dark) continuarem ativando a variante `dark:`. */
+@custom-variant dark (&:where([data-theme$="dark"], [data-theme$="dark"] *));
 
 @theme {
   --font-serif: "Fraunces", Georgia, Cambria, serif;
   --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --shadow-center: 0 0 12px -2px rgb(0 0 0 / 0.05);
   --animate-pulse-fast: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/*
+  Tokens fora do conjunto semantico do daisyUI. Sao superficies e tintas
+  proprias do Chorinho (papel kraft, tinta suave, selo de mel) que precisam de
+  valor proprio em cada tema -- definir so no :root recriaria o problema que
+  esta migracao resolve, que e componente travado no claro.
+
+  A rampa completa esta documentada em components/design-system/tokens.ts --
+  ao mexer num valor aqui, espelhe la, e vice-versa.
+*/
+@theme {
+  --color-kraft: #fdfbf7;
+  --color-craft: #f4ede2;
+  --color-kraft-ink: #856d5c;
+  --color-kraft-edge: #d8c7b0;
+
+  --color-honey-soft: #fef3c7;
+  --color-honey-edge: #fde68a;
+  --color-honey-ink: #92400e;
+}
+
+@layer base {
+  [data-theme$="dark"] {
+    --color-kraft: #2a201a;
+    --color-craft: #201a14;
+    --color-kraft-ink: #b9a897;
+    --color-kraft-edge: #4a3a2e;
+
+    --color-honey-soft: #3a2c12;
+    --color-honey-edge: #5b4520;
+    --color-honey-ink: #fcd34d;
+  }
+
+  /* Antes da hidratacao o next-themes ainda nao escreveu data-theme; o daisyUI
+     ja aplica o tema escuro por --prefersdark, entao acompanhamos para nao
+     piscar superficies claras sobre fundo escuro. */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+      --color-kraft: #2a201a;
+      --color-craft: #201a14;
+      --color-kraft-ink: #b9a897;
+      --color-kraft-edge: #4a3a2e;
+
+      --color-honey-soft: #3a2c12;
+      --color-honey-edge: #5b4520;
+      --color-honey-ink: #fcd34d;
+    }
+  }
 }
 
 @plugin "daisyui" {

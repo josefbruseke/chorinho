@@ -22,7 +22,11 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
         />
       </head>
       <body>
-        <ThemeProvider enableSystem>
+        {/* attribute="data-theme": o daisyUI aplica tema por [data-theme], nao por
+            classe. Sem isso o next-themes escrevia class="dark" e o seletor de
+            tema nao mudava cor nenhuma -- o escuro so aparecia se o sistema
+            operacional estivesse escuro. */}
+        <ThemeProvider attribute="data-theme" enableSystem>
           <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
         </ThemeProvider>
       </body>

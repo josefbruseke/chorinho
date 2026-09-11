@@ -9,6 +9,29 @@ import { serwist } from "@serwist/next/config";
  * `public/sw.js` depois — o mesmo resultado, sem abrir mao do Turbopack.
  */
 
+/**
+ * O que fica de fora do precache.
+ *
+ * So alcanca os arquivos estaticos: as paginas do Next entram no manifesto
+ * depois desta transformacao, entao nao adianta tentar remover rota daqui --
+ * uma rota que nao pode ser precacheada precisa responder 200, e nao 404.
+ */
+const FORA_DO_PRECACHE = [
+  // Os 400 pedacos de JavaScript do build. O padrao baixaria 18 MB no momento
+  // em que o atendente instala o aplicativo -- num celular barato, em rede de
+  // bairro, isso e a instalacao inteira falhando. Eles ja sao guardados em
+  // cache conforme vao sendo usados, entao o balcao fica offline-capaz depois
+  // do primeiro uso com internet, que e como ele vai ser usado de qualquer
+  // jeito.
+  /\/chunks\//,
+  /\.map$/,
+  // Manifestos de build que o Turbopack nao emite: respondem 404, e UMA
+  // entrada de precache com 404 faz a instalacao INTEIRA do service worker
+  // falhar -- o aplicativo fica sem modo offline por causa de um arquivo que
+  // nem existe.
+  /_(ssg|build|clientMiddleware)Manifest\.js$/,
+];
+
 export default serwist({
   swSrc: "app/sw.ts",
   swDest: "public/sw.js",
@@ -32,17 +55,10 @@ export default serwist({
    *
    * O que continua no precache: o CSS, os icones e a pagina de falta de
    * conexao -- poucos kilobytes, e o que garante que a tela nao apareca crua.
-   *
-   * Fora tambem as rotas do grupo (dev): elas respondem 404 em producao, e uma
-   * unica entrada de precache que devolve 404 faz a instalacao INTEIRA do
-   * service worker falhar -- o aplicativo fica sem modo offline por causa de
-   * uma pagina de depuracao que ninguem usa.
    */
   manifestTransforms: [
     manifest => ({
-      manifest: manifest.filter(
-        entrada => !/\/chunks\/|\.map$/.test(entrada.url) && !/^\/(debug|blockexplorer)(\/|$)/.test(entrada.url),
-      ),
+      manifest: manifest.filter(entrada => !FORA_DO_PRECACHE.some(padrao => padrao.test(entrada.url))),
       warnings: [],
     }),
   ],

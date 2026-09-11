@@ -2,6 +2,8 @@
 pragma solidity ^0.8.20;
 
 import { Test } from "forge-std/Test.sol";
+import { DiscountNFT } from "../contracts/DiscountNFT.sol";
+import { DiscountProgram } from "../contracts/DiscountProgram.sol";
 import { EstablishmentRegistry } from "../contracts/EstablishmentRegistry.sol";
 import { SubscriptionManager } from "../contracts/SubscriptionManager.sol";
 import { PointsVault } from "../contracts/PointsVault.sol";
@@ -15,6 +17,8 @@ contract RewardCatalogTest is Test {
     PointsVault vault;
     StampLedger ledger;
     RewardCatalog catalog;
+    DiscountProgram programs;
+    DiscountNFT discount;
     BonusNFT bonus;
 
     address admin = makeAddr("admin");
@@ -34,7 +38,9 @@ contract RewardCatalogTest is Test {
         subs = new SubscriptionManager(admin);
         vault = new PointsVault(admin, "https://chorinho.test/pontos/{id}.json");
         ledger = new StampLedger(registry, subs, vault, admin);
-        catalog = new RewardCatalog(registry, ledger, vault);
+        programs = new DiscountProgram(registry);
+        discount = new DiscountNFT(registry, programs);
+        catalog = new RewardCatalog(registry, ledger, vault, discount);
         bonus = new BonusNFT(registry);
 
         registry.grantRole(registry.RELAYER_ROLE(), relayer);
@@ -80,7 +86,7 @@ contract RewardCatalogTest is Test {
 
     function _recompensaSimples(uint256 custoSelos) internal returns (uint256) {
         vm.prank(lojista);
-        return catalog.createReward(lojaId, custoSelos, PONTO_CIDADE, 0, 0, 0, 0, keccak256("pao-de-queijo"));
+        return catalog.createReward(lojaId, custoSelos, PONTO_CIDADE, 0, 0, 0, 0, 0, keccak256("pao-de-queijo"));
     }
 
     // ------------------------------------------------------ caminho feliz
@@ -102,7 +108,7 @@ contract RewardCatalogTest is Test {
         _carimbar(5000, "v1"); // 5 carimbos, 25 pontos
 
         vm.prank(lojista);
-        uint256 premio = catalog.createReward(lojaId, 3, PONTO_CIDADE, 10, 0, 0, 0, keccak256("combo"));
+        uint256 premio = catalog.createReward(lojaId, 3, PONTO_CIDADE, 10, 0, 0, 0, 0, keccak256("combo"));
 
         vm.prank(atendente);
         catalog.claim(premio, cliente, "resgate-1");
@@ -133,7 +139,7 @@ contract RewardCatalogTest is Test {
         _carimbar(10_000, "v1");
 
         vm.prank(lojista);
-        uint256 premio = catalog.createReward(lojaId, 1, PONTO_CIDADE, 0, 0, 0, 2, keccak256("limitado"));
+        uint256 premio = catalog.createReward(lojaId, 1, PONTO_CIDADE, 0, 0, 0, 2, 0, keccak256("limitado"));
 
         vm.prank(atendente);
         catalog.claim(premio, cliente, "r1");
@@ -153,7 +159,7 @@ contract RewardCatalogTest is Test {
         uint64 comeca = uint64(block.timestamp + 1 days);
         vm.prank(lojista);
         uint256 premio =
-            catalog.createReward(lojaId, 1, PONTO_CIDADE, 0, comeca, comeca + 1 days, 0, keccak256("flash"));
+            catalog.createReward(lojaId, 1, PONTO_CIDADE, 0, comeca, comeca + 1 days, 0, 0, keccak256("flash"));
 
         vm.prank(atendente);
         vm.expectRevert(RewardCatalog.RewardNotStarted.selector);
@@ -172,7 +178,7 @@ contract RewardCatalogTest is Test {
     function test_Recompensa_NaoPodeSerDeGraca() public {
         vm.prank(lojista);
         vm.expectRevert(RewardCatalog.FreeRewardNotAllowed.selector);
-        catalog.createReward(lojaId, 0, PONTO_CIDADE, 0, 0, 0, 0, keccak256("gratis"));
+        catalog.createReward(lojaId, 0, PONTO_CIDADE, 0, 0, 0, 0, 0, keccak256("gratis"));
     }
 
     function test_Resgate_SemSaldoReverte() public {
@@ -200,7 +206,7 @@ contract RewardCatalogTest is Test {
     function test_Catalogo_EstranhoNaoCria() public {
         vm.prank(estranho);
         vm.expectRevert(RewardCatalog.NotEstablishmentOwner.selector);
-        catalog.createReward(lojaId, 1, PONTO_CIDADE, 0, 0, 0, 0, keccak256("x"));
+        catalog.createReward(lojaId, 1, PONTO_CIDADE, 0, 0, 0, 0, 0, keccak256("x"));
     }
 
     // ------------------------------------------------- assinatura
@@ -295,5 +301,69 @@ contract RewardCatalogTest is Test {
         vm.prank(cliente);
         vm.expectRevert(BonusNFT.SoulboundTransferNotAllowed.selector);
         bonus.transferFrom(cliente, estranho, tokenId);
+    }
+
+    // ------------------------------------------------- peca da colecao
+
+    /// O caminho DIRETO: o cliente gasta os proprios carimbos e leva a peca
+    /// colecionavel junto com o produto do balcao.
+    function test_Peca_EntregueAoResgatar() public {
+        vm.prank(lojista);
+        uint256 programa = programs.createProgram(
+            lojaId, "Clube", DiscountProgram.DiscountKind.Percentual, 1000, 0, bytes32(0), 0, 0, false, bytes32(0)
+        );
+
+        DiscountNFT.PieceParams memory params;
+        params.programId = programa;
+        params.level = 1;
+        params.uri = "ipfs://peca";
+        vm.prank(lojista);
+        discount.createPiece(1, params);
+
+        vm.prank(lojista);
+        uint256 premio = catalog.createReward(lojaId, 3, PONTO_CIDADE, 0, 0, 0, 0, 1, keccak256("com-peca"));
+
+        _carimbar(5000, "v1"); // 5 carimbos
+
+        vm.prank(atendente);
+        catalog.claim(premio, cliente, keccak256("entrega"));
+
+        assertEq(ledger.stampsOf(lojaId, cliente), 2, "carimbos cobrados");
+        assertEq(discount.balanceOf(cliente, 1), 1, "peca entregue");
+    }
+
+    /**
+     * Se a cunhagem falha, a transacao inteira volta atras. O cliente nao pode
+     * ficar sem os carimbos E sem a peca.
+     */
+    function test_Peca_TiragemEsgotadaDesfazOResgate() public {
+        vm.prank(lojista);
+        uint256 programa = programs.createProgram(
+            lojaId, "Clube", DiscountProgram.DiscountKind.Percentual, 1000, 0, bytes32(0), 0, 0, false, bytes32(0)
+        );
+
+        DiscountNFT.PieceParams memory params;
+        params.programId = programa;
+        params.level = 1;
+        params.maxSupply = 1;
+        params.uri = "ipfs://rara";
+        vm.prank(lojista);
+        discount.createPiece(1, params);
+
+        vm.prank(lojista);
+        uint256 premio = catalog.createReward(lojaId, 1, PONTO_CIDADE, 0, 0, 0, 0, 1, keccak256("rara"));
+
+        _carimbar(5000, "v1");
+
+        vm.prank(atendente);
+        catalog.claim(premio, cliente, keccak256("primeira"));
+        assertEq(discount.balanceOf(cliente, 1), 1);
+
+        uint256 antes = ledger.stampsOf(lojaId, cliente);
+        vm.prank(atendente);
+        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.MaxSupplyExceeded.selector, 1, 1, 0));
+        catalog.claim(premio, cliente, keccak256("segunda"));
+
+        assertEq(ledger.stampsOf(lojaId, cliente), antes, "nenhum carimbo cobrado");
     }
 }

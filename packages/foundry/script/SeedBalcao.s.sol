@@ -21,11 +21,6 @@ import { SubscriptionManager } from "../contracts/SubscriptionManager.sol";
  *         Uso: bun seed:balcao   (cadeia no ar e contratos implantados antes)
  */
 contract SeedBalcao is Script {
-    /// @dev Conta #1 do anvil. E a "dona" das lojas locais — separada da conta
-    ///      que faz o deploy para que o teste passe pelo caminho real, em que
-    ///      dono e relayer sao pessoas diferentes.
-    address constant DONO_LOCAL = 0x70997970C51812dc3A010C7d01b50e0d17dc79C8;
-
     /// @dev Classe de ponto criada pelo DeployLoyalty.
     uint256 constant PONTO_CIDADE = 1;
 
@@ -47,11 +42,17 @@ contract SeedBalcao is Script {
 
         vm.startBroadcast();
 
+        // O dono das lojas de demonstracao e quem esta publicando. Aqui havia a
+        // conta #1 do anvil cravada, o que numa rede publica seria um endereco
+        // que ninguem controla -- e sem chave nao da para criar programa nem
+        // peca em nome da loja.
+        (, address dono,) = vm.readCallers();
+
         for (uint256 i = 0; i < nomes.length; i++) {
             uint256 id = i + 1;
 
             if (registry.ownerOfEstablishment(id) == address(0)) {
-                registry.registerEstablishment(DONO_LOCAL, keccak256(bytes(nomes[i])));
+                registry.registerEstablishment(dono, keccak256(bytes(nomes[i])));
                 console.log("Loja registrada:", id, nomes[i]);
             }
 

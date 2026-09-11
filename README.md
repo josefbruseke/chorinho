@@ -33,7 +33,7 @@ Quer os passos separados, cada um no seu terminal?
 ```bash
 bun chain          # blockchain local
 bun run deploy     # publica os contratos e gera os tipos do frontend
-bun run seed:tudo  # lojas, regras de carimbo e prêmios de exemplo
+bun run seed:tudo  # lojas, regras de carimbo, prêmios e a coleção de peças
 bun start          # frontend
 ```
 
@@ -75,9 +75,9 @@ Com o PDV aberto, desligue o wifi e registre três vendas. Elas ficam em `/pdv/f
 | `bun chain` | Só a blockchain local |
 | `bun run deploy` | Publica os contratos e regenera os tipos do frontend |
 | `bun compile` | Compila os contratos |
-| `bun run seed` | Campanhas de exemplo (modelo antigo de cupom) |
 | `bun run seed:balcao` | Registra as oito lojas, assinaturas e regras de carimbo |
 | `bun run seed:recompensas` | Dez prêmios de exemplo, com ids fixos |
+| `bun run seed:colecao` | Programas de desconto, peças, conquistas e a troca por carimbos |
 | `bun run seed:tudo` | Os três acima, na ordem |
 | `bun account` | Mostra a conta usada nos deploys |
 | `bun generate` | Cria uma conta nova de deploy |

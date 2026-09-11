@@ -2,389 +2,413 @@
 pragma solidity ^0.8.20;
 
 import { Test } from "forge-std/Test.sol";
-import { EstablishmentRegistry } from "../contracts/EstablishmentRegistry.sol";
 import { DiscountNFT } from "../contracts/DiscountNFT.sol";
+import { DiscountProgram } from "../contracts/DiscountProgram.sol";
+import { EstablishmentRegistry } from "../contracts/EstablishmentRegistry.sol";
 import { IERC1155Errors } from "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
 
 contract DiscountNFTTest is Test {
     EstablishmentRegistry registry;
+    DiscountProgram programs;
     DiscountNFT discount;
 
     address admin = makeAddr("admin");
-    address establishment = makeAddr("establishment");
-    address user = makeAddr("user");
-    address other = makeAddr("other");
+    address donoCafe = makeAddr("donoCafe");
+    address donoPadaria = makeAddr("donoPadaria");
+    address atendente = makeAddr("atendente");
+    address relayer = makeAddr("relayer");
+    address cliente = makeAddr("cliente");
+    address outro = makeAddr("outro");
 
-    uint256 constant PRICE = 0.01 ether;
-    uint256 constant MAIN_ID = 1;
-    uint256 constant COMBO_ID = 100;
+    uint256 cafe;
+    uint256 padaria;
+    uint256 programa;
 
-    event Minted(uint256 indexed tokenId, address indexed to, uint256 amount, uint256 paid);
-    event ComboMinted(uint256 indexed mainTokenId, uint256 indexed comboTokenId, address indexed to, uint256 amount);
-    event ComboMintSkipped(uint256 indexed mainTokenId, uint256 indexed comboTokenId, address indexed to);
-    event Redeemed(
+    uint256 constant PECA = 1;
+
+    event PieceMinted(uint256 indexed tokenId, address indexed to, uint256 amount, address indexed minter);
+    event PieceUsed(
         uint256 indexed tokenId,
         address indexed user,
-        address indexed establishment,
+        uint256 indexed establishmentId,
         uint256 amount,
         bytes32 redemptionRef
     );
 
     function setUp() public {
         registry = new EstablishmentRegistry(admin);
-        discount = new DiscountNFT(registry);
+        programs = new DiscountProgram(registry);
+        discount = new DiscountNFT(registry, programs);
 
-        vm.prank(admin);
-        registry.addEstablishment(establishment);
+        vm.startPrank(admin);
+        cafe = registry.registerEstablishment(donoCafe, keccak256("cafe"));
+        padaria = registry.registerEstablishment(donoPadaria, keccak256("padaria"));
+        registry.grantRole(registry.RELAYER_ROLE(), relayer);
+        vm.stopPrank();
 
-        vm.deal(user, 100 ether);
-        vm.deal(other, 100 ether);
+        vm.prank(donoCafe);
+        registry.addOperator(cafe, atendente);
+
+        vm.prank(donoCafe);
+        programa = programs.createProgram(
+            cafe, "Clube da Manha", DiscountProgram.DiscountKind.Percentual, 1500, 0, bytes32(0), 0, 0, true, bytes32(0)
+        );
     }
 
     // ------------------------------------------------------------- helpers
 
-    function _params(uint256 price, uint256 maxSupply, uint64 startTime, uint64 endTime, uint256 maxPerWallet)
+    function _params(uint256 maxSupply, uint64 startTime, uint64 endTime, uint256 maxPerWallet)
         internal
-        pure
-        returns (DiscountNFT.CampaignParams memory p)
+        view
+        returns (DiscountNFT.PieceParams memory p)
     {
-        p.price = price;
+        p.programId = programa;
+        p.level = 1;
         p.maxSupply = maxSupply;
         p.startTime = startTime;
         p.endTime = endTime;
         p.maxPerWallet = maxPerWallet;
-        p.category = DiscountNFT.Category.Gastronomy;
-        p.flash = maxSupply != 0 && endTime != 0;
-        p.comboTokenIds = new uint256[](0);
-        p.uri = "ipfs://campaign-metadata";
+        p.uri = "ipfs://peca";
     }
 
-    function _createDefaultCampaign() internal {
+    function _criarPeca() internal {
+        vm.prank(donoCafe);
+        discount.createPiece(PECA, _params(0, 0, 0, 0));
+    }
+
+    // ------------------------------------------------------------- catalogo
+
+    function test_Criar_GuardaAPeca() public {
+        vm.prank(donoCafe);
+        discount.createPiece(PECA, _params(50, 100, 200, 2));
+
+        DiscountNFT.Piece memory p = discount.getPiece(PECA);
+        assertEq(p.programId, programa);
+        assertEq(p.level, 1);
+        assertEq(p.maxSupply, 50);
+        assertEq(p.startTime, 100);
+        assertEq(p.endTime, 200);
+        assertEq(p.maxPerWallet, 2);
+        assertTrue(p.active);
+        assertEq(discount.uri(PECA), "ipfs://peca");
+    }
+
+    /// A colecao e da loja, nao da plataforma: quem cria e o dono do programa.
+    function test_Criar_SoDonoDoProgramaOuAdmin() public {
+        vm.prank(donoPadaria);
+        vm.expectRevert(DiscountNFT.NotEstablishmentOwner.selector);
+        discount.createPiece(PECA, _params(0, 0, 0, 0));
+
         vm.prank(admin);
-        discount.createCampaign(MAIN_ID, _params(PRICE, 0, 0, 0, 0));
+        discount.createPiece(PECA, _params(0, 0, 0, 0));
+        assertTrue(discount.pieceExists(PECA));
     }
 
-    // ------------------------------------------------------ campaign admin
-
-    function test_CreateCampaign_StoresDataAndEmitsUri() public {
-        _createDefaultCampaign();
-        DiscountNFT.Campaign memory c = discount.getCampaign(MAIN_ID);
-        assertEq(c.price, PRICE);
-        assertTrue(c.active);
-        assertEq(discount.uri(MAIN_ID), "ipfs://campaign-metadata");
+    function test_Criar_RecusaDuplicata() public {
+        _criarPeca();
+        vm.prank(donoCafe);
+        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.PieceAlreadyExists.selector, PECA));
+        discount.createPiece(PECA, _params(0, 0, 0, 0));
     }
 
-    function test_CreateCampaign_RevertsForNonAdmin() public {
-        vm.prank(user);
-        vm.expectRevert(DiscountNFT.NotAdmin.selector);
-        discount.createCampaign(MAIN_ID, _params(PRICE, 0, 0, 0, 0));
+    function test_Criar_RecusaProgramaInexistente() public {
+        DiscountNFT.PieceParams memory p = _params(0, 0, 0, 0);
+        p.programId = 999;
+
+        vm.prank(donoCafe);
+        vm.expectRevert(DiscountNFT.UnknownProgram.selector);
+        discount.createPiece(PECA, p);
     }
 
-    function test_CreateCampaign_RevertsOnDuplicate() public {
-        _createDefaultCampaign();
-        vm.prank(admin);
-        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.CampaignAlreadyExists.selector, MAIN_ID));
-        discount.createCampaign(MAIN_ID, _params(PRICE, 0, 0, 0, 0));
+    function test_Criar_RecusaNivelZero() public {
+        DiscountNFT.PieceParams memory p = _params(0, 0, 0, 0);
+        p.level = 0;
+
+        vm.prank(donoCafe);
+        vm.expectRevert(DiscountNFT.InvalidLevel.selector);
+        discount.createPiece(PECA, p);
     }
 
-    function test_CreateCampaign_RevertsOnInvalidWindow() public {
-        vm.prank(admin);
+    function test_Criar_RecusaJanelaInvertida() public {
+        vm.prank(donoCafe);
         vm.expectRevert(DiscountNFT.InvalidWindow.selector);
-        discount.createCampaign(MAIN_ID, _params(PRICE, 0, 100, 50, 0));
+        discount.createPiece(PECA, _params(0, 200, 100, 0));
     }
 
-    function test_CreateCampaign_RevertsOnUnknownComboReference() public {
-        DiscountNFT.CampaignParams memory p = _params(PRICE, 0, 0, 0, 0);
-        p.comboTokenIds = new uint256[](1);
-        p.comboTokenIds[0] = 999; // never created
-        vm.prank(admin);
-        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.InvalidComboReference.selector, 999));
-        discount.createCampaign(MAIN_ID, p);
+    function test_Desativar_TravaACunhagem() public {
+        _criarPeca();
+
+        vm.prank(donoCafe);
+        discount.setPieceActive(PECA, false);
+
+        vm.prank(relayer);
+        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.PieceNotActive.selector, PECA));
+        discount.mintTo(cliente, PECA, 1);
     }
 
-    function test_SetCampaignActive_TogglesMinting() public {
-        _createDefaultCampaign();
-        vm.prank(admin);
-        discount.setCampaignActive(MAIN_ID, false);
+    // -------------------------------------------------------------- emitir
 
-        vm.prank(user);
-        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.CampaignNotActive.selector, MAIN_ID));
-        discount.mint{ value: PRICE }(MAIN_ID, 1);
+    function test_Emitir_CaminhoFeliz() public {
+        _criarPeca();
+
+        vm.expectEmit(true, true, true, true);
+        emit PieceMinted(PECA, cliente, 2, relayer);
+
+        vm.prank(relayer);
+        discount.mintTo(cliente, PECA, 2);
+
+        assertEq(discount.balanceOf(cliente, PECA), 2);
+        assertEq(discount.totalSupply(PECA), 2);
+        assertEq(discount.mintedBy(PECA, cliente), 2);
     }
 
-    // ----------------------------------------------------------------- mint
+    /// Nao existe compra com dinheiro: quem cunha e quem sabe por que a peca
+    /// foi merecida.
+    function test_Emitir_SoQuemTemPapelDeCunhador() public {
+        _criarPeca();
 
-    function test_Mint_HappyPath() public {
-        _createDefaultCampaign();
+        vm.prank(cliente);
+        vm.expectRevert(DiscountNFT.NotAllowedToMint.selector);
+        discount.mintTo(cliente, PECA, 1);
 
-        vm.prank(user);
-        vm.expectEmit(true, true, false, true);
-        emit Minted(MAIN_ID, user, 2, 2 * PRICE);
-        discount.mint{ value: 2 * PRICE }(MAIN_ID, 2);
-
-        assertEq(discount.balanceOf(user, MAIN_ID), 2);
-        assertEq(discount.totalSupply(MAIN_ID), 2);
-        assertEq(discount.mintedBy(MAIN_ID, user), 2);
-        assertEq(address(discount).balance, 2 * PRICE);
+        vm.prank(donoCafe);
+        vm.expectRevert(DiscountNFT.NotAllowedToMint.selector);
+        discount.mintTo(cliente, PECA, 1);
     }
 
-    function test_Mint_RevertsOnWrongPayment() public {
-        _createDefaultCampaign();
-
-        vm.startPrank(user);
-        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.InvalidPayment.selector, PRICE, PRICE - 1));
-        discount.mint{ value: PRICE - 1 }(MAIN_ID, 1);
-
-        // overpaying also reverts: exact payment, no refund logic
-        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.InvalidPayment.selector, PRICE, PRICE + 1));
-        discount.mint{ value: PRICE + 1 }(MAIN_ID, 1);
-        vm.stopPrank();
-    }
-
-    function testFuzz_Mint_WrongPaymentAlwaysReverts(uint256 sent) public {
-        _createDefaultCampaign();
-        sent = bound(sent, 0, 100 ether);
-        vm.assume(sent != PRICE);
-
-        vm.prank(user);
-        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.InvalidPayment.selector, PRICE, sent));
-        discount.mint{ value: sent }(MAIN_ID, 1);
-    }
-
-    function test_Mint_RevertsBeforeWindowAndAfterWindow() public {
-        uint64 start = uint64(block.timestamp + 1 days);
-        uint64 end = uint64(block.timestamp + 2 days);
-        vm.prank(admin);
-        discount.createCampaign(MAIN_ID, _params(PRICE, 0, start, end, 0));
-
-        vm.prank(user);
-        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.CampaignNotStarted.selector, MAIN_ID, start));
-        discount.mint{ value: PRICE }(MAIN_ID, 1);
-
-        vm.warp(end + 1);
-        vm.prank(user);
-        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.CampaignEnded.selector, MAIN_ID, end));
-        discount.mint{ value: PRICE }(MAIN_ID, 1);
-    }
-
-    function test_Mint_SucceedsAtExactWindowBoundaries() public {
-        uint64 start = uint64(block.timestamp + 1 days);
-        uint64 end = uint64(block.timestamp + 2 days);
-        vm.prank(admin);
-        discount.createCampaign(MAIN_ID, _params(PRICE, 0, start, end, 0));
-
-        vm.warp(start);
-        vm.prank(user);
-        discount.mint{ value: PRICE }(MAIN_ID, 1);
-
-        vm.warp(end);
-        vm.prank(user);
-        discount.mint{ value: PRICE }(MAIN_ID, 1);
-
-        assertEq(discount.balanceOf(user, MAIN_ID), 2);
-    }
-
-    function test_Mint_SupplyCapExactBoundary() public {
-        vm.prank(admin);
-        discount.createCampaign(MAIN_ID, _params(PRICE, 5, 0, 0, 0));
-
-        vm.prank(user);
-        discount.mint{ value: 5 * PRICE }(MAIN_ID, 5); // exactly maxSupply: ok
-
-        vm.prank(other);
-        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.MaxSupplyExceeded.selector, MAIN_ID, 1, 0));
-        discount.mint{ value: PRICE }(MAIN_ID, 1);
-    }
-
-    function test_Mint_RespectsMaxPerWallet() public {
-        vm.prank(admin);
-        discount.createCampaign(MAIN_ID, _params(PRICE, 0, 0, 0, 2));
-
-        vm.startPrank(user);
-        discount.mint{ value: 2 * PRICE }(MAIN_ID, 2);
-        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.MaxPerWalletExceeded.selector, MAIN_ID, 1, 0));
-        discount.mint{ value: PRICE }(MAIN_ID, 1);
-        vm.stopPrank();
-
-        // cap is per wallet, another wallet can still mint
-        vm.prank(other);
-        discount.mint{ value: PRICE }(MAIN_ID, 1);
-        assertEq(discount.balanceOf(other, MAIN_ID), 1);
-    }
-
-    function test_Mint_RevertsOnNonexistentCampaignAndZeroAmount() public {
-        vm.prank(user);
-        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.CampaignDoesNotExist.selector, 42));
-        discount.mint(42, 1);
-
-        _createDefaultCampaign();
-        vm.prank(user);
+    function test_Emitir_RecusaQuantidadeZero() public {
+        _criarPeca();
+        vm.prank(relayer);
         vm.expectRevert(DiscountNFT.ZeroAmount.selector);
-        discount.mint(MAIN_ID, 0);
+        discount.mintTo(cliente, PECA, 0);
     }
 
-    // ---------------------------------------------------------------- combo
+    function test_Emitir_RecusaPecaInexistente() public {
+        vm.prank(relayer);
+        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.UnknownPiece.selector, PECA));
+        discount.mintTo(cliente, PECA, 1);
+    }
 
-    function _createComboSetup(uint256 comboMaxSupply) internal {
-        vm.startPrank(admin);
-        // combo target created first (leaf-first requirement)
-        discount.createCampaign(COMBO_ID, _params(0, comboMaxSupply, 0, 0, 0));
-        DiscountNFT.CampaignParams memory p = _params(PRICE, 0, 0, 0, 0);
-        p.comboTokenIds = new uint256[](1);
-        p.comboTokenIds[0] = COMBO_ID;
-        discount.createCampaign(MAIN_ID, p);
+    function test_Emitir_TiragemNoLimiteExato() public {
+        vm.prank(donoCafe);
+        discount.createPiece(PECA, _params(3, 0, 0, 0));
+
+        vm.prank(relayer);
+        discount.mintTo(cliente, PECA, 3);
+        assertEq(discount.totalSupply(PECA), 3);
+
+        vm.prank(relayer);
+        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.MaxSupplyExceeded.selector, PECA, 1, 0));
+        discount.mintTo(outro, PECA, 1);
+    }
+
+    function test_Emitir_RespeitaTetoPorCarteira() public {
+        vm.prank(donoCafe);
+        discount.createPiece(PECA, _params(0, 0, 0, 2));
+
+        vm.prank(relayer);
+        discount.mintTo(cliente, PECA, 2);
+
+        vm.prank(relayer);
+        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.MaxPerWalletExceeded.selector, PECA, 1, 0));
+        discount.mintTo(cliente, PECA, 1);
+
+        // O teto e por carteira, nao da peca: outra pessoa continua podendo.
+        vm.prank(relayer);
+        discount.mintTo(outro, PECA, 2);
+        assertEq(discount.balanceOf(outro, PECA), 2);
+    }
+
+    function test_Emitir_NosLimitesExatosDaJanela() public {
+        vm.warp(1000);
+        vm.prank(donoCafe);
+        discount.createPiece(PECA, _params(0, 2000, 3000, 0));
+
+        vm.prank(relayer);
+        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.PieceNotStarted.selector, PECA, uint64(2000)));
+        discount.mintTo(cliente, PECA, 1);
+
+        vm.warp(2000);
+        vm.prank(relayer);
+        discount.mintTo(cliente, PECA, 1);
+
+        vm.warp(3000);
+        vm.prank(relayer);
+        discount.mintTo(cliente, PECA, 1);
+
+        vm.warp(3001);
+        vm.prank(relayer);
+        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.PieceExpired.selector, PECA, uint64(3000)));
+        discount.mintTo(cliente, PECA, 1);
+    }
+
+    // ---------------------------------------------------------------- usar
+
+    function test_Usar_QueimaEEmite() public {
+        _criarPeca();
+        vm.prank(relayer);
+        discount.mintTo(cliente, PECA, 2);
+
+        bytes32 ref = keccak256("atendimento");
+        vm.expectEmit(true, true, true, true);
+        emit PieceUsed(PECA, cliente, cafe, 1, ref);
+
+        vm.prank(atendente);
+        discount.usePiece(cliente, PECA, cafe, 1, ref);
+
+        assertEq(discount.balanceOf(cliente, PECA), 1);
+    }
+
+    function test_Usar_SoOperadorDaLojaOuRelayer() public {
+        _criarPeca();
+        vm.prank(relayer);
+        discount.mintTo(cliente, PECA, 1);
+
+        vm.prank(outro);
+        vm.expectRevert(DiscountNFT.NotOperator.selector);
+        discount.usePiece(cliente, PECA, cafe, 1, bytes32(0));
+
+        vm.prank(relayer);
+        discount.usePiece(cliente, PECA, cafe, 1, bytes32(0));
+        assertEq(discount.balanceOf(cliente, PECA), 0);
+    }
+
+    /**
+     * O teste que sustenta a pool inteira: a padaria nao aceitou o convite,
+     * entao a peca do cafe nao vale nela -- nem com o atendente certo, nem com
+     * o relayer.
+     */
+    function test_Usar_NaoValeEmLojaQueNaoEntrouNaPool() public {
+        _criarPeca();
+        vm.prank(relayer);
+        discount.mintTo(cliente, PECA, 1);
+
+        vm.prank(donoPadaria);
+        registry.addOperator(padaria, outro);
+
+        vm.prank(outro);
+        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.NotValidHere.selector, PECA, padaria));
+        discount.usePiece(cliente, PECA, padaria, 1, bytes32(0));
+    }
+
+    function test_Usar_ValeDepoisQueAVizinhaAceita() public {
+        _criarPeca();
+        vm.prank(relayer);
+        discount.mintTo(cliente, PECA, 1);
+
+        vm.prank(donoCafe);
+        programs.invite(programa, padaria);
+        vm.prank(donoPadaria);
+        programs.acceptInvite(programa, padaria);
+
+        vm.prank(relayer);
+        discount.usePiece(cliente, PECA, padaria, 1, bytes32(0));
+        assertEq(discount.balanceOf(cliente, PECA), 0);
+    }
+
+    function test_Usar_RecusaAcimaDoSaldo() public {
+        _criarPeca();
+        vm.prank(relayer);
+        discount.mintTo(cliente, PECA, 1);
+
+        vm.prank(atendente);
+        vm.expectRevert(abi.encodeWithSelector(IERC1155Errors.ERC1155InsufficientBalance.selector, cliente, 1, 2, PECA));
+        discount.usePiece(cliente, PECA, cafe, 2, bytes32(0));
+    }
+
+    /// O tempo de vida governa a EMISSAO. Honrar uma peca vencida e decisao de
+    /// balcao, e o contrato nao atrapalha.
+    function test_Usar_FuncionaDepoisDeAJanelaDeEmissaoAcabar() public {
+        vm.warp(1000);
+        vm.prank(donoCafe);
+        discount.createPiece(PECA, _params(0, 0, 2000, 0));
+
+        vm.prank(relayer);
+        discount.mintTo(cliente, PECA, 1);
+
+        vm.warp(5000);
+        vm.prank(atendente);
+        discount.usePiece(cliente, PECA, cafe, 1, bytes32(0));
+        assertEq(discount.balanceOf(cliente, PECA), 0);
+    }
+
+    function test_Usar_ProgramaDesativadoNaoVale() public {
+        _criarPeca();
+        vm.prank(relayer);
+        discount.mintTo(cliente, PECA, 1);
+
+        vm.prank(donoCafe);
+        programs.setProgramActive(programa, false);
+
+        vm.prank(atendente);
+        vm.expectRevert(abi.encodeWithSelector(DiscountNFT.NotValidHere.selector, PECA, cafe));
+        discount.usePiece(cliente, PECA, cafe, 1, bytes32(0));
+    }
+
+    // ---------------------------------------------------- transferibilidade
+
+    /// A peca e a unica coisa do sistema que circula. E de proposito.
+    function test_Transferencia_ELivre() public {
+        _criarPeca();
+        vm.prank(relayer);
+        discount.mintTo(cliente, PECA, 2);
+
+        vm.prank(cliente);
+        discount.safeTransferFrom(cliente, outro, PECA, 1, "");
+
+        assertEq(discount.balanceOf(cliente, PECA), 1);
+        assertEq(discount.balanceOf(outro, PECA), 1);
+    }
+
+    function test_Transferencia_QuemRecebeConsegueUsar() public {
+        _criarPeca();
+        vm.prank(relayer);
+        discount.mintTo(cliente, PECA, 1);
+
+        vm.prank(cliente);
+        discount.safeTransferFrom(cliente, outro, PECA, 1, "");
+
+        vm.prank(atendente);
+        discount.usePiece(outro, PECA, cafe, 1, bytes32(0));
+        assertEq(discount.balanceOf(outro, PECA), 0);
+    }
+
+    // ------------------------------------------------------------- leitura
+
+    function test_Desconto_VemDoPrograma() public {
+        vm.prank(donoCafe);
+        DiscountNFT.PieceParams memory p = _params(0, 0, 0, 0);
+        p.level = 2;
+        discount.createPiece(PECA, p);
+
+        // 15% do programa, nivel 2, numa conta de R$ 100 = R$ 30.
+        assertEq(discount.discountFor(PECA, 10_000), 3000);
+    }
+
+    function test_Desconto_DePecaInexistenteEZero() public view {
+        assertEq(discount.discountFor(999, 10_000), 0);
+    }
+
+    function test_Enumeracao_ListaNaOrdemDeCriacao() public {
+        vm.startPrank(donoCafe);
+        discount.createPiece(7, _params(0, 0, 0, 0));
+        discount.createPiece(3, _params(0, 0, 0, 0));
         vm.stopPrank();
-    }
 
-    function test_Combo_MintsAssociatedTokenForFree() public {
-        _createComboSetup(0);
-
-        vm.prank(user);
-        vm.expectEmit(true, true, true, true);
-        emit ComboMinted(MAIN_ID, COMBO_ID, user, 2);
-        discount.mint{ value: 2 * PRICE }(MAIN_ID, 2); // pays only for MAIN_ID
-
-        assertEq(discount.balanceOf(user, MAIN_ID), 2);
-        assertEq(discount.balanceOf(user, COMBO_ID), 2);
-    }
-
-    function test_Combo_SkippedWhenComboSupplyExhausted_MainStillMints() public {
-        _createComboSetup(1);
-
-        // first buyer takes the single combo unit
-        vm.prank(other);
-        discount.mint{ value: PRICE }(MAIN_ID, 1);
-        assertEq(discount.balanceOf(other, COMBO_ID), 1);
-
-        // second buyer: combo skipped, main purchase unaffected
-        vm.prank(user);
-        vm.expectEmit(true, true, true, false);
-        emit ComboMintSkipped(MAIN_ID, COMBO_ID, user);
-        discount.mint{ value: PRICE }(MAIN_ID, 1);
-
-        assertEq(discount.balanceOf(user, MAIN_ID), 1);
-        assertEq(discount.balanceOf(user, COMBO_ID), 0);
-    }
-
-    // --------------------------------------------------------------- redeem
-
-    function test_Redeem_BurnsAndEmits() public {
-        _createDefaultCampaign();
-        vm.prank(user);
-        discount.mint{ value: 2 * PRICE }(MAIN_ID, 2);
-
-        bytes32 ref = keccak256("order-123");
-        vm.prank(establishment);
-        vm.expectEmit(true, true, true, true);
-        emit Redeemed(MAIN_ID, user, establishment, 1, ref);
-        discount.redeem(user, MAIN_ID, 1, ref);
-
-        assertEq(discount.balanceOf(user, MAIN_ID), 1);
-        assertEq(discount.totalSupply(MAIN_ID), 1);
-    }
-
-    function test_Redeem_RevertsForNonEstablishment() public {
-        _createDefaultCampaign();
-        vm.prank(user);
-        discount.mint{ value: PRICE }(MAIN_ID, 1);
-
-        vm.prank(other);
-        vm.expectRevert(DiscountNFT.NotEstablishment.selector);
-        discount.redeem(user, MAIN_ID, 1, bytes32(0));
-    }
-
-    function test_Redeem_RevertsAboveBalance() public {
-        _createDefaultCampaign();
-        vm.prank(user);
-        discount.mint{ value: PRICE }(MAIN_ID, 1);
-
-        vm.prank(establishment);
-        vm.expectRevert(abi.encodeWithSelector(IERC1155Errors.ERC1155InsufficientBalance.selector, user, 1, 2, MAIN_ID));
-        discount.redeem(user, MAIN_ID, 2, bytes32(0));
-    }
-
-    function test_Redeem_WorksAfterMintWindowEnded() public {
-        uint64 end = uint64(block.timestamp + 1 days);
-        vm.prank(admin);
-        discount.createCampaign(MAIN_ID, _params(PRICE, 0, 0, end, 0));
-        vm.prank(user);
-        discount.mint{ value: PRICE }(MAIN_ID, 1);
-
-        // mint window closing must not lock already-sold coupons
-        vm.warp(end + 30 days);
-        vm.prank(establishment);
-        discount.redeem(user, MAIN_ID, 1, bytes32(0));
-        assertEq(discount.balanceOf(user, MAIN_ID), 0);
-    }
-
-    // ------------------------------------------------------------- transfer
-
-    function test_Transfer_IsUnrestricted() public {
-        _createDefaultCampaign();
-        vm.prank(user);
-        discount.mint{ value: PRICE }(MAIN_ID, 1);
-
-        vm.prank(user);
-        discount.safeTransferFrom(user, other, MAIN_ID, 1, "");
-        assertEq(discount.balanceOf(other, MAIN_ID), 1);
-
-        // and the receiver can be redeemed against (resale keeps the benefit)
-        vm.prank(establishment);
-        discount.redeem(other, MAIN_ID, 1, bytes32(0));
-        assertEq(discount.balanceOf(other, MAIN_ID), 0);
-    }
-
-    // ---------------------------------------------------------- enumeration
-
-    function test_Enumeration_ListsCampaignsInCreationOrder() public {
-        assertEq(discount.getCampaignIds().length, 0);
-
-        _createComboSetup(0); // creates COMBO_ID first, then MAIN_ID
-
-        uint256[] memory ids = discount.getCampaignIds();
+        uint256[] memory ids = discount.getPieceIds();
         assertEq(ids.length, 2);
-        assertEq(ids[0], COMBO_ID);
-        assertEq(ids[1], MAIN_ID);
+        assertEq(ids[0], 7);
+        assertEq(ids[1], 3);
     }
 
-    function test_GetAllCampaigns_ReturnsDataAndMintedCounts() public {
-        _createComboSetup(0);
+    function test_GetAllPieces_DevolveDadosETiragemJaSaida() public {
+        _criarPeca();
+        vm.prank(relayer);
+        discount.mintTo(cliente, PECA, 2);
 
-        vm.prank(user);
-        discount.mint{ value: 2 * PRICE }(MAIN_ID, 2); // also combo-mints 2 of COMBO_ID
-
-        (uint256[] memory ids, DiscountNFT.Campaign[] memory campaigns, uint256[] memory minted) =
-            discount.getAllCampaigns();
-
-        assertEq(ids.length, 2);
-        assertEq(campaigns.length, 2);
-        assertEq(minted.length, 2);
-
-        assertEq(ids[0], COMBO_ID);
-        assertEq(campaigns[0].price, 0);
-        assertEq(minted[0], 2);
-
-        assertEq(ids[1], MAIN_ID);
-        assertEq(campaigns[1].price, PRICE);
-        assertEq(campaigns[1].comboTokenIds.length, 1);
-        assertEq(minted[1], 2);
-    }
-
-    // ------------------------------------------------------------- withdraw
-
-    function test_Withdraw_OnlyAdmin() public {
-        _createDefaultCampaign();
-        vm.prank(user);
-        discount.mint{ value: PRICE }(MAIN_ID, 1);
-
-        vm.prank(user);
-        vm.expectRevert(DiscountNFT.NotAdmin.selector);
-        discount.withdraw(payable(user));
-
-        address payable treasury = payable(makeAddr("treasury"));
-        vm.prank(admin);
-        discount.withdraw(treasury);
-        assertEq(treasury.balance, PRICE);
-        assertEq(address(discount).balance, 0);
+        (uint256[] memory ids, DiscountNFT.Piece[] memory pecas, uint256[] memory saidas) = discount.getAllPieces();
+        assertEq(ids.length, 1);
+        assertEq(pecas[0].programId, programa);
+        assertEq(saidas[0], 2);
     }
 }

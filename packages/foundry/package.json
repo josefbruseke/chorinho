@@ -16,8 +16,8 @@
     "format": "make format",
     "lint": "make lint",
     "postinstall": "shx cp -n .env.example .env",
-    "seed": "ETH_KEYSTORE_ACCOUNT=scaffold-eth-default forge script script/SeedCampaigns.s.sol --rpc-url localhost --password localhost --broadcast -vv",
     "seed:balcao": "ETH_KEYSTORE_ACCOUNT=scaffold-eth-default forge script script/SeedBalcao.s.sol --rpc-url localhost --password localhost --broadcast -vv",
+    "seed:colecao": "ETH_KEYSTORE_ACCOUNT=scaffold-eth-default forge script script/SeedColecao.s.sol --rpc-url localhost --password localhost --broadcast -vv",
     "seed:recompensas": "ETH_KEYSTORE_ACCOUNT=scaffold-eth-default forge script script/SeedRecompensas.s.sol --rpc-url localhost --password localhost --broadcast -vv",
     "test": "forge test",
     "verify": "make verify RPC_URL=${1:-localhost}"

@@ -46,7 +46,7 @@ contract SeedRecompensas is Script {
 
         for (uint256 i = 0; i < ofertas.length; i++) {
             uint256 id = i + 1;
-            (uint256 lojaExistente,,,,,,,,,) = catalog.rewards(id);
+            (uint256 lojaExistente,,,,,,,,,,) = catalog.rewards(id);
             if (lojaExistente != 0) continue;
 
             Oferta memory o = ofertas[i];
@@ -59,6 +59,9 @@ contract SeedRecompensas is Script {
                 0,
                 // Sem teto de estoque na demonstracao: limite de resgate e
                 // decisao comercial de cada loja, nao do seed.
+                0,
+                // Sem peca da colecao nesta recompensa -- o seed das pecas e
+                // separado, para o catalogo continuar legivel.
                 0,
                 keccak256(bytes(o.titulo))
             );

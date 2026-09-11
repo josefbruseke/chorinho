@@ -59,6 +59,9 @@ contract BonusNFT is ERC721URIStorage, ERC721Burnable {
     uint8 public constant MAX_TIER = 5;
 
     event BonusMinted(uint256 indexed tokenId, address indexed to, uint256 indexed routeId);
+    event AchievementBadgeMinted(
+        uint256 indexed tokenId, uint256 indexed establishmentId, address indexed to, uint256 routeId
+    );
     event BadgeMinted(uint256 indexed tokenId, uint256 indexed establishmentId, address indexed to, uint8 tier);
     event BadgeUpgraded(uint256 indexed tokenId, uint8 fromTier, uint8 toTier);
     event TierThresholdsSet(uint256 indexed establishmentId, uint256[6] thresholds);
@@ -114,6 +117,40 @@ contract BonusNFT is ERC721URIStorage, ERC721Burnable {
         _setTokenURI(tokenId, uri);
 
         emit BonusMinted(tokenId, to, routeId);
+    }
+
+    // --------------------------------------------------------- conquistas
+
+    /**
+     * @notice O selo de uma conquista da loja.
+     * @dev Separado do `mintBonus` porque grava tambem de qual loja veio: um
+     *      selo que nao diz onde foi conquistado nao serve para a carteira
+     *      agrupar a colecao por estabelecimento.
+     *
+     *      Nao mexe em `badgeOf` de proposito. Aquele mapeamento pertence a
+     *      peca de tempo de casa, que e uma so por cliente e evolui de nivel;
+     *      conquista e outra coisa, e a pessoa pode ter varias na mesma loja.
+     *
+     *      Quem confere se a conquista foi merecida e o contrato Achievements,
+     *      que recebe RELAYER_ROLE no deploy.
+     */
+    function mintAchievementBadge(address to, uint256 establishmentId, uint256 routeId, string calldata uri)
+        external
+        returns (uint256 tokenId)
+    {
+        if (!registry.isRelayer(msg.sender)) revert NotRelayer();
+
+        tokenId = _nextTokenId++;
+
+        // Estado antes do _safeMint, pelo mesmo motivo de sempre: ele chama
+        // onERC721Received no destinatario, que e chamada externa.
+        establishmentIdOf[tokenId] = establishmentId;
+        routeIdOf[tokenId] = routeId;
+
+        _safeMint(to, tokenId);
+        _setTokenURI(tokenId, uri);
+
+        emit AchievementBadgeMinted(tokenId, establishmentId, to, routeId);
     }
 
     // -------------------------------------------------- tempo de casa

@@ -3,272 +3,279 @@ pragma solidity ^0.8.20;
 
 import { ERC1155 } from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import { ERC1155Supply } from "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
-import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import { DiscountProgram } from "./DiscountProgram.sol";
 import { EstablishmentRegistry } from "./EstablishmentRegistry.sol";
 
 /**
  * @title DiscountNFT
- * @notice ERC1155 collection where each tokenId is a discount campaign
- *         (regular or flash promotion). Users mint by paying in native
- *         currency; partner establishments redeem coupons by burning them.
+ * @notice A peca colecionavel da loja. Cada tokenId e uma peca: uma tiragem
+ *         fechada, com tempo de vida proprio, que aciona um programa de
+ *         desconto.
  *
- * Design decisions worth calling out:
+ *         E a UNICA coisa neste sistema que se transfere. Carimbo, ponto e selo
+ *         de conquista sao pessoais -- eles provam que VOCE esteve la, e vender
+ *         isso destruiria o que significam. Ja um desconto que voce nao vai
+ *         usar vale para outra pessoa, e o cupom morto deixa de ser lixo.
  *
- * - Campaigns are a mapping inside this contract rather than per-campaign
- *   contracts (no factory): ERC1155 tokenIds are exactly the "many classes,
- *   one collection" primitive this needs.
+ * Decisoes que valem explicacao:
  *
- * - Redemption burns the unit. ERC1155 units of a given tokenId are fungible,
- *   so "marking one specific unit as used" is not representable; burning plus
- *   the Redeemed event (carrying an off-chain redemption reference) is the
- *   idiomatic equivalent, and the event log preserves full history.
+ * - **A peca nao carrega regra.** Percentual, teto, produto e em quais lojas
+ *   vale moram no DiscountProgram. A loja ajusta o programa e todas as pecas ja
+ *   emitidas acompanham, sem reemitir nada.
  *
- * - Establishments can burn from any wallet without user approval. Redemption
- *   happens in person at the point of sale, the role is granted by the
- *   platform admin, and a malicious establishment gains nothing (it destroys
- *   a coupon it would otherwise have to honor). Requiring a user signature
- *   would push EIP-712 flows into this phase for little benefit.
+ * - **`level` e o "valor" da peca** dentro do programa: bronze 1, ouro 3. O
+ *   desconto e a base do programa vezes o nivel, limitado pelo teto. Assim uma
+ *   colecao inteira sai de um programa so.
  *
- * - `maxPerWallet` counts units *minted* by a wallet, not units held —
- *   transfers are unrestricted by design (resale/gifting), so a hold-based
- *   cap would be trivially circumvented anyway. The cap exists to stop a
- *   single wallet from sweeping a flash promotion's supply at mint time.
+ * - **Nao existe compra com dinheiro.** A peca se obtem gastando os proprios
+ *   carimbos (pelo RewardCatalog) ou conquistando (pelo Achievements). Aceitar
+ *   ETH aqui obrigaria a responder para quem vai o dinheiro, e a resposta do
+ *   produto e "nenhum dinheiro flui para os comerciantes atraves de nos".
  *
- * - Combo bonus tokens are minted best-effort: if the combo campaign is
- *   paused, out of its window, or out of supply, the main purchase still
- *   succeeds and ComboMintSkipped is emitted. A free add-on should never
- *   block the paid purchase. Combos resolve one level deep (a combo's own
- *   combos are not cascaded) and bypass the combo campaign's price and
- *   per-wallet cap — they are gifts, not purchases.
+ * - **`maxPerWallet` conta unidades cunhadas, nao possuidas** -- a peca e
+ *   transferivel de proposito, entao um teto por posse seria burlado num
+ *   toque. Ele existe para uma carteira nao varrer a tiragem inteira.
  */
-contract DiscountNFT is ERC1155Supply, ReentrancyGuard {
-    enum Category {
-        Gastronomy,
-        LeisureTourism,
-        Sports,
-        Culture,
-        Apparel
+contract DiscountNFT is ERC1155Supply {
+    struct PieceParams {
+        /// @notice O programa cujas regras esta peca aciona.
+        uint256 programId;
+        /// @notice O nivel da peca dentro do programa. 1 = beneficio base.
+        uint256 level;
+        /// @notice A tiragem. 0 = sem limite -- mas exclusividade e o ponto,
+        ///         entao o painel sempre sugere um numero.
+        uint256 maxSupply;
+        /// @notice Tempo de vida da peca. 0 = sem limite daquele lado.
+        uint64 startTime;
+        uint64 endTime;
+        uint256 maxPerWallet;
+        string uri;
     }
 
-    struct CampaignParams {
-        uint256 price; // wei per unit
-        uint256 maxSupply; // 0 = unlimited
-        uint64 startTime; // unix; 0 = no lower bound
-        uint64 endTime; // unix; 0 = no upper bound
-        uint256 maxPerWallet; // 0 = unlimited
-        Category category;
-        bool flash; // display flag for the frontend; scarcity itself is enforced by maxSupply + window
-        uint256[] comboTokenIds; // campaigns minted for free alongside this one
-        string uri; // metadata URI for this tokenId
-    }
-
-    struct Campaign {
-        uint256 price;
+    struct Piece {
+        uint256 programId;
+        uint256 level;
         uint256 maxSupply;
         uint64 startTime;
         uint64 endTime;
         uint256 maxPerWallet;
-        Category category;
-        bool flash;
         bool active;
         bool exists;
-        uint256[] comboTokenIds;
         string uri;
     }
 
     EstablishmentRegistry public immutable registry;
+    DiscountProgram public immutable programs;
 
-    mapping(uint256 tokenId => Campaign) private _campaigns;
+    mapping(uint256 tokenId => Piece) private _pieces;
     mapping(uint256 tokenId => mapping(address wallet => uint256)) public mintedBy;
 
-    // ERC1155 has no native enumeration; this array lets the frontend load the
-    // whole storefront in a single RPC call (getAllCampaigns) instead of
-    // scanning CampaignCreated logs. Push-only: campaigns are never deleted,
-    // only deactivated, so the array cannot need compaction.
-    uint256[] private _campaignIds;
+    /// @dev O ERC1155 nao enumera. Este array deixa a vitrine carregar a
+    ///      colecao inteira numa chamada so, em vez de varrer eventos. So
+    ///      cresce: peca nunca e apagada, so desativada.
+    uint256[] private _pieceIds;
 
-    event CampaignCreated(uint256 indexed tokenId, Category category, bool flash);
-    event CampaignActiveSet(uint256 indexed tokenId, bool active);
-    event CampaignUriSet(uint256 indexed tokenId, string uri);
-    event Minted(uint256 indexed tokenId, address indexed to, uint256 amount, uint256 paid);
-    event ComboMinted(uint256 indexed mainTokenId, uint256 indexed comboTokenId, address indexed to, uint256 amount);
-    event ComboMintSkipped(uint256 indexed mainTokenId, uint256 indexed comboTokenId, address indexed to);
-    /// @param redemptionRef opaque reference produced off-chain (e.g. hash of the
-    ///        receipt/order id) linking this burn to a concrete redemption.
-    event Redeemed(
+    event PieceCreated(uint256 indexed tokenId, uint256 indexed programId, uint256 level, uint256 maxSupply);
+    event PieceActiveSet(uint256 indexed tokenId, bool active);
+    event PieceUriSet(uint256 indexed tokenId, string uri);
+    event PieceMinted(uint256 indexed tokenId, address indexed to, uint256 amount, address indexed minter);
+    /// @param redemptionRef referencia opaca gerada fora da cadeia, ligando esta
+    ///        queima a um atendimento concreto.
+    event PieceUsed(
         uint256 indexed tokenId,
         address indexed user,
-        address indexed establishment,
+        uint256 indexed establishmentId,
         uint256 amount,
         bytes32 redemptionRef
     );
-    event Withdrawn(address indexed to, uint256 amount);
 
-    error NotAdmin();
-    error NotEstablishment();
-    error CampaignAlreadyExists(uint256 tokenId);
-    error CampaignDoesNotExist(uint256 tokenId);
-    error CampaignNotActive(uint256 tokenId);
-    error CampaignNotStarted(uint256 tokenId, uint64 startTime);
-    error CampaignEnded(uint256 tokenId, uint64 endTime);
+    error NotAllowedToMint();
+    error NotOperator();
+    error NotEstablishmentOwner();
+    error PieceAlreadyExists(uint256 tokenId);
+    error UnknownPiece(uint256 tokenId);
+    error PieceNotActive(uint256 tokenId);
+    error PieceNotStarted(uint256 tokenId, uint64 startTime);
+    error PieceExpired(uint256 tokenId, uint64 endTime);
     error MaxSupplyExceeded(uint256 tokenId, uint256 requested, uint256 available);
     error MaxPerWalletExceeded(uint256 tokenId, uint256 requested, uint256 remaining);
-    error InvalidPayment(uint256 expected, uint256 sent);
+    error UnknownProgram();
+    error InvalidLevel();
     error InvalidWindow();
-    error InvalidComboReference(uint256 comboTokenId);
+    error NotValidHere(uint256 tokenId, uint256 establishmentId);
     error ZeroAmount();
-    error WithdrawFailed();
 
-    modifier onlyAdmin() {
-        if (!registry.isAdmin(msg.sender)) revert NotAdmin();
-        _;
-    }
-
-    // Base URI is empty: uri() is overridden to return the per-campaign URI.
-    constructor(EstablishmentRegistry _registry) ERC1155("") {
+    /// @dev A URI base fica vazia: `uri()` devolve a de cada peca.
+    constructor(EstablishmentRegistry _registry, DiscountProgram _programs) ERC1155("") {
         registry = _registry;
+        programs = _programs;
     }
 
-    // ---------------------------------------------------------------- admin
+    // ------------------------------------------------------------ catalogo
 
-    function createCampaign(uint256 tokenId, CampaignParams calldata p) external onlyAdmin {
-        if (_campaigns[tokenId].exists) revert CampaignAlreadyExists(tokenId);
+    /**
+     * @notice Cria uma peca de um programa.
+     * @dev Quem pode e o dono do estabelecimento que criou o programa, ou o
+     *      admin da plataforma. Nao e mais so o admin: a colecao e da loja.
+     */
+    function createPiece(uint256 tokenId, PieceParams calldata p) external {
+        if (_pieces[tokenId].exists) revert PieceAlreadyExists(tokenId);
+        if (!programs.programExists(p.programId)) revert UnknownProgram();
+        if (p.level == 0) revert InvalidLevel();
         if (p.endTime != 0 && p.endTime <= p.startTime) revert InvalidWindow();
-        // Combo targets must already exist, so campaigns are created leaf-first.
-        // This also makes self-reference impossible without an explicit check.
-        for (uint256 i = 0; i < p.comboTokenIds.length; i++) {
-            if (!_campaigns[p.comboTokenIds[i]].exists) revert InvalidComboReference(p.comboTokenIds[i]);
-        }
 
-        _campaigns[tokenId] = Campaign({
-            price: p.price,
+        _onlyProgramOwnerOrAdmin(p.programId);
+
+        _pieces[tokenId] = Piece({
+            programId: p.programId,
+            level: p.level,
             maxSupply: p.maxSupply,
             startTime: p.startTime,
             endTime: p.endTime,
             maxPerWallet: p.maxPerWallet,
-            category: p.category,
-            flash: p.flash,
             active: true,
             exists: true,
-            comboTokenIds: p.comboTokenIds,
             uri: p.uri
         });
-        _campaignIds.push(tokenId);
+        _pieceIds.push(tokenId);
 
-        emit CampaignCreated(tokenId, p.category, p.flash);
+        emit PieceCreated(tokenId, p.programId, p.level, p.maxSupply);
         emit URI(p.uri, tokenId);
     }
 
-    function setCampaignActive(uint256 tokenId, bool active) external onlyAdmin {
-        if (!_campaigns[tokenId].exists) revert CampaignDoesNotExist(tokenId);
-        _campaigns[tokenId].active = active;
-        emit CampaignActiveSet(tokenId, active);
+    function setPieceActive(uint256 tokenId, bool active) external {
+        Piece storage piece = _pieces[tokenId];
+        if (!piece.exists) revert UnknownPiece(tokenId);
+        _onlyProgramOwnerOrAdmin(piece.programId);
+
+        piece.active = active;
+        emit PieceActiveSet(tokenId, active);
     }
 
-    function setCampaignUri(uint256 tokenId, string calldata newUri) external onlyAdmin {
-        if (!_campaigns[tokenId].exists) revert CampaignDoesNotExist(tokenId);
-        _campaigns[tokenId].uri = newUri;
-        emit CampaignUriSet(tokenId, newUri);
+    function setPieceUri(uint256 tokenId, string calldata newUri) external {
+        Piece storage piece = _pieces[tokenId];
+        if (!piece.exists) revert UnknownPiece(tokenId);
+        _onlyProgramOwnerOrAdmin(piece.programId);
+
+        piece.uri = newUri;
+        emit PieceUriSet(tokenId, newUri);
         emit URI(newUri, tokenId);
     }
 
-    function withdraw(address payable to) external onlyAdmin nonReentrant {
-        uint256 balance = address(this).balance;
-        (bool success,) = to.call{ value: balance }("");
-        if (!success) revert WithdrawFailed();
-        emit Withdrawn(to, balance);
-    }
+    // -------------------------------------------------------------- emitir
 
-    // ----------------------------------------------------------------- mint
-
-    function mint(uint256 tokenId, uint256 amount) external payable nonReentrant {
+    /**
+     * @notice Entrega a peca a alguem.
+     * @dev So os contratos que sabem por que ela foi merecida: o RewardCatalog
+     *      (o cliente gastou os proprios carimbos) e o Achievements (o cliente
+     *      bateu um criterio). Os dois recebem RELAYER_ROLE no deploy. O
+     *      proprio relayer da plataforma tambem passa, para o caminho em que o
+     *      servidor atesta uma venda avulsa.
+     */
+    function mintTo(address to, uint256 tokenId, uint256 amount) external {
+        if (!registry.isRelayer(msg.sender)) revert NotAllowedToMint();
         if (amount == 0) revert ZeroAmount();
-        Campaign storage c = _campaigns[tokenId];
-        if (!c.exists) revert CampaignDoesNotExist(tokenId);
-        if (!c.active) revert CampaignNotActive(tokenId);
-        if (c.startTime != 0 && block.timestamp < c.startTime) revert CampaignNotStarted(tokenId, c.startTime);
-        if (c.endTime != 0 && block.timestamp > c.endTime) revert CampaignEnded(tokenId, c.endTime);
-        if (c.maxSupply != 0) {
-            uint256 available = c.maxSupply - totalSupply(tokenId);
+
+        Piece storage piece = _pieces[tokenId];
+        if (!piece.exists) revert UnknownPiece(tokenId);
+        if (!piece.active) revert PieceNotActive(tokenId);
+        if (piece.startTime != 0 && block.timestamp < piece.startTime) {
+            revert PieceNotStarted(tokenId, piece.startTime);
+        }
+        if (piece.endTime != 0 && block.timestamp > piece.endTime) revert PieceExpired(tokenId, piece.endTime);
+
+        if (piece.maxSupply != 0) {
+            uint256 available = piece.maxSupply - totalSupply(tokenId);
             if (amount > available) revert MaxSupplyExceeded(tokenId, amount, available);
         }
-        if (c.maxPerWallet != 0) {
-            uint256 remaining = c.maxPerWallet - mintedBy[tokenId][msg.sender];
+        if (piece.maxPerWallet != 0) {
+            uint256 remaining = piece.maxPerWallet - mintedBy[tokenId][to];
             if (amount > remaining) revert MaxPerWalletExceeded(tokenId, amount, remaining);
         }
-        // Exact payment required — no refund path means no unexpected value
-        // sitting in the contract and one less external call.
-        uint256 cost = c.price * amount;
-        if (msg.value != cost) revert InvalidPayment(cost, msg.value);
 
-        mintedBy[tokenId][msg.sender] += amount;
-        _mint(msg.sender, tokenId, amount, "");
-        emit Minted(tokenId, msg.sender, amount, msg.value);
-
-        // Best-effort combo mints (see contract-level notes).
-        uint256[] storage combos = c.comboTokenIds;
-        for (uint256 i = 0; i < combos.length; i++) {
-            uint256 comboId = combos[i];
-            Campaign storage cc = _campaigns[comboId];
-            bool inWindow = (cc.startTime == 0 || block.timestamp >= cc.startTime)
-                && (cc.endTime == 0 || block.timestamp <= cc.endTime);
-            bool hasSupply = cc.maxSupply == 0 || totalSupply(comboId) + amount <= cc.maxSupply;
-            if (!cc.active || !inWindow || !hasSupply) {
-                emit ComboMintSkipped(tokenId, comboId, msg.sender);
-                continue;
-            }
-            _mint(msg.sender, comboId, amount, "");
-            emit ComboMinted(tokenId, comboId, msg.sender, amount);
-        }
+        mintedBy[tokenId][to] += amount;
+        _mint(to, tokenId, amount, "");
+        emit PieceMinted(tokenId, to, amount, msg.sender);
     }
 
-    // --------------------------------------------------------------- redeem
+    // ---------------------------------------------------------------- usar
 
-    function redeem(address user, uint256 tokenId, uint256 amount, bytes32 redemptionRef) external {
-        if (!registry.isEstablishment(msg.sender)) revert NotEstablishment();
+    /**
+     * @notice Queima a peca no balcao, em troca do desconto.
+     * @dev Duas condicoes, e as duas importam. Quem chama precisa operar
+     *      AQUELA loja (ou ser o relayer), e o programa da peca precisa valer
+     *      nela. A segunda e o que sustenta a pool: uma loja que nao aceitou o
+     *      convite nao e obrigada a honrar a peca da vizinha.
+     *
+     *      Nao ha conferencia da janela de emissao aqui: o tempo de vida
+     *      governa a EMISSAO, e honrar uma peca vencida e decisao de balcao.
+     *      O que vale e o programa estar valendo agora, e isso `validAt` diz.
+     */
+    function usePiece(address user, uint256 tokenId, uint256 establishmentId, uint256 amount, bytes32 redemptionRef)
+        external
+    {
         if (amount == 0) revert ZeroAmount();
-        // No campaign-window check here on purpose: the mint window governs
-        // *sales*; whether an expired coupon is still honored is a business
-        // decision the establishment makes at the counter.
+        Piece storage piece = _pieces[tokenId];
+        if (!piece.exists) revert UnknownPiece(tokenId);
+
+        if (!registry.isOperatorOf(msg.sender, establishmentId) && !registry.isRelayer(msg.sender)) {
+            revert NotOperator();
+        }
+        if (!programs.validAt(piece.programId, establishmentId)) revert NotValidHere(tokenId, establishmentId);
+
         _burn(user, tokenId, amount);
-        emit Redeemed(tokenId, user, msg.sender, amount, redemptionRef);
+        emit PieceUsed(tokenId, user, establishmentId, amount, redemptionRef);
     }
 
-    // ---------------------------------------------------------------- views
+    // ------------------------------------------------------------- leitura
 
-    function getCampaign(uint256 tokenId) external view returns (Campaign memory) {
-        if (!_campaigns[tokenId].exists) revert CampaignDoesNotExist(tokenId);
-        return _campaigns[tokenId];
+    /// @notice Quanto esta peca desconta numa conta de `billCents`. E o numero
+    ///         que o atendente le pronto, sem fazer conta de cabeca.
+    function discountFor(uint256 tokenId, uint256 billCents) external view returns (uint256) {
+        Piece storage piece = _pieces[tokenId];
+        if (!piece.exists) return 0;
+        return programs.discountFor(piece.programId, piece.level, billCents);
     }
 
-    function campaignExists(uint256 tokenId) external view returns (bool) {
-        return _campaigns[tokenId].exists;
+    function getPiece(uint256 tokenId) external view returns (Piece memory) {
+        if (!_pieces[tokenId].exists) revert UnknownPiece(tokenId);
+        return _pieces[tokenId];
     }
 
-    function getCampaignIds() external view returns (uint256[] memory) {
-        return _campaignIds;
+    function pieceExists(uint256 tokenId) external view returns (bool) {
+        return _pieces[tokenId].exists;
     }
 
-    /// @notice Everything the storefront needs in one call: ids, full campaign
-    ///         structs, and units already minted per campaign (for "remaining
-    ///         supply" displays). Not paginated: campaign counts are small
-    ///         (dozens) and this is a view call, so gas is not a concern.
-    function getAllCampaigns()
+    function getPieceIds() external view returns (uint256[] memory) {
+        return _pieceIds;
+    }
+
+    /// @notice Tudo o que a vitrine precisa numa chamada: ids, pecas e quantas
+    ///         ja sairam de cada tiragem. Sem paginacao -- sao dezenas, e e
+    ///         view.
+    function getAllPieces()
         external
         view
-        returns (uint256[] memory ids, Campaign[] memory campaigns, uint256[] memory minted)
+        returns (uint256[] memory ids, Piece[] memory pieces, uint256[] memory minted)
     {
-        ids = _campaignIds;
+        ids = _pieceIds;
         uint256 len = ids.length;
-        campaigns = new Campaign[](len);
+        pieces = new Piece[](len);
         minted = new uint256[](len);
         for (uint256 i = 0; i < len; i++) {
-            campaigns[i] = _campaigns[ids[i]];
+            pieces[i] = _pieces[ids[i]];
             minted[i] = totalSupply(ids[i]);
         }
     }
 
     function uri(uint256 tokenId) public view override returns (string memory) {
-        return _campaigns[tokenId].uri;
+        return _pieces[tokenId].uri;
+    }
+
+    function _onlyProgramOwnerOrAdmin(uint256 programId) private view {
+        uint256 dono = programs.getProgram(programId).ownerEstablishmentId;
+        if (registry.ownerOfEstablishment(dono) != msg.sender && !registry.isAdmin(msg.sender)) {
+            revert NotEstablishmentOwner();
+        }
     }
 }

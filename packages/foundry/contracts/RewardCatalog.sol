@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+import { DiscountNFT } from "./DiscountNFT.sol";
 import { EstablishmentRegistry } from "./EstablishmentRegistry.sol";
 import { StampLedger } from "./StampLedger.sol";
 import { PointsVault } from "./PointsVault.sol";
@@ -28,6 +29,9 @@ contract RewardCatalog {
         uint32 maxRedemptions;
         uint32 redeemed;
         bool active;
+        /// @notice Peca da colecao entregue junto. 0 = a recompensa e so o
+        ///         produto do balcao, sem colecionavel.
+        uint256 pieceId;
         /// @notice Hash do registro no Supabase, para detectar adulteracao.
         bytes32 metadataHash;
     }
@@ -35,6 +39,7 @@ contract RewardCatalog {
     EstablishmentRegistry public immutable registry;
     StampLedger public immutable stampLedger;
     PointsVault public immutable pointsVault;
+    DiscountNFT public immutable discountNFT;
 
     mapping(uint256 rewardId => Reward) public rewards;
 
@@ -67,10 +72,16 @@ contract RewardCatalog {
     error ClaimAlreadyProcessed();
     error FreeRewardNotAllowed();
 
-    constructor(EstablishmentRegistry _registry, StampLedger _stampLedger, PointsVault _pointsVault) {
+    constructor(
+        EstablishmentRegistry _registry,
+        StampLedger _stampLedger,
+        PointsVault _pointsVault,
+        DiscountNFT _discountNFT
+    ) {
         registry = _registry;
         stampLedger = _stampLedger;
         pointsVault = _pointsVault;
+        discountNFT = _discountNFT;
     }
 
     // ----------------------------------------------------------- catalogo
@@ -83,6 +94,7 @@ contract RewardCatalog {
         uint64 startTime,
         uint64 endTime,
         uint32 maxRedemptions,
+        uint256 pieceId,
         bytes32 metadataHash
     ) external returns (uint256 rewardId) {
         _onlyOwnerOrAdmin(establishmentId);
@@ -102,6 +114,7 @@ contract RewardCatalog {
             maxRedemptions: maxRedemptions,
             redeemed: 0,
             active: true,
+            pieceId: pieceId,
             metadataHash: metadataHash
         });
 
@@ -153,6 +166,12 @@ contract RewardCatalog {
         }
         if (r.pointCost > 0) {
             pointsVault.burn(customer, r.pointTypeId, r.pointCost);
+        }
+        // A peca sai por ultimo, depois de o custo ja ter sido cobrado: se a
+        // cunhagem reverter (tiragem esgotada, peca vencida), a transacao
+        // inteira volta atras e o cliente nao fica sem os carimbos.
+        if (r.pieceId != 0) {
+            discountNFT.mintTo(customer, r.pieceId, 1);
         }
 
         emit RewardClaimed(rewardId, r.establishmentId, customer, r.stampCost, r.pointCost, claimRef);

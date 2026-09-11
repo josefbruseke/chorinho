@@ -29,7 +29,7 @@ import { codigoCurtoValido, decodificarPasse } from "~~/utils/pass";
 
 type Etapa =
   | { nome: "valor" }
-  | { nome: "cliente"; usarCodigo?: boolean; erroCamera?: boolean }
+  | { nome: "cliente"; camera?: boolean; usarCodigo?: boolean; erroCamera?: boolean }
   | { nome: "enviando" }
   | { nome: "recibo"; carimbos: number; saldo?: number; sequencia?: number; cliente?: string; naFila?: boolean }
   | { nome: "erro"; mensagem: string };
@@ -40,11 +40,45 @@ export const TerminalPdv = () => {
   const [codigo, setCodigo] = useState("");
   const [previa, setPrevia] = useState<number | null>(null);
   const [loja, setLoja] = useState<string>();
+
   const [semAcesso, setSemAcesso] = useState<string>();
+  const [cameraLiberada, setCameraLiberada] = useState(false);
   const enviando = useRef(false);
 
   const { fila, online, sincronizando, sincronizar } = useFilaOffline();
   useWakeLock();
+
+  /**
+   * A câmera só abre sozinha depois que o aparelho já autorizou uma vez.
+   *
+   * Abrir de cara joga o pedido de permissão do navegador na cara do atendente
+   * no meio da primeira venda — e uma recusa apressada ali fica gravada. Na
+   * primeira vez ele decide com o balcão vazio; da segunda em diante a câmera
+   * abre direto, sem toque extra.
+   */
+  useEffect(() => {
+    if (typeof navigator === "undefined" || !navigator.permissions?.query) return;
+    navigator.permissions
+      .query({ name: "camera" as PermissionName })
+      .then(estado => setCameraLiberada(estado.state === "granted"))
+      .catch(() => undefined);
+  }, []);
+
+  // O nome da loja aparece antes de qualquer digitação: é assim que o atendente
+  // percebe na hora que entrou com a conta errada.
+  useEffect(() => {
+    const carregar = async () => {
+      try {
+        const r = await fetch("/api/pos/balcao");
+        const corpo = await r.json();
+        if (r.ok) setLoja(corpo.nome);
+        else setSemAcesso(r.status === 401 ? "Entre com a conta do balcão para registrar vendas." : corpo?.erro);
+      } catch {
+        // Sem internet: o balcão continua registrando para a fila.
+      }
+    };
+    void carregar();
+  }, []);
 
   // Prévia dos carimbos: o atendente confere o número antes de pedir o passe,
   // e um valor abaixo do piso da loja aparece como zero, não como surpresa.
@@ -61,13 +95,7 @@ export const TerminalPdv = () => {
           body: JSON.stringify({ valorCentavos: centavos }),
         });
         const corpo = await r.json();
-        if (r.status === 401) setSemAcesso("Entre com a conta do balcão para registrar vendas.");
-        else if (r.status === 403 || r.status === 409) setSemAcesso(corpo?.erro);
-        else {
-          setSemAcesso(undefined);
-          setLoja(corpo?.loja);
-          setPrevia(typeof corpo?.carimbos === "number" ? corpo.carimbos : null);
-        }
+        setPrevia(r.ok && typeof corpo?.carimbos === "number" ? corpo.carimbos : null);
       } catch {
         setPrevia(null);
       }
@@ -166,7 +194,7 @@ export const TerminalPdv = () => {
               <button
                 type="button"
                 disabled={centavos === 0}
-                onClick={() => setEtapa({ nome: "cliente" })}
+                onClick={() => setEtapa({ nome: "cliente", camera: cameraLiberada })}
                 className="btn btn-primary btn-block h-16 rounded-2xl text-lg font-black disabled:opacity-40"
               >
                 Continuar
@@ -186,7 +214,7 @@ export const TerminalPdv = () => {
               {formatarCentavos(centavos)}
             </button>
 
-            {!etapa.usarCodigo && !etapa.erroCamera ? (
+            {etapa.camera && !etapa.usarCodigo && !etapa.erroCamera ? (
               <>
                 <QrScanner
                   onScan={texto => void registrar({ qr: texto })}
@@ -209,6 +237,30 @@ export const TerminalPdv = () => {
                     Não deu para abrir a câmera. Peça o código de 6 dígitos ao cliente.
                   </div>
                 )}
+
+                {/* Primeira venda deste aparelho: a câmera ainda não foi
+                    autorizada. O botão é grande porque escanear é o caminho
+                    normal — digitar é a saída. */}
+                {!etapa.camera && !etapa.usarCodigo && !etapa.erroCamera && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCameraLiberada(true);
+                        setEtapa({ nome: "cliente", camera: true });
+                      }}
+                      className="btn btn-primary btn-block h-20 gap-2 rounded-2xl text-lg font-black"
+                    >
+                      <CameraIcon className="h-7 w-7" />
+                      Escanear o passe
+                    </button>
+                    <p className="m-0 -mt-1 text-center text-xs opacity-65">
+                      O navegador vai pedir acesso à câmera. É só na primeira vez.
+                    </p>
+                    <div className="divider my-0 text-xs opacity-60">ou digite o código</div>
+                  </>
+                )}
+
                 <form
                   className="flex w-full flex-col gap-3"
                   onSubmit={e => {
@@ -235,14 +287,19 @@ export const TerminalPdv = () => {
                     Confirmar carimbo
                   </button>
                 </form>
-                <button
-                  type="button"
-                  onClick={() => setEtapa({ nome: "cliente" })}
-                  className="btn btn-ghost btn-sm gap-1.5 rounded-xl"
-                >
-                  <CameraIcon className="h-4 w-4" />
-                  Voltar para a câmera
-                </button>
+                {(etapa.camera || etapa.usarCodigo) && !etapa.erroCamera && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCameraLiberada(true);
+                      setEtapa({ nome: "cliente", camera: true });
+                    }}
+                    className="btn btn-ghost btn-sm gap-1.5 rounded-xl"
+                  >
+                    <CameraIcon className="h-4 w-4" />
+                    Voltar para a câmera
+                  </button>
+                )}
               </>
             )}
           </div>
@@ -310,7 +367,7 @@ export const TerminalPdv = () => {
             <div className="flex w-full flex-col gap-2">
               <button
                 type="button"
-                onClick={() => setEtapa({ nome: "cliente" })}
+                onClick={() => setEtapa({ nome: "cliente", camera: cameraLiberada })}
                 className="btn btn-primary btn-block h-14 rounded-2xl font-black"
               >
                 Tentar de novo

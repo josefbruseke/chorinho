@@ -37,8 +37,14 @@ export const QrScanner = ({ onScan, onError }: { onScan: (text: string) => void;
     return () => {
       if (stopped) return;
       stopped = true;
-      // stop() rejects if start() never finished; nothing to clean up then
-      scanner.stop().catch(() => undefined);
+      // stop() pode lancar de forma sincrona quando o start nunca terminou --
+      // um `.catch()` sozinho nao pegaria isso, e a excecao subiria no meio da
+      // limpeza do React.
+      try {
+        void scanner.stop().catch(() => undefined);
+      } catch {
+        // nada iniciado, nada a parar
+      }
     };
   }, []);
 

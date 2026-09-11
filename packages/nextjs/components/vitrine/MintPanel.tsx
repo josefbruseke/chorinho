@@ -115,7 +115,7 @@ export const MintPanel = ({ campaign }: { campaign: Campaign }) => {
             <CheckCircleIcon className="h-5 w-5" />
             <span>Compra concluída! Seu cupom já está pronto para usar.</span>
           </div>
-          <Link href="/meus-cupons" className="btn btn-success btn-lg">
+          <Link href="/carteira" className="btn btn-success btn-lg">
             Ver meu cupom
           </Link>
         </div>

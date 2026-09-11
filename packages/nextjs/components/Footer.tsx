@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { useFetchNativeCurrencyPrice } from "@scaffold-ui/hooks";
@@ -52,7 +54,7 @@ export const Footer = () => {
             </div>
           </div>
           <div className="flex items-center gap-4 text-xs">
-            <Link href="/parceiro" className="font-semibold hover:text-primary transition-colors">
+            <Link href="/cadastro" className="font-semibold hover:text-primary transition-colors">
               Cadastrar meu estabelecimento
             </Link>
           </div>

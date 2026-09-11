@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { keccak256, stringToHex } from "viem";
 import { useAccount } from "wagmi";
 import {
   BuildingStorefrontIcon,
+  CameraIcon,
   CheckBadgeIcon,
   CheckCircleIcon,
   SparklesIcon,
@@ -114,6 +116,14 @@ export const MerchantTerminal: React.FC = () => {
               <span className="badge badge-success badge-xs">Ativo</span>
             </div>
           )}
+
+          <Link
+            href="/pdv/escanear"
+            className="btn btn-sm rounded-2xl gap-1.5 bg-white/15 hover:bg-white/25 border-white/20 text-secondary-content"
+          >
+            <CameraIcon className="w-4 h-4" />
+            Ler QR do cliente
+          </Link>
         </div>
       </div>
 

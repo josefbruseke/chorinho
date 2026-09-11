@@ -3,26 +3,54 @@ pragma solidity ^0.8.20;
 
 import "./DeployHelpers.s.sol";
 import { EstablishmentRegistry } from "../contracts/EstablishmentRegistry.sol";
+import { SubscriptionManager } from "../contracts/SubscriptionManager.sol";
+import { PointsVault } from "../contracts/PointsVault.sol";
+import { StampLedger } from "../contracts/StampLedger.sol";
 import { DiscountNFT } from "../contracts/DiscountNFT.sol";
 import { BonusNFT } from "../contracts/BonusNFT.sol";
 
 /**
- * @notice Deploys the loyalty platform: registry first (source of roles),
- *         then both NFT contracts wired to it. The deployer account becomes
- *         the platform admin (DEFAULT_ADMIN_ROLE on the registry).
+ * @notice Sobe a plataforma inteira e liga os papeis entre os contratos.
  *
- * bun deploy --file DeployLoyalty.s.sol                        # local anvil
- * bun deploy --file DeployLoyalty.s.sol --network baseSepolia  # Base Sepolia (requires keystore)
+ *         A ordem importa: o registry e a fonte de permissao e vem primeiro;
+ *         o PointsVault precisa existir antes do StampLedger, que o recebe no
+ *         construtor; e as concessoes de papel vem por ultimo, quando todos os
+ *         enderecos ja existem.
+ *
+ * bun deploy --file DeployLoyalty.s.sol                        # anvil local
+ * bun deploy --file DeployLoyalty.s.sol --network baseSepolia  # testnet
  */
 contract DeployLoyalty is ScaffoldETHDeploy {
+    /// @dev Classe de ponto padrao. Id fixo para continuar previsivel entre
+    ///      redes: 1 e sempre o ponto da cidade.
+    uint256 constant PONTO_CIDADE = 1;
+
     function run() external ScaffoldEthDeployerRunner {
         EstablishmentRegistry registry = new EstablishmentRegistry(deployer);
+        SubscriptionManager subscriptions = new SubscriptionManager(deployer);
+        PointsVault points = new PointsVault(deployer, "https://chorinho.app/pontos/{id}.json");
+        StampLedger ledger = new StampLedger(registry, subscriptions, points, deployer);
+
         DiscountNFT discount = new DiscountNFT(registry);
         BonusNFT bonus = new BonusNFT(registry);
 
-        // Recorded in deployments/<chainId>.json so tooling (e.g. the seed
-        // script) can find the addresses without parsing broadcast files.
+        // O ledger e quem credita e queima ponto; ninguem mais.
+        points.grantRole(points.MINTER_ROLE(), address(ledger));
+        points.grantRole(points.BURNER_ROLE(), address(ledger));
+
+        points.createPointType(PONTO_CIDADE, "Ponto da Cidade", PointsVault.Scope.City, 1);
+
+        // Em rede local o proprio deployer faz o papel do relayer e do oraculo
+        // de cobranca, para o fluxo completo rodar sem backend.
+        if (block.chainid == 31_337) {
+            registry.grantRole(registry.RELAYER_ROLE(), deployer);
+            subscriptions.grantRole(subscriptions.BILLING_ORACLE_ROLE(), deployer);
+        }
+
         deployments.push(Deployment("EstablishmentRegistry", address(registry)));
+        deployments.push(Deployment("SubscriptionManager", address(subscriptions)));
+        deployments.push(Deployment("PointsVault", address(points)));
+        deployments.push(Deployment("StampLedger", address(ledger)));
         deployments.push(Deployment("DiscountNFT", address(discount)));
         deployments.push(Deployment("BonusNFT", address(bonus)));
     }

@@ -49,7 +49,7 @@ const CouponDetail: NextPage = () => {
     return (
       <div className="text-center py-24 flex flex-col items-center gap-4">
         <p className="text-lg opacity-70 m-0">Cupom não encontrado.</p>
-        <Link href="/meus-cupons" className="btn btn-primary btn-sm">
+        <Link href="/carteira" className="btn btn-primary btn-sm">
           Meus cupons
         </Link>
       </div>
@@ -62,7 +62,7 @@ const CouponDetail: NextPage = () => {
 
   return (
     <div className="max-w-md w-full mx-auto px-5 py-8 flex flex-col items-center gap-5">
-      <Link href="/meus-cupons" className="btn btn-ghost btn-sm gap-1 self-start -ml-2">
+      <Link href="/carteira" className="btn btn-ghost btn-sm gap-1 self-start -ml-2">
         <ArrowLeftIcon className="h-4 w-4" />
         Meus cupons
       </Link>

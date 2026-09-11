@@ -32,6 +32,177 @@
   --color-honey-soft: #fef3c7;
   --color-honey-edge: #fde68a;
   --color-honey-ink: #92400e;
+
+  /* A tela do QR e a unica superficie que NAO acompanha o tema: camera de
+     celular barato le muito mais rapido codigo escuro sobre fundo claro, e no
+     balcao isso e a diferenca entre escanear de primeira ou segurar a fila.
+     Por isso estes tres nao tem contraparte no bloco escuro. */
+  --color-qr-surface: #ffffff;
+  --color-qr-ink: #261c14;
+  --color-qr-muted: #856d5c;
+}
+
+/*
+  TEMAS POR FLAVOR
+  ----------------
+  Uma paleta so. Cada flavor reaproveita os mesmos tokens do Chorinho e muda
+  apenas densidade, raio e peso -- a marca e uma coisa so (DESIGN_SYSTEM.md).
+  O next-themes continua dono do eixo claro/escuro; o layout de cada route
+  group escolhe QUAL PAR usar.
+
+  - pos-*      balcao: mais contraste e raio menor para alvo grande sob luz do dia
+  - merchant-* back office: mais denso, orientado a dados
+  - admin-*    plataforma: igual ao merchant, com primario mais sobrio
+*/
+
+@plugin "daisyui/theme" {
+  name: "pos-light";
+
+  --color-primary: #9a3412;
+  --color-primary-content: #fffdfa;
+  --color-secondary: #1c1410;
+  --color-secondary-content: #fdfbf7;
+  --color-accent: #b45309;
+  --color-accent-content: #fffdfa;
+  --color-neutral: #2b211a;
+  --color-neutral-content: #fffdfa;
+  --color-base-100: #ffffff;
+  --color-base-200: #f7f3ec;
+  --color-base-300: #ddd2bf;
+  --color-base-content: #1c1410;
+  --color-info: #1e40af;
+  --color-success: #15803d;
+  --color-warning: #b45309;
+  --color-error: #991b1b;
+
+  --radius-field: 0.5rem;
+  --radius-box: 0.75rem;
+  --radius-selector: 0.5rem;
+}
+
+@plugin "daisyui/theme" {
+  name: "pos-dark";
+
+  --color-primary: #f97316;
+  --color-primary-content: #140c06;
+  --color-secondary: #faf6ef;
+  --color-secondary-content: #1c1410;
+  --color-accent: #fbbf24;
+  --color-accent-content: #1c1410;
+  --color-neutral: #33281f;
+  --color-neutral-content: #faf6ef;
+  --color-base-100: #1c1611;
+  --color-base-200: #120e0b;
+  --color-base-300: #453527;
+  --color-base-content: #fdf9f0;
+  --color-info: #60a5fa;
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
+
+  --radius-field: 0.5rem;
+  --radius-box: 0.75rem;
+  --radius-selector: 0.5rem;
+}
+
+@plugin "daisyui/theme" {
+  name: "merchant-light";
+
+  --color-primary: #c2410c;
+  --color-primary-content: #fffdfa;
+  --color-secondary: #261c14;
+  --color-secondary-content: #fdfbf7;
+  --color-accent: #d97706;
+  --color-accent-content: #261c14;
+  --color-neutral: #362a22;
+  --color-neutral-content: #fffdfa;
+  --color-base-100: #ffffff;
+  --color-base-200: #f8f6f2;
+  --color-base-300: #e7e0d5;
+  --color-base-content: #281d16;
+  --color-info: #1d4ed8;
+  --color-success: #15803d;
+  --color-warning: #d97706;
+  --color-error: #b91c1c;
+
+  --radius-field: 0.5rem;
+  --radius-box: 0.875rem;
+  --radius-selector: 0.5rem;
+}
+
+@plugin "daisyui/theme" {
+  name: "merchant-dark";
+
+  --color-primary: #ea580c;
+  --color-primary-content: #1e130b;
+  --color-secondary: #f5efe6;
+  --color-secondary-content: #261c14;
+  --color-accent: #fbbf24;
+  --color-accent-content: #261c14;
+  --color-neutral: #382d24;
+  --color-neutral-content: #fbf8f2;
+  --color-base-100: #211a15;
+  --color-base-200: #17120f;
+  --color-base-300: #3a2e25;
+  --color-base-content: #f7f1e6;
+  --color-info: #3b82f6;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  --radius-field: 0.5rem;
+  --radius-box: 0.875rem;
+  --radius-selector: 0.5rem;
+}
+
+@plugin "daisyui/theme" {
+  name: "admin-light";
+
+  --color-primary: #7c2d12;
+  --color-primary-content: #fffdfa;
+  --color-secondary: #1f1810;
+  --color-secondary-content: #fdfbf7;
+  --color-accent: #a16207;
+  --color-accent-content: #fffdfa;
+  --color-neutral: #2f261e;
+  --color-neutral-content: #fffdfa;
+  --color-base-100: #ffffff;
+  --color-base-200: #f6f4f0;
+  --color-base-300: #e3ddd2;
+  --color-base-content: #231a14;
+  --color-info: #1d4ed8;
+  --color-success: #15803d;
+  --color-warning: #a16207;
+  --color-error: #b91c1c;
+
+  --radius-field: 0.375rem;
+  --radius-box: 0.75rem;
+  --radius-selector: 0.375rem;
+}
+
+@plugin "daisyui/theme" {
+  name: "admin-dark";
+
+  --color-primary: #d9622a;
+  --color-primary-content: #170f09;
+  --color-secondary: #efe9e0;
+  --color-secondary-content: #1f1810;
+  --color-accent: #d9a441;
+  --color-accent-content: #1f1810;
+  --color-neutral: #332a22;
+  --color-neutral-content: #efe9e0;
+  --color-base-100: #1e1915;
+  --color-base-200: #15110e;
+  --color-base-300: #372d24;
+  --color-base-content: #f2ece2;
+  --color-info: #3b82f6;
+  --color-success: #22c55e;
+  --color-warning: #d9a441;
+  --color-error: #ef4444;
+
+  --radius-field: 0.375rem;
+  --radius-box: 0.75rem;
+  --radius-selector: 0.375rem;
 }
 
 @layer base {
@@ -66,7 +237,13 @@
 @plugin "daisyui" {
   themes:
     light,
-    dark --prefersdark;
+    dark --prefersdark,
+    pos-light,
+    pos-dark,
+    merchant-light,
+    merchant-dark,
+    admin-light,
+    admin-dark;
 }
 
 /*

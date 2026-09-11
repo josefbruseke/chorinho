@@ -4,7 +4,14 @@ import React, { useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { hardhat } from "viem/chains";
-import { Bars3Icon, BugAntIcon, BuildingStorefrontIcon, QrCodeIcon, TicketIcon } from "@heroicons/react/24/outline";
+import {
+  Bars3Icon,
+  BugAntIcon,
+  BuildingStorefrontIcon,
+  LifebuoyIcon,
+  MapIcon,
+  SparklesIcon,
+} from "@heroicons/react/24/outline";
 import { BrandLogo } from "~~/components/BrandLogo";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick, useTargetNetwork } from "~~/hooks/scaffold-eth";
@@ -16,21 +23,27 @@ type HeaderMenuLink = {
   localOnly?: boolean;
 };
 
+/** Navegação do site institucional — o flavor público. */
 export const menuLinks: HeaderMenuLink[] = [
   {
-    label: "Explorar Locais",
-    href: "/",
+    label: "Como funciona",
+    href: "/como-funciona",
+    icon: <SparklesIcon className="h-4 w-4" />,
+  },
+  {
+    label: "Para comerciantes",
+    href: "/para-comerciantes",
     icon: <BuildingStorefrontIcon className="h-4 w-4" />,
   },
   {
-    label: "Meus Passes & Carimbos",
-    href: "/meus-cupons",
-    icon: <TicketIcon className="h-4 w-4" />,
+    label: "Ajuda",
+    href: "/ajuda",
+    icon: <LifebuoyIcon className="h-4 w-4" />,
   },
   {
-    label: "Área do Lojista",
-    href: "/parceiro",
-    icon: <QrCodeIcon className="h-4 w-4" />,
+    label: "Abrir o app",
+    href: "/mapa",
+    icon: <MapIcon className="h-4 w-4" />,
   },
   {
     label: "Debug Contracts",
@@ -40,14 +53,14 @@ export const menuLinks: HeaderMenuLink[] = [
   },
 ];
 
-export const HeaderMenuLinks = () => {
+export const HeaderMenuLinks = ({ links = menuLinks }: { links?: HeaderMenuLink[] }) => {
   const pathname = usePathname();
   const { targetNetwork } = useTargetNetwork();
   const isLocalNetwork = targetNetwork.id === hardhat.id;
 
   return (
     <>
-      {menuLinks
+      {links
         .filter(({ localOnly }) => !localOnly || isLocalNetwork)
         .map(({ label, href, icon }) => {
           const isActive = pathname === href;
@@ -75,7 +88,7 @@ export const HeaderMenuLinks = () => {
 /**
  * Site header
  */
-export const Header = () => {
+export const Header = ({ links = menuLinks, homeHref = "/" }: { links?: HeaderMenuLink[]; homeHref?: string }) => {
   const { targetNetwork } = useTargetNetwork();
   const isLocalNetwork = targetNetwork.id === hardhat.id;
 
@@ -97,10 +110,10 @@ export const Header = () => {
               burgerMenuRef?.current?.removeAttribute("open");
             }}
           >
-            <HeaderMenuLinks />
+            <HeaderMenuLinks links={links} />
           </ul>
         </details>
-        <Link href="/" passHref className="flex items-center gap-2.5 mx-2 lg:mr-8 shrink-0 group">
+        <Link href={homeHref} passHref className="flex items-center gap-2.5 mx-2 lg:mr-8 shrink-0 group">
           <BrandLogo className="w-9 h-9 group-hover:scale-105 transition-transform" />
           <div className="flex flex-col leading-tight">
             <div className="flex items-center gap-1.5">
@@ -113,7 +126,7 @@ export const Header = () => {
           </div>
         </Link>
         <ul className="hidden lg:flex lg:flex-nowrap items-center gap-1.5 m-0 p-0 list-none">
-          <HeaderMenuLinks />
+          <HeaderMenuLinks links={links} />
         </ul>
       </div>
       <div className="navbar-end grow mr-2">

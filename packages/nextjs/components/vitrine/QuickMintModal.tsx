@@ -107,7 +107,7 @@ export const QuickMintModal: React.FC<QuickMintModalProps> = ({ campaign, onClos
 
               <div className="flex flex-col sm:flex-row gap-2.5 w-full pt-2">
                 <Link
-                  href="/meus-cupons"
+                  href="/carteira"
                   className="btn btn-primary rounded-2xl flex-1 font-bold gap-1.5"
                   onClick={onClose}
                 >

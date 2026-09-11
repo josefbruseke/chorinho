@@ -58,18 +58,27 @@ Para popular a vitrine com campanhas de exemplo: `bun seed`.
 
 ---
 
-## Telas de hoje
+## As seis experiências
 
-| Rota | Para quem |
-| :--- | :--- |
-| `/` | Cliente — vitrine de campanhas do bairro |
-| `/campanha/[id]` | Cliente — detalhe da oferta |
-| `/meus-cupons` | Cliente — passes e carimbos |
-| `/parceiro` | Lojista — terminal de balcão |
-| `/debug` | Dev — interagir com os contratos direto |
-| `/blockexplorer` | Dev — explorador da blockchain local |
+O aplicativo é um só, dividido em seis experiências ("flavors"). Cada uma tem
+navegação e tema próprios, sobre a mesma paleta da marca.
 
-> A reestruturação em seis experiências separadas (cliente, lojista, PDV, admin, site e políticas), o mapa e o PWA estão planejados e ainda não foram construídos. Veja o roadmap abaixo.
+| Flavor | Rotas | Para quem |
+| :--- | :--- | :--- |
+| **SPA** | `/`, `/como-funciona`, `/para-comerciantes`, `/ajuda` | Visitante — site e aquisição |
+| **Privacidade** | `/privacidade`, `/termos`, `/carteira-e-seguranca`, `/cookies` | Quem quer ler as regras |
+| **Cliente** | `/mapa`, `/explorar`, `/carteira`, `/passe`, `/recompensas`, `/perfil`, `/campanha/[id]` | Quem compra no bairro |
+| **Comerciante** | `/painel`, `/cadastro` | Dono da loja |
+| **PDV** | `/pdv` | Atendente no balcão |
+| **Admin** | `/admin` | Nossa equipe |
+| **Dev** | `/debug`, `/blockexplorer` | Ferramentas do Scaffold-ETH |
+
+Cada flavor vive num route group em `packages/nextjs/app/` — `(site)`, `(legal)`,
+`(app)`, `(merchant)`, `(pos)`, `(admin)` e `(dev)` — com layout, navegação e par
+de temas próprios.
+
+> Algumas telas ainda são marcadores honestos que dizem em qual etapa o conteúdo
+> chega. O mapa, o PWA e a autenticação estão no roadmap abaixo.
 
 ---
 

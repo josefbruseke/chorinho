@@ -65,16 +65,20 @@ export const remainingSupply = (c: Campaign): bigint | null => (c.maxSupply === 
 export const nowSeconds = () => Math.floor(Date.now() / 1000);
 
 /**
- * Prices are charged on-chain in native currency but always DISPLAYED in BRL:
- * the audience is non-crypto consumers, so "ETH" never appears in the UI.
- * Fixed demo rate until the payment/pricing infra phase defines a real one.
+ * Os precos sao cobrados on-chain em moeda nativa e sempre EXIBIDOS em BRL: o
+ * publico e o consumidor comum do bairro, entao "ETH" nunca aparece na tela.
+ *
+ * ATENCAO: esta taxa e arbitraria e o valor em reais que o cliente ve NAO
+ * corresponde a cotacao real. Serve para demonstracao em rede local. O
+ * `DiscountNFT` passa a guardar preco em centavos no M3 e esta conversao
+ * inteira desaparece junto.
  */
-const DEMO_ETH_BRL = 15_000;
+const TAXA_DEMO_ETH_BRL = Number(process.env.NEXT_PUBLIC_DEMO_ETH_BRL ?? 15_000);
 
 const brlFormatter = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 export const formatPrice = (wei: bigint) =>
-  wei === 0n ? "Grátis" : brlFormatter.format(Number(formatEther(wei)) * DEMO_ETH_BRL);
+  wei === 0n ? "Grátis" : brlFormatter.format(Number(formatEther(wei)) * TAXA_DEMO_ETH_BRL);
 
 const IPFS_GATEWAY = "https://ipfs.io/ipfs/";
 

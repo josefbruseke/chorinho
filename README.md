@@ -1,83 +1,159 @@
-# 🏗 Scaffold-ETH 2
+<img src="packages/nextjs/public/og.png" alt="Chorinho" width="720">
 
-<h4 align="center">
-  <a href="https://docs.scaffoldeth.io">Documentation</a> |
-  <a href="https://scaffoldeth.io">Website</a>
-</h4>
+# Chorinho
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
+**Chorinho** é a digitalização daquele agrado que só o comércio de bairro sabe dar: a fatia extra de bolo na padaria, o refil de café no coador, a toalha quente na barbearia.
 
-> [!NOTE]
-> 🤖 Scaffold-ETH 2 is AI-ready! It has everything agents need to build on Ethereum. Check `.agents/`, `.claude/`, `.opencode` or `.cursor/` for more info.
+É um programa de fidelidade **compartilhado entre lojas**: o caixa escaneia o cliente, informa o valor da venda, e os selos são creditados automaticamente pelas regras daquele comerciante. Selos viram desconto, produto e NFTs exclusivas do estabelecimento — e tudo fica registrado on-chain.
 
-⚙️ Built using NextJS, RainbowKit, Foundry, Wagmi, Viem, and Typescript.
+O cliente não precisa saber que existe blockchain por trás. Entra com e-mail ou Google e pronto.
 
-- ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
-- 🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
-- 🧱 [**Components**](https://docs.scaffoldeth.io/components/): Collection of common web3 components to quickly build your frontend.
-- 🔥 **Burner Wallet & Local Faucet**: Quickly test your application with a burner wallet and local faucet.
-- 🔐 **Integration with Wallet Providers**: Connect to different wallet providers and interact with the Ethereum network.
+---
 
-![Debug Contracts tab](https://github.com/scaffold-eth/scaffold-eth-2/assets/55535804/b237af0c-5027-4849-a5c1-2e31495cccb1)
+## Rodando na sua máquina
 
-## Requirements
+**Pré-requisitos:** [Bun](https://bun.sh) 1.3+, [Foundry](https://getfoundry.sh) e [Git](https://git-scm.com).
 
-Before you begin, you need to install the following tools:
-
-- [Node (>= v20.18.3)](https://nodejs.org/en/download/)
-- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
-- [Git](https://git-scm.com/downloads)
-
-## Quickstart
-
-To get started with Scaffold-ETH 2, follow the steps below:
-
-1. Install dependencies if it was skipped in CLI:
-
-```
-cd my-dapp-example
-yarn install
+```bash
+bun install
+bun dev
 ```
 
-2. Run a local network in the first terminal:
+É só isso. O `bun dev` sobe as três coisas de uma vez: a blockchain local (Anvil), o deploy dos contratos e o frontend.
 
-```
-yarn chain
-```
+| Serviço | Endereço |
+| :--- | :--- |
+| Aplicação | http://localhost:3000 |
+| Blockchain local (Anvil) | http://localhost:8545 |
 
-This command starts a local Ethereum network using Foundry. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `packages/foundry/foundry.toml`.
+Quer os passos separados, cada um no seu terminal?
 
-3. On a second terminal, deploy the test contract:
-
-```
-yarn deploy
-```
-
-This command deploys a test smart contract to the local network. The contract is located in `packages/foundry/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/foundry/script` to deploy the contract to the network. You can also customize the deploy script.
-
-4. On a third terminal, start your NextJS app:
-
-```
-yarn start
+```bash
+bun chain      # blockchain local
+bun deploy     # deploy dos contratos (gera os tipos do frontend)
+bun start      # frontend
 ```
 
-Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
+Para popular a vitrine com campanhas de exemplo: `bun seed`.
 
-Run smart contract test with `yarn foundry:test`
+---
 
-- Edit your smart contracts in `packages/foundry/contracts`
-- Edit your frontend homepage at `packages/nextjs/app/page.tsx`. For guidance on [routing](https://nextjs.org/docs/app/building-your-application/routing/defining-routes) and configuring [pages/layouts](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts) checkout the Next.js documentation.
-- Edit your deployment scripts in `packages/foundry/script`
+## Comandos
 
+| Comando | O que faz |
+| :--- | :--- |
+| `bun dev` | Sobe tudo: blockchain, deploy e frontend |
+| `bun run test` | Roda os testes dos contratos |
+| `bun compile` | Compila os contratos |
+| `bun deploy` | Faz o deploy e regenera os tipos do frontend |
+| `bun seed` | Cria campanhas de exemplo na blockchain local |
+| `bun lint` | Verifica contratos e frontend |
+| `bun format` | Formata contratos e frontend |
+| `bun next:build` | Build de produção do frontend |
+| `bun account` | Mostra a conta usada nos deploys |
+| `bun generate` | Cria uma conta nova de deploy |
+| `bun account:import` | Importa uma chave privada existente |
+| `bun deploy --network base-sepolia` | Deploy numa rede de verdade |
+| `bun verify --network base-sepolia` | Verifica os contratos no explorador |
 
-## Documentation
+---
 
-Visit our [docs](https://docs.scaffoldeth.io) to learn how to start building with Scaffold-ETH 2.
+## Telas de hoje
 
-To know more about its features, check out our [website](https://scaffoldeth.io).
+| Rota | Para quem |
+| :--- | :--- |
+| `/` | Cliente — vitrine de campanhas do bairro |
+| `/campanha/[id]` | Cliente — detalhe da oferta |
+| `/meus-cupons` | Cliente — passes e carimbos |
+| `/parceiro` | Lojista — terminal de balcão |
+| `/debug` | Dev — interagir com os contratos direto |
+| `/blockexplorer` | Dev — explorador da blockchain local |
 
-## Contributing to Scaffold-ETH 2
+> A reestruturação em seis experiências separadas (cliente, lojista, PDV, admin, site e políticas), o mapa e o PWA estão planejados e ainda não foram construídos. Veja o roadmap abaixo.
 
-We welcome contributions to Scaffold-ETH 2!
+---
 
-Please see [CONTRIBUTING.MD](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to Scaffold-ETH 2.
+## Contratos
+
+Em `packages/foundry/contracts/`:
+
+| Contrato | O que faz |
+| :--- | :--- |
+| `EstablishmentRegistry` | Diretório de lojas parceiras e permissões da plataforma |
+| `DiscountNFT` | Campanhas e cupons (ERC-1155), com resgate no balcão |
+| `BonusNFT` | Selo de conquista intransferível, cunhado ao completar uma trilha |
+
+Rode `bun run test` para os testes (precisa do `run`: `test` é um comando embutido do Bun). Depois de `bun deploy`, os tipos aparecem sozinhos em `packages/nextjs/contracts/deployedContracts.ts` — **nunca edite esse arquivo à mão.**
+
+---
+
+## Variáveis de ambiente
+
+Nenhuma é obrigatória para rodar localmente — o projeto sobe com chaves públicas de demonstração.
+
+**`packages/nextjs/.env.local`**
+
+| Variável | Para quê |
+| :--- | :--- |
+| `NEXT_PUBLIC_ALCHEMY_API_KEY` | RPC próprio em redes públicas |
+| `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID` | Conectar carteiras via WalletConnect |
+
+**`packages/foundry/.env`**
+
+| Variável | Para quê |
+| :--- | :--- |
+| `ALCHEMY_API_KEY` | Deploy em redes públicas |
+| `ETHERSCAN_API_KEY` | Verificar contratos no explorador |
+
+> Nunca versione um `.env`. O `.gitignore` já bloqueia todos eles.
+
+---
+
+## Como o lojista paga
+
+**Ainda não está decidido** — e isso é de propósito. A cobrança fica atrás de uma interface única (`BillingProvider`), com cinco caminhos pré-engatilhados. Trocar de gateway é trocar uma variável, não refazer código.
+
+```bash
+BILLING_PROVIDER=manual        # padrão — admin ativa a loja à mão, sem gateway
+BILLING_PROVIDER=stripe        # cartão nacional e internacional, com portal de autoatendimento
+BILLING_PROVIDER=mercadopago   # cartão, Pix, boleto e saldo MP — o lojista já tem conta
+BILLING_PROVIDER=asaas         # Pix, boleto e cartão, com régua de inadimplência inclusa
+BILLING_PROVIDER=pix           # Pix Automático (Banco Central) — custo por transação quase zero
+BILLING_PROVIDER=crypto        # USDC na Base — liquidação instantânea, sem chargeback
+```
+
+| Opção | Meios | Recorrência | Ponto forte | Ponto fraco |
+| :--- | :--- | :--- | :--- | :--- |
+| **Stripe** | Cartão | Nativa | Único com portal pronto para o lojista | Taxa mais alta no Brasil |
+| **Mercado Pago** | Cartão, Pix, boleto | Nativa | O lojista já conhece e confia | API de assinatura mais rústica |
+| **Asaas** | Pix, boleto, cartão | Nativa | Feito para PME brasileira, taxa baixa | Menos conhecido fora do Brasil |
+| **Pix Automático** | Pix | Nativa | Custo quase zero por cobrança | Exige PSP habilitado |
+| **USDC (Base)** | Stablecoin | Própria | Instantâneo e sem chargeback | Exige que o lojista tenha cripto |
+
+Até a escolha ser feita, o admin ativa lojas manualmente — nada no produto fica bloqueado por essa decisão.
+
+---
+
+## Branches
+
+| Branch | Para quê |
+| :--- | :--- |
+| `main` | Produção. Só entra por PR com CI verde |
+| `dev` | Integração. É para cá que vão os PRs do dia a dia |
+| `testes` | QA com dados de exemplo. Pode forçar push à vontade |
+| `ci` | Sandbox para mexer no pipeline sem queimar run de PR |
+
+---
+
+## Roadmap
+
+O plano completo — contratos de selos e pontos, as seis experiências, mapa, PWA offline no balcão e cobrança — está descrito em detalhe no plano de implementação do projeto.
+
+## Documentação do projeto
+
+- [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md) — identidade visual, tipografia, cores e componentes
+- [`AGENTS.md`](./AGENTS.md) — convenções de código e instruções para agentes
+
+---
+
+Construído sobre [Scaffold-ETH 2](https://docs.scaffoldeth.io).

@@ -49,7 +49,7 @@ If the user wants a CLI script to test API routes programmatically, add to `pack
 }
 ```
 
-Add to root `package.json`: `"send402request": "yarn workspace @se-2/hardhat send402request"`
+Add to root `package.json`: `"send402request": "bun workspace @se-2/hardhat send402request"`
 
 ### Environment variables
 
@@ -197,7 +197,7 @@ import { registerExactEvmScheme } from "@x402/evm/exact/client";
 
 async function main() {
   const privateKey = process.env.DEPLOYER_PRIVATE_KEY as `0x${string}`;
-  if (!privateKey) { console.log("No deployer key. Run `yarn generate` first."); return; }
+  if (!privateKey) { console.log("No deployer key. Run `bun generate` first."); return; }
 
   const signer = privateKeyToAccount(privateKey);
   const client = new x402Client();
@@ -217,10 +217,10 @@ main().catch(console.error);
 
 1. Set `targetNetworks: [chains.baseSepolia]` in `scaffold.config.ts`
 2. Configure `.env.development` with facilitator URL, pay-to address, and `NETWORK=eip155:84532`
-3. `yarn start` — visit `http://localhost:3000`
+3. `bun start` — visit `http://localhost:3000`
 4. Navigate to a protected page — you should see the x402 paywall
 5. To test API routes: `curl http://localhost:3000/api/payment/builder` should return 402 with `PAYMENT-REQUIRED` header
-6. To test paid access: `yarn send402request` (needs funded wallet on Base Sepolia — get test USDC from [Circle faucet](https://faucet.circle.com/))
+6. To test paid access: `bun send402request` (needs funded wallet on Base Sepolia — get test USDC from [Circle faucet](https://faucet.circle.com/))
 
 ### Production
 

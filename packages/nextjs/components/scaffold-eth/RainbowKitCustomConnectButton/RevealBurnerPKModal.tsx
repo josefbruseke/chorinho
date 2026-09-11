@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { rainbowkitBurnerWallet } from "burner-connector";
-import { ShieldExclamationIcon } from "@heroicons/react/24/outline";
+import { ShieldExclamationIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useCopyToClipboard } from "~~/hooks/scaffold-eth";
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
 
@@ -32,8 +32,8 @@ export const RevealBurnerPKModal = () => {
           <label className="modal-box relative">
             {/* dummy input to capture event onclick on modal box */}
             <input className="h-0 w-0 absolute top-0 left-0" />
-            <label htmlFor="reveal-burner-pk-modal" className="btn btn-ghost btn-sm absolute right-3 top-3">
-              ✕
+            <label htmlFor="reveal-burner-pk-modal" className="btn btn-ghost btn-sm btn-circle absolute right-3 top-3">
+              <XMarkIcon className="h-4 w-4" />
             </label>
             <div>
               <p className="text-lg font-semibold m-0 p-0">Copy Burner Wallet Private Key</p>

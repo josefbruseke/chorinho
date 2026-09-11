@@ -3,17 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "yarn lint && next build",
+    "build": "bun run lint && next build",
     "check-types": "tsc --noEmit --incremental",
     "dev": "next dev",
     "format": "prettier --write . '!(node_modules|.next)/**/*'",
-    "ipfs": "NEXT_PUBLIC_IPFS_BUILD=true yarn build && yarn bgipfs upload config init -u https://upload.bgipfs.com && CID=$(yarn bgipfs upload out | grep -o 'CID: [^ ]*' | cut -d' ' -f2) && [ ! -z \"$CID\" ] && echo '🚀 Upload complete! Your site is now available at: https://community.bgipfs.com/ipfs/'$CID || echo '❌ Upload failed'",
-    "lint": "yarn eslint .",
+    "ipfs": "NEXT_PUBLIC_IPFS_BUILD=true bun run build && bunx bgipfs upload config init -u https://upload.bgipfs.com && CID=$(bunx bgipfs upload out | grep -o 'CID: [^ ]*' | cut -d' ' -f2) && [ ! -z \"$CID\" ] && echo 'Upload complete! Your site is now available at: https://community.bgipfs.com/ipfs/'$CID || echo 'Upload failed'",
+    "lint": "eslint .",
     "serve": "next start",
     "start": "next dev",
-    "vercel": "vercel --build-env YARN_ENABLE_IMMUTABLE_INSTALLS=false --build-env ENABLE_EXPERIMENTAL_COREPACK=1 --build-env VERCEL_TELEMETRY_DISABLED=1",
+    "vercel": "vercel --build-env VERCEL_TELEMETRY_DISABLED=1",
     "vercel:login": "vercel login",
-    "vercel:yolo": "vercel --build-env YARN_ENABLE_IMMUTABLE_INSTALLS=false --build-env ENABLE_EXPERIMENTAL_COREPACK=1 --build-env NEXT_PUBLIC_IGNORE_BUILD_ERROR=true --build-env VERCEL_TELEMETRY_DISABLED=1"
+    "vercel:yolo": "vercel --build-env NEXT_PUBLIC_IGNORE_BUILD_ERROR=true --build-env VERCEL_TELEMETRY_DISABLED=1"
   },
   "dependencies": {
     "@heroicons/react": "~2.2.0",
@@ -23,6 +23,8 @@
     "@scaffold-ui/debug-contracts": "^0.1.11",
     "@scaffold-ui/hooks": "^0.1.8",
     "@tanstack/react-query": "~5.100.5",
+    "@uniswap/sdk-core": "^7.19.1",
+    "@uniswap/v2-sdk": "^4.19.1",
     "blo": "~2.0.0",
     "burner-connector": "0.0.21",
     "daisyui": "5.5.19",
@@ -57,6 +59,5 @@
     "type-fest": "~5.6.0",
     "typescript": "~5.8.2",
     "vercel": "~52.0.0"
-  },
-  "packageManager": "yarn@4.13.0"
+  }
 }

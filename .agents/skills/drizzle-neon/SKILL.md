@@ -47,9 +47,9 @@ Add to `packages/nextjs/package.json`:
 
 ```json
 {
-  "drizzle-kit": "yarn workspace @se-2/nextjs drizzle-kit",
-  "db:seed": "yarn workspace @se-2/nextjs db:seed",
-  "db:wipe": "yarn workspace @se-2/nextjs db:wipe"
+  "drizzle-kit": "bun workspace @se-2/nextjs drizzle-kit",
+  "db:seed": "bun workspace @se-2/nextjs db:seed",
+  "db:wipe": "bun workspace @se-2/nextjs db:wipe"
 }
 ```
 
@@ -255,14 +255,14 @@ SE-2 already includes `@tanstack/react-query` — use `useQuery` and `useMutatio
 ```bash
 # Development (fast, no migrations)
 docker compose up -d                  # Start local Postgres
-yarn drizzle-kit push                 # Push schema directly to DB
-yarn drizzle-kit studio               # Open Drizzle Studio UI
-yarn db:seed                          # Seed with test data
-yarn db:wipe                          # Reset all tables
+bun drizzle-kit push                 # Push schema directly to DB
+bun drizzle-kit studio               # Open Drizzle Studio UI
+bun db:seed                          # Seed with test data
+bun db:wipe                          # Reset all tables
 
 # Production (stable schema)
-yarn drizzle-kit generate             # Generate SQL migration files
-yarn drizzle-kit migrate              # Apply migrations to DB
+bun drizzle-kit generate             # Generate SQL migration files
+bun drizzle-kit migrate              # Apply migrations to DB
 ```
 
 Use `push` during active development. Switch to `generate` + `migrate` when the schema is stable. Never use `push` in production.
@@ -282,16 +282,16 @@ Use `push` during active development. Switch to `generate` + `migrate` when the 
 ## How to Test
 
 1. `docker compose up -d` — start local Postgres
-2. `yarn drizzle-kit push` — apply schema to local DB
-3. `yarn start` — start Next.js
+2. `bun drizzle-kit push` — apply schema to local DB
+3. `bun start` — start Next.js
 4. Visit the users page — should show empty list, add a user via the form
-5. `yarn db:seed` — seed with test data
-6. `yarn drizzle-kit studio` — inspect data at `https://local.drizzle.studio`
+5. `bun db:seed` — seed with test data
+6. `bun drizzle-kit studio` — inspect data at `https://local.drizzle.studio`
 
 ### Production (Neon)
 
 1. Create a Neon project at [neon.tech](https://neon.tech/)
 2. Set `POSTGRES_URL` to the Neon connection string (contains `neondb`)
 3. Update `PRODUCTION_DATABASE_HOSTNAME` in `postgresClient.ts` to your Neon project hostname
-4. Run `yarn drizzle-kit generate` then `yarn drizzle-kit migrate`
+4. Run `bun drizzle-kit generate` then `bun drizzle-kit migrate`
 5. The database client auto-switches to Neon's serverless driver

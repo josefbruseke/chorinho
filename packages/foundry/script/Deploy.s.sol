@@ -8,7 +8,7 @@ import { DeployLoyalty } from "./DeployLoyalty.s.sol";
  * @notice Main deployment script for all contracts
  * @dev Run this when you want to deploy multiple contracts at once
  *
- * Example: yarn deploy # runs this script(without`--file` flag)
+ * Example: bun deploy # runs this script(without`--file` flag)
  */
 contract DeployScript is ScaffoldETHDeploy {
     function run() external {

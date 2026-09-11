@@ -11,8 +11,8 @@ import { BonusNFT } from "../contracts/BonusNFT.sol";
  *         then both NFT contracts wired to it. The deployer account becomes
  *         the platform admin (DEFAULT_ADMIN_ROLE on the registry).
  *
- * yarn deploy --file DeployLoyalty.s.sol                        # local anvil
- * yarn deploy --file DeployLoyalty.s.sol --network baseSepolia  # Base Sepolia (requires keystore)
+ * bun deploy --file DeployLoyalty.s.sol                        # local anvil
+ * bun deploy --file DeployLoyalty.s.sol --network baseSepolia  # Base Sepolia (requires keystore)
  */
 contract DeployLoyalty is ScaffoldETHDeploy {
     function run() external ScaffoldEthDeployerRunner {

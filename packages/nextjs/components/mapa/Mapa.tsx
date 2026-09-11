@@ -51,7 +51,16 @@ export const Mapa = ({ className = "" }: { className?: string }) => {
 
   return (
     <div className={`relative ${className}`}>
-      <MapaCanvas className="w-full h-full" centroSolicitado={centro} />
+      {/* A caixa absoluta existe por causa da altura.
+          Quando a altura do pai vem de `flex-1`, ela nao e uma altura
+          *declarada*, e o `height: 100%` do Leaflet resolve para `auto` -- o
+          mapa nascia com zero pixel e a tela ficava em branco, sem erro nenhum.
+          Nao da para passar `absolute` por className: o MapaCanvas ja aplica
+          `relative` no proprio contorno, e `relative` vence `absolute` na ordem
+          do Tailwind. */}
+      <div className="absolute inset-0">
+        <MapaCanvas className="w-full h-full" centroSolicitado={centro} />
+      </div>
 
       {convite && (
         <div className="absolute inset-x-3 bottom-3 z-10 rounded-box border border-base-300 bg-base-100/95 backdrop-blur-md p-4 shadow-lg flex flex-col gap-3 sm:max-w-sm">

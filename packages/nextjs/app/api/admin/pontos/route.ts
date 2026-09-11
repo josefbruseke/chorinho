@@ -13,6 +13,10 @@ import {
 
 export const runtime = "nodejs";
 
+// Espera a transação ser minerada: na Sepolia o bloco fecha a cada ~12s, e no
+// teto padrão da Vercel a função morre no meio da espera.
+export const maxDuration = 60;
+
 /**
  * O pedaço do PointsVault que o back office usa para administrar o catálogo
  * de tipos de ponto. Vive aqui, e não em `services/relayer/abi.ts`, porque

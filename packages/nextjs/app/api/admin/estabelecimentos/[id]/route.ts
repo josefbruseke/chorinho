@@ -10,6 +10,10 @@ import { clientePublico, escreverComoAdmin, relayerConfigurado } from "~~/servic
 
 export const runtime = "nodejs";
 
+// Espera a transação ser minerada: na Sepolia o bloco fecha a cada ~12s, e no
+// teto padrão da Vercel a função morre no meio da espera.
+export const maxDuration = 60;
+
 /** Endereço usado quando a loja ainda não tem dono com carteira. */
 const SEM_DONO = "0x0000000000000000000000000000000000000000";
 
@@ -86,7 +90,12 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       keccak256(toHex(loja.slug)),
     ]);
 
-    const recibo = await clientePublico().waitForTransactionReceipt({ hash: hash as `0x${string}` });
+    // O `escreverComoAdmin` já esperou a mineração; esta segunda leitura é só
+    // para pegar os logs, e por isso a espera é curta.
+    const recibo = await clientePublico().waitForTransactionReceipt({
+      hash: hash as `0x${string}`,
+      timeout: 15_000,
+    });
     const [evento] = parseEventLogs({ abi: ABI_REGISTRO, eventName: "EstablishmentRegistered", logs: recibo.logs });
 
     if (!evento) return NextResponse.json({ erro: "a rede não confirmou o registro" }, { status: 502 });

@@ -28,6 +28,34 @@ import { codigoCurtoValido, decodificarPasse } from "~~/utils/pass";
  * com wifi ruim, é a forma mais confiável de perder a venda.
  */
 
+/**
+ * A espera do balcão, contada em voz alta.
+ *
+ * O carimbo só existe quando a rede confirma, e isso leva de dez a vinte
+ * segundos. Um spinner mudo por vinte segundos é um atendente concluindo que
+ * travou e apertando tudo de novo — então a tela diz o número, e diz que o
+ * cliente já pode ir embora.
+ */
+const Esperando = ({ centavos }: { centavos: number }) => {
+  const [segundos, setSegundos] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setSegundos(s => s + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4 text-center">
+      <span className="loading loading-spinner loading-lg text-primary" />
+      <p className="m-0 font-bold opacity-70">Registrando {formatarCentavos(centavos)}…</p>
+      <p className="m-0 max-w-xs text-sm opacity-60">
+        A rede confirma em alguns segundos{segundos > 3 ? ` (${segundos}s)` : ""}. Pode liberar o cliente — o carimbo
+        aparece na carteira dele sozinho.
+      </p>
+    </div>
+  );
+};
+
 type Etapa =
   | { nome: "valor" }
   | { nome: "cliente"; camera?: boolean; usarCodigo?: boolean; erroCamera?: boolean }
@@ -320,12 +348,7 @@ export const TerminalPdv = () => {
           </div>
         )}
 
-        {etapa.nome === "enviando" && (
-          <div className="flex flex-1 flex-col items-center justify-center gap-3">
-            <span className="loading loading-spinner loading-lg text-primary" />
-            <p className="m-0 font-bold opacity-70">Registrando {formatarCentavos(centavos)}…</p>
-          </div>
-        )}
+        {etapa.nome === "enviando" && <Esperando centavos={centavos} />}
 
         {etapa.nome === "recibo" && (
           <div className="flex w-full max-w-sm flex-1 flex-col items-center justify-center gap-5 text-center">

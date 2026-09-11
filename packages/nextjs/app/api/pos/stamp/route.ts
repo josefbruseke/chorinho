@@ -5,6 +5,10 @@ import { PASSE_VALIDADE_SEGUNDOS } from "~~/utils/pass";
 
 export const runtime = "nodejs";
 
+// Espera a transação ser minerada: na Sepolia o bloco fecha a cada ~12s, e no
+// teto padrão da Vercel a função morre no meio da espera.
+export const maxDuration = 60;
+
 /**
  * Uma venda, agora, com o cliente na frente do atendente.
  *

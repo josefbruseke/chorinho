@@ -2,11 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { Address } from "@scaffold-ui/components";
-import { base, baseSepolia, foundry } from "viem/chains";
+import { base, baseSepolia, foundry, sepolia } from "viem/chains";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 /** Espelha `REDES` de `services/relayer/servidor.ts` — não é importável do servidor para o cliente. */
-const REDES = { [foundry.id]: foundry, [baseSepolia.id]: baseSepolia, [base.id]: base } as const;
+const REDES = {
+  [foundry.id]: foundry,
+  [sepolia.id]: sepolia,
+  [baseSepolia.id]: baseSepolia,
+  [base.id]: base,
+} as const;
 
 type Saude = {
   vendasTravadas: number;

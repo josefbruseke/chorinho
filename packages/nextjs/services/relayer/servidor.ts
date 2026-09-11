@@ -7,11 +7,12 @@ import {
   createWalletClient,
   http,
   keccak256,
+  nonceManager,
   parseEventLogs,
   stringToHex,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { base, baseSepolia, foundry } from "viem/chains";
+import { base, baseSepolia, foundry, sepolia } from "viem/chains";
 import deployedContracts from "~~/contracts/deployedContracts";
 
 /**
@@ -27,7 +28,24 @@ import deployedContracts from "~~/contracts/deployedContracts";
  * navegador.
  */
 
-const REDES = { [foundry.id]: foundry, [baseSepolia.id]: baseSepolia, [base.id]: base } as const;
+const REDES = {
+  [foundry.id]: foundry,
+  [sepolia.id]: sepolia,
+  [baseSepolia.id]: baseSepolia,
+  [base.id]: base,
+} as const;
+
+/**
+ * Quanto esperamos o recibo antes de desistir.
+ *
+ * O padrão do viem é 180 segundos — três vezes o teto de uma função da Vercel.
+ * Estourado o teto, o processo morre no meio da espera e a venda fica pendurada
+ * em `enviada` mesmo tendo entrado na rede. Melhor desistir antes, com a
+ * transação já no ar e o hash em mãos, e deixar a fila reenviar.
+ *
+ * Na Sepolia o bloco fecha a cada ~12s, então 45s são três ou quatro blocos.
+ */
+const ESPERA_DO_RECIBO_MS = 45_000;
 
 type IdDeRede = keyof typeof REDES;
 type NomeDeContrato = keyof (typeof deployedContracts)[31337];
@@ -66,14 +84,49 @@ export const enderecoDoContrato = (nome: NomeDeContrato) => {
 
 export const clientePublico = () => createPublicClient({ chain: REDES[idDaRede()], transport: transporte() });
 
+/**
+ * Duas vendas confirmadas ao mesmo tempo pegavam o mesmo nonce.
+ *
+ * Sem gerente de nonce cada envio pergunta à rede qual é o próximo, e dois
+ * terminais confirmando no mesmo segundo recebem a mesma resposta: a segunda
+ * transação volta como *replacement transaction underpriced*. No anvil isso
+ * nunca apareceu porque o bloco fecha instantâneo e a primeira já estava
+ * minerada antes de a segunda perguntar.
+ *
+ * O gerente é o padrão do viem, guardado num módulo: o estado é por endereço e
+ * por rede, então sobrevive a estas funções criarem uma conta nova a cada
+ * chamada. Serializa dentro de um processo — duas instâncias na Vercel ainda
+ * podem colidir, e para isso existe a fila offline.
+ */
 export const clienteRelayer = () =>
   createWalletClient({
-    account: privateKeyToAccount(chaveDoRelayer()),
+    account: privateKeyToAccount(chaveDoRelayer(), { nonceManager }),
     chain: REDES[idDaRede()],
     transport: transporte(),
   });
 
 export const enderecoDoRelayer = () => privateKeyToAccount(chaveDoRelayer()).address;
+
+/**
+ * Envia, e devolve o nonce ao gerente se o envio falhar.
+ *
+ * O gerente incrementa ANTES de saber se a transação foi aceita. Se o envio
+ * quebra — RPC fora do ar, saldo insuficiente — o contador local fica um à
+ * frente da rede, e daí em diante todo envio nasce com um buraco no nonce e
+ * fica preso na mempool sem nunca ser minerado. O `reset` faz o gerente
+ * esquecer o que achava e voltar a perguntar à rede.
+ */
+const enviar = async (
+  carteira: ReturnType<typeof clienteRelayer> | ReturnType<typeof clienteAdmin>,
+  request: Parameters<typeof carteira.writeContract>[0],
+) => {
+  try {
+    return await carteira.writeContract(request as never);
+  } catch (e) {
+    nonceManager.reset({ address: carteira.account.address, chainId: idDaRede() });
+    throw e;
+  }
+};
 
 /**
  * A conta administradora da plataforma.
@@ -97,7 +150,7 @@ const chaveDeAdmin = () => {
 
 export const clienteAdmin = () =>
   createWalletClient({
-    account: privateKeyToAccount(chaveDeAdmin()),
+    account: privateKeyToAccount(chaveDeAdmin(), { nonceManager }),
     chain: REDES[idDaRede()],
     transport: transporte(),
   });
@@ -126,8 +179,8 @@ export const escreverComoAdmin = async (
     args,
   } as never);
 
-  const hash = await carteira.writeContract(request as never);
-  const recibo = await publico.waitForTransactionReceipt({ hash, confirmations: 1 });
+  const hash = await enviar(carteira, request as never);
+  const recibo = await publico.waitForTransactionReceipt({ hash, confirmations: 1, timeout: ESPERA_DO_RECIBO_MS });
   if (recibo.status !== "success") throw new Error("a transação reverteu na rede");
   return hash;
 };
@@ -183,7 +236,7 @@ export const emitirCarimbos = async (vendas: VendaOnchain[]) => {
       functionName: "issueStampsBatch",
       args: [vendas],
     });
-    hash = await carteira.writeContract(request);
+    hash = await enviar(carteira, request);
   } else {
     const { request } = await publico.simulateContract({
       account: carteira.account,
@@ -192,9 +245,9 @@ export const emitirCarimbos = async (vendas: VendaOnchain[]) => {
       functionName: "issueStamps",
       args: [vendas[0]],
     });
-    hash = await carteira.writeContract(request);
+    hash = await enviar(carteira, request);
   }
-  const recibo = await publico.waitForTransactionReceipt({ hash, confirmations: 1 });
+  const recibo = await publico.waitForTransactionReceipt({ hash, confirmations: 1, timeout: ESPERA_DO_RECIBO_MS });
   if (recibo.status !== "success") throw new Error("a transação reverteu na rede");
 
   // O que valeu foi o que o contrato gravou, não o que o PDV calculou: lemos o
@@ -294,8 +347,8 @@ export const resgatarRecompensa = async (rewardId: bigint, cliente: `0x${string}
     args: [rewardId, cliente, claimRef],
   });
 
-  const hash = await carteira.writeContract(request);
-  const recibo = await publico.waitForTransactionReceipt({ hash, confirmations: 1 });
+  const hash = await enviar(carteira, request);
+  const recibo = await publico.waitForTransactionReceipt({ hash, confirmations: 1, timeout: ESPERA_DO_RECIBO_MS });
   if (recibo.status !== "success") throw new Error("a transação reverteu na rede");
 
   const [evento] = parseEventLogs({ abi: ABI_CATALOGO, eventName: "RewardClaimed", logs: recibo.logs });

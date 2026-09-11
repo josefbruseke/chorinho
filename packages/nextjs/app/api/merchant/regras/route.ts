@@ -6,6 +6,10 @@ import { erroDoContrato, escreverComoAdmin, lerRegra, relayerConfigurado } from 
 
 export const runtime = "nodejs";
 
+// Espera a transação ser minerada: na Sepolia o bloco fecha a cada ~12s, e no
+// teto padrão da Vercel a função morre no meio da espera.
+export const maxDuration = 60;
+
 /** Um dia. Acima disso a "sequência" deixa de significar hábito. */
 const JANELA_MAXIMA_SEGUNDOS = 90 * 24 * 60 * 60;
 

@@ -82,6 +82,9 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
       transactionReceipt = await publicClient.waitForTransactionReceipt({
         hash: transactionHash,
         confirmations: options?.blockConfirmations,
+        // Dois minutos. O padrão do viem são três, e ninguém fica olhando um
+        // spinner por três minutos sem concluir que a página travou.
+        timeout: 120_000,
       });
       notification.remove(notificationId);
 

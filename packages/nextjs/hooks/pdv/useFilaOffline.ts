@@ -10,8 +10,17 @@ import {
   observarFila,
   removerDaFila,
 } from "~~/utils/fila";
+import { MAX_POR_LOTE } from "~~/utils/pdv";
 
-type ResultadoSync = { saleRef: string; ok: boolean; erro?: string; duplicada?: boolean; carimbos?: number };
+type ResultadoSync = {
+  saleRef: string;
+  ok: boolean;
+  erro?: string;
+  /** O servidor dizendo se esta venda continua na fila. Ver `ResultadoVenda`. */
+  reter?: boolean;
+  duplicada?: boolean;
+  carimbos?: number;
+};
 
 const INTERVALO_MS = 30_000;
 
@@ -49,7 +58,9 @@ export const useFilaOffline = () => {
 
   const sincronizar = useCallback(async (): Promise<ResultadoSync[]> => {
     if (emVoo.current || !navigator.onLine) return [];
-    const pendentes = await lerFila();
+    // Sobe em levas: o servidor recusa lote maior que `MAX_POR_LOTE`, e uma fila
+    // de vinte vendas que volta 400 inteira ficaria presa para sempre.
+    const pendentes = (await lerFila()).slice(0, MAX_POR_LOTE);
     if (pendentes.length === 0) return [];
 
     emVoo.current = true;
@@ -73,9 +84,15 @@ export const useFilaOffline = () => {
       const corpo: { resultados?: ResultadoSync[] } = await r.json();
       const resultados = corpo.resultados ?? [];
 
-      // Sai da fila só o que o servidor confirmou. Um erro de passe também sai:
-      // insistir nele todo minuto até o fim dos tempos não conserta nada.
-      const definitivas = resultados.filter(x => x.ok || (x.erro && !x.erro.includes("rede"))).map(x => x.saleRef);
+      // Sai da fila o que o servidor confirmou e o que ele deu por encerrado —
+      // passe já usado, valor inválido: insistir todo minuto não conserta.
+      //
+      // A comparação é com `false` explícito, e não `!x.reter`, de propósito.
+      // Um servidor que não conhece esta marca — um aparelho com a página velha
+      // em cache, por exemplo — devolve o campo ausente, e aí a venda FICA. O
+      // erro de segurar demais é uma tentativa a mais; o de soltar demais é uma
+      // venda que some sem nunca ter sido enviada.
+      const definitivas = resultados.filter(x => x.ok || x.reter === false).map(x => x.saleRef);
       const reter = resultados.filter(x => !x.ok && !definitivas.includes(x.saleRef));
 
       if (definitivas.length > 0) await removerDaFila(definitivas);

@@ -13,6 +13,7 @@ import {
 } from "~~/services/relayer/servidor";
 import { formatarCentavos } from "~~/utils/dinheiro";
 import { codigoCurtoValido, decodificarPasse } from "~~/utils/pass";
+import { MAX_POR_LOTE } from "~~/utils/pdv";
 
 /**
  * O caminho de uma venda, do balcão até a rede.
@@ -34,8 +35,17 @@ import { codigoCurtoValido, decodificarPasse } from "~~/utils/pass";
  */
 export const JANELA_DA_FILA_SEGUNDOS = 48 * 60 * 60;
 
-/** Teto por requisicao. Lote maior que isso estoura o limite de gas do bloco. */
-export const MAX_POR_LOTE = 25;
+export { MAX_POR_LOTE };
+
+/**
+ * Quanto tempo a retentativa individual pode consumir.
+ *
+ * A função inteira tem sessenta segundos. O lote já gastou uma parte tentando,
+ * e ainda é preciso gravar o desfecho e responder. Quarenta e cinco segundos é
+ * o que sobra com folga; o que não couber volta marcado para reenvio, nunca
+ * como falha.
+ */
+const ORCAMENTO_DA_RETENTATIVA_MS = 45_000;
 
 const BPS_SEM_BONUS = 10_000;
 const BPS_TETO = 30_000;
@@ -53,6 +63,16 @@ export type ResultadoVenda = {
   saleRef: string;
   ok: boolean;
   erro?: string;
+  /**
+   * Se esta venda deve continuar na fila do aparelho.
+   *
+   * Existe porque a alternativa era o aparelho adivinhar pela mensagem: até
+   * agora ele procurava a palavra "rede" no texto do erro, e qualquer erro novo
+   * com outra redação fazia uma venda **nunca enviada** sumir da fila sem que
+   * ninguém percebesse. Vem sempre preenchida quando `ok` é falso — um aparelho
+   * que receber a resposta sem esta marca deve segurar a venda, não descartá-la.
+   */
+  reter?: boolean;
   /** Já tinha sido processada antes: não é falha, é o reenvio funcionando. */
   duplicada?: boolean;
   carimbos?: number;
@@ -225,19 +245,19 @@ export const processarVendas = async (
   for (const entrada of entradas) {
     const saleRef = String(entrada.saleRef ?? "").trim();
     if (saleRef.length < 8 || saleRef.length > 64) {
-      resultados.set(saleRef, { saleRef, ok: false, erro: "referência de venda inválida" });
+      resultados.set(saleRef, { saleRef, ok: false, reter: false, erro: "referência de venda inválida" });
       continue;
     }
     if (resultados.has(saleRef) || pendentes.some(p => p.saleRef === saleRef)) continue;
 
     if (!valorValido(entrada.valorCentavos)) {
-      resultados.set(saleRef, { saleRef, ok: false, erro: "valor da venda inválido" });
+      resultados.set(saleRef, { saleRef, ok: false, reter: false, erro: "valor da venda inválido" });
       continue;
     }
 
     const boostBps = entrada.boostBps ?? BPS_SEM_BONUS;
     if (!Number.isInteger(boostBps) || boostBps < BPS_SEM_BONUS || boostBps > BPS_TETO) {
-      resultados.set(saleRef, { saleRef, ok: false, erro: "bônus de produto fora do limite" });
+      resultados.set(saleRef, { saleRef, ok: false, reter: false, erro: "bônus de produto fora do limite" });
       continue;
     }
 
@@ -276,7 +296,13 @@ export const processarVendas = async (
       try {
         cliente = await resolverCliente(entrada, janelaSegundos);
       } catch (e) {
-        resultados.set(saleRef, { saleRef, ok: false, erro: e instanceof Error ? e.message : "passe inválido" });
+        // Passe vencido, já usado ou cliente sem carteira: insistir não conserta.
+        resultados.set(saleRef, {
+          saleRef,
+          ok: false,
+          reter: false,
+          erro: e instanceof Error ? e.message : "passe inválido",
+        });
         continue;
       }
 
@@ -292,7 +318,8 @@ export const processarVendas = async (
       });
 
       if (error) {
-        resultados.set(saleRef, { saleRef, ok: false, erro: "não foi possível registrar a venda" });
+        // O banco recusou a gravação. É transitório: a venda volta para a fila.
+        resultados.set(saleRef, { saleRef, ok: false, reter: true, erro: "não foi possível registrar a venda" });
         continue;
       }
     }
@@ -327,15 +354,24 @@ export const processarVendas = async (
 type Pendente = { saleRef: string; cliente: Cliente; venda: VendaOnchain };
 
 /**
- * Manda o lote e, se ele reverter, refaz uma a uma.
+ * Manda o lote e, se ele reverter, refaz uma a uma — enquanto der tempo.
  *
  * O lote é o que torna o gás irrisório por venda, mas ele é tudo-ou-nada: uma
- * venda abaixo do piso de ticket derrubaria as outras nove junto. A segunda
+ * venda abaixo do piso de ticket derrubaria as outras sete junto. A segunda
  * passada custa mais gás e só acontece quando algo deu errado — é o preço de
  * não perder vendas boas por causa de uma ruim.
+ *
+ * O que muda numa rede de verdade é o relógio: cada envio individual espera um
+ * bloco, e o orçamento acaba antes da fila. As que sobram voltam **adiadas**,
+ * não falhadas — continuam `enviada` no banco e na fila do aparelho, e sobem na
+ * próxima leva.
  */
 const enviarComRetentativaIndividual = async (pendentes: Pendente[]) => {
   const saida = new Map<string, ResultadoVenda>();
+  // O relógio começa a correr aqui, e não depois do lote: a tentativa em lote
+  // também espera um recibo, e contar o orçamento só a partir dela daria 45
+  // segundos por cima dos 45 que ela já pode ter consumido.
+  const limite = Date.now() + ORCAMENTO_DA_RETENTATIVA_MS;
 
   const aplicar = (lote: Pendente[], hash: string, porVenda: Map<string, CarimbosEmitidos>) => {
     for (const p of lote) {
@@ -359,17 +395,26 @@ const enviarComRetentativaIndividual = async (pendentes: Pendente[]) => {
     return saida;
   } catch (e) {
     if (pendentes.length === 1) {
-      saida.set(pendentes[0].saleRef, { saleRef: pendentes[0].saleRef, ok: false, erro: mensagemDeRede(e) });
+      saida.set(pendentes[0].saleRef, { saleRef: pendentes[0].saleRef, ok: false, ...leituraDoErro(e) });
       return saida;
     }
   }
 
   for (const p of pendentes) {
+    if (Date.now() >= limite) {
+      saida.set(p.saleRef, {
+        saleRef: p.saleRef,
+        ok: false,
+        reter: true,
+        erro: "adiada: a rede não deu tempo nesta leva",
+      });
+      continue;
+    }
     try {
       const { hash, porVenda } = await emitirCarimbos([p.venda]);
       aplicar([p], hash, porVenda);
     } catch (e) {
-      saida.set(p.saleRef, { saleRef: p.saleRef, ok: false, erro: mensagemDeRede(e) });
+      saida.set(p.saleRef, { saleRef: p.saleRef, ok: false, ...leituraDoErro(e) });
     }
   }
 
@@ -394,6 +439,13 @@ const gravarDesfecho = async (balcao: Balcao, pendentes: Pendente[], enviados: M
           points_issued: r.pontos ?? 0,
           confirmed_at: new Date().toISOString(),
         })
+        .eq("sale_ref", p.saleRef);
+    } else if (r?.reter) {
+      // Adiada, não falhada: fica em `enviada` para a próxima leva encontrá-la.
+      // Marcar "falhou" aqui apagaria uma venda que nunca chegou a ser enviada.
+      await admin
+        .from("sales")
+        .update({ erro: r.erro ?? null })
         .eq("sale_ref", p.saleRef);
     } else {
       await admin
@@ -438,14 +490,26 @@ const atualizarCache = async (balcao: Balcao, carteiras: string[]) => {
   );
 };
 
-/** Traduz o erro da rede para algo que o atendente consiga agir. */
-const mensagemDeRede = (e: unknown) => {
+/**
+ * Traduz o erro da rede para algo que o atendente consiga agir, e diz se a
+ * venda volta para a fila.
+ *
+ * A divisão é entre **veredito** e **acidente**. Se o contrato recusou — ticket
+ * abaixo do piso, cooldown, assinatura vencida — reenviar amanhã dá a mesma
+ * resposta, e a venda sai da fila. Qualquer outra coisa é RPC fora do ar, gás,
+ * timeout: sobe na próxima leva.
+ */
+const leituraDoErro = (e: unknown): { erro: string; reter: boolean } => {
   const cru = e instanceof Error ? e.message : String(e);
   // O atendente recebe a versao curta; o log guarda a inteira. Sem isto, uma
   // configuracao errada de relayer vira "nao foi possivel enviar" e ninguem
   // descobre por que.
   console.error("[pdv] falha ao emitir carimbos:", cru);
 
+  return { erro: mensagemDeRede(e), reter: erroDoContrato(e)?.nome === undefined };
+};
+
+const mensagemDeRede = (e: unknown) => {
   const contrato = erroDoContrato(e);
   switch (contrato?.nome) {
     case "TicketBelowFloor": {

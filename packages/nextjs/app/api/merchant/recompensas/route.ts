@@ -7,6 +7,10 @@ import { clientePublico, erroDoContrato, escreverComoAdmin, relayerConfigurado }
 
 export const runtime = "nodejs";
 
+// Espera a transação ser minerada: na Sepolia o bloco fecha a cada ~12s, e no
+// teto padrão da Vercel a função morre no meio da espera.
+export const maxDuration = 60;
+
 /**
  * Classe de ponto padrão da rede — o ponto da cidade. Não existe outra hoje,
  * mas fica nomeado em vez de um `1n` solto no meio dos argumentos.

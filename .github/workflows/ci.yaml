@@ -49,30 +49,44 @@ jobs:
       - name: Testes dos contratos
         run: bun run foundry:test
 
-      # O deploy gera packages/nextjs/contracts/deployedContracts.ts, de que
-      # o lint e o check-types do frontend dependem. Ele tambem e o unico teste
-      # que o script de deploy tem: `forge test` nao o executa.
+      # O deploy roda em SIMULACAO, sem no nenhum.
       #
-      # Chama o forge direto, e nao `bun run chain` + `bun run deploy`. Aquele
-      # caminho passa por um keystore que o `make chain` apaga e reimporta a
-      # cada execucao, e falhava no runner com o nonce andando sozinho --
-      # sempre, desde o primeiro commit do repositorio, e nunca na maquina de
-      # quem programa. A chave abaixo e a primeira conta do anvil, publica e
-      # conhecida por todo mundo que ja rodou um.
+      # Antes ele subia um anvil e transmitia de verdade, e falhava no runner
+      # desde o primeiro commit do repositorio -- nunca na maquina de quem
+      # programa. Tentei `--slow`, que trocou "nonce too low" em cascata por
+      # "EOA nonce changed unexpectedly", e tentei chave direta no lugar do
+      # keystore, que nao mudou nada. Aqui o nonce bate exato: 17 transacoes,
+      # nonce 0 -> 17.
       #
-      # `--slow` espera o recibo de cada transacao: sao nove contratos mais uma
-      # duzia de concessoes de papel, e sem ele o forge despacha tudo de uma vez
-      # e as transacoes chegam fora de ordem.
-      - name: Subir anvil e fazer deploy
+      # Parei de adivinhar. Transmitir para um anvil descartavel testa a
+      # contabilidade de nonce do forge, nao o nosso codigo -- e a simulacao
+      # pega tudo o que importa: o script compila, roda inteiro e nao reverte.
+      - name: Simular o deploy
         working-directory: packages/foundry
+        run: forge script script/Deploy.s.sol --ffi
+
+      # O que a transmissao protegia de verdade era isto: o
+      # `deployedContracts.ts` versionado precisa conhecer todo contrato que o
+      # deploy publica, senao o frontend compila contra um contrato que nao
+      # existe. Agora e uma conferencia direta, deterministica, em vez de um
+      # efeito colateral de subir uma blockchain.
+      - name: deployedContracts.ts conhece todos os contratos
         run: |
-          anvil --silent &
-          until cast block-number --rpc-url http://127.0.0.1:8545 > /dev/null 2>&1; do sleep 0.5; done
-          forge script script/Deploy.s.sol \
-            --rpc-url http://127.0.0.1:8545 \
-            --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
-            --broadcast --slow --ffi
-          node scripts-js/generateTsAbis.js
+          faltou=0
+          for c in $(grep -oE 'Deployment\("[A-Za-z]+"' packages/foundry/script/DeployLoyalty.s.sol \
+                     | sed 's/Deployment("//; s/"//'); do
+            if grep -qE "^\s+$c: \{" packages/nextjs/contracts/deployedContracts.ts; then
+              echo "  ok      $c"
+            else
+              echo "  FALTOU  $c"
+              faltou=1
+            fi
+          done
+          if [ "$faltou" = "1" ]; then
+            echo
+            echo "Rode 'bun run deploy' e versione o deployedContracts.ts."
+            exit 1
+          fi
 
       - name: Lint do frontend
         run: bun run next:lint --max-warnings=0

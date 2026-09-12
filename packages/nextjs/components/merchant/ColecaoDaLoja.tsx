@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { SparklesIcon } from "@heroicons/react/24/outline";
+import { RectangleStackIcon } from "@heroicons/react/24/outline";
 import { beneficioEmTexto, dataCurta, tiragemEmTexto } from "~~/utils/colecao";
 
 type Programa = {
@@ -290,7 +290,7 @@ export const ColecaoDaLoja = () => {
             disabled={!tituloValido || !form.programaId || criando}
             className="btn btn-primary h-14 gap-1.5 rounded-2xl font-black disabled:opacity-40"
           >
-            <SparklesIcon className="h-5 w-5" />
+            <RectangleStackIcon className="h-5 w-5" />
             Criar peça
           </button>
         </form>

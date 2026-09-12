@@ -5,7 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import type { NextPage } from "next";
-import { ArrowRightStartOnRectangleIcon, ShieldCheckIcon, SparklesIcon, WalletIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRightStartOnRectangleIcon,
+  QuestionMarkCircleIcon,
+  ShieldCheckIcon,
+  WalletIcon,
+} from "@heroicons/react/24/outline";
 import { supabaseBrowser } from "~~/services/database/browser";
 import type { Tables } from "~~/services/database/types";
 
@@ -106,7 +111,7 @@ const Perfil: NextPage = () => {
           href="/ajuda"
           className="flex items-center gap-3 p-4 min-h-12 hover:bg-base-200 active:bg-base-200 transition-colors"
         >
-          <SparklesIcon className="w-5 h-5 text-brand-ink shrink-0" />
+          <QuestionMarkCircleIcon className="w-5 h-5 text-brand-ink shrink-0" />
           <div>
             <strong className="block text-sm">Ajuda</strong>
             <span className="text-xs opacity-70">Perguntas frequentes</span>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CheckCircleIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon, StarIcon } from "@heroicons/react/24/outline";
 import { CategoryIcon } from "~~/components/vitrine/CategoryIcon";
 import { categoryInfo } from "~~/utils/vitrine";
 
@@ -53,7 +53,7 @@ export const CatalogoRecompensas = () => {
         </div>
         {dados.pontos > 0 && (
           <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-honey-edge bg-honey-soft px-3 py-1.5 text-sm font-bold text-honey-ink">
-            <SparklesIcon className="h-4 w-4" />
+            <StarIcon className="h-4 w-4" />
             {dados.pontos}
           </span>
         )}
@@ -114,7 +114,7 @@ export const CatalogoRecompensas = () => {
                     {r.selos > 0 && r.pontos > 0 && " + "}
                     {r.pontos > 0 && (
                       <>
-                        <SparklesIcon className="h-3.5 w-3.5" />
+                        <StarIcon className="h-3.5 w-3.5" />
                         {r.pontos}
                       </>
                     )}

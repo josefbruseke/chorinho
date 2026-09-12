@@ -8,7 +8,7 @@ import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
   HashtagIcon,
-  SparklesIcon,
+  RectangleStackIcon,
 } from "@heroicons/react/24/outline";
 import { QrScanner } from "~~/components/vitrine/QrScanner";
 import { useWakeLock } from "~~/hooks/pdv/useWakeLock";
@@ -302,7 +302,7 @@ export const EntregaDePremio = () => {
                 onClick={() => setAba("peca")}
                 className={`tab h-12 gap-1.5 font-black ${aba === "peca" ? "tab-active" : ""}`}
               >
-                <SparklesIcon className="h-4 w-4" />
+                <RectangleStackIcon className="h-4 w-4" />
                 Peça
               </button>
             </div>

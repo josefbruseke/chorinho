@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { SparklesIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
+import { Squares2X2Icon, StarIcon } from "@heroicons/react/24/outline";
 import { type Cartela, CartelaCard } from "~~/components/carteira/CartelaCard";
 import { MinhaColecao } from "~~/components/carteira/MinhaColecao";
 import { supabaseBrowser, supabaseConfigurado } from "~~/services/database/browser";
@@ -97,7 +97,7 @@ export const MinhasCartelas = () => {
             href="/recompensas"
             className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-honey-edge bg-honey-soft px-3 py-1.5 text-sm font-bold text-honey-ink no-underline"
           >
-            <SparklesIcon className="h-4 w-4" />
+            <StarIcon className="h-4 w-4" />
             {dados.pontos} pontos
           </Link>
         )}

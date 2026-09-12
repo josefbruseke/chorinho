@@ -9,7 +9,7 @@ import {
   BugAntIcon,
   BuildingStorefrontIcon,
   LifebuoyIcon,
-  SparklesIcon,
+  LightBulbIcon,
   Squares2X2Icon,
 } from "@heroicons/react/24/outline";
 import { BrandLogo } from "~~/components/BrandLogo";
@@ -31,7 +31,7 @@ export const menuLinks: HeaderMenuLink[] = [
   {
     label: "Como funciona",
     href: "/como-funciona",
-    icon: <SparklesIcon className="h-4 w-4" />,
+    icon: <LightBulbIcon className="h-4 w-4" />,
   },
   {
     label: "Para comerciantes",

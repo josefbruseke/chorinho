@@ -8,7 +8,7 @@ import {
   CheckCircleIcon,
   FireIcon,
   QrCodeIcon,
-  SparklesIcon,
+  StarIcon,
 } from "@heroicons/react/24/outline";
 import { CategoryIcon } from "~~/components/vitrine/CategoryIcon";
 import { supabaseBrowser, supabaseConfigurado } from "~~/services/database/browser";
@@ -166,7 +166,7 @@ export const CartelaDaLoja = ({ slug }: { slug: string }) => {
                     {r.selos > 0 && r.pontos > 0 && " + "}
                     {r.pontos > 0 && (
                       <>
-                        <SparklesIcon className="h-3.5 w-3.5" />
+                        <StarIcon className="h-3.5 w-3.5" />
                         {r.pontos}
                       </>
                     )}

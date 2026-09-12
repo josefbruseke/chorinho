@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { NextPage } from "next";
-import { GiftIcon, MapIcon, QrCodeIcon, SparklesIcon, TicketIcon, TrophyIcon } from "@heroicons/react/24/outline";
+import { GiftIcon, MapIcon, QrCodeIcon, StarIcon, TicketIcon, TrophyIcon } from "@heroicons/react/24/outline";
 import { INICIO_DO_APP } from "~~/utils/rotas";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
 
@@ -35,7 +35,7 @@ const ETAPAS = [
       "Cartela completa vira recompensa: aquele agrado que a casa dá. É o atendente quem confirma o resgate no balcão.",
   },
   {
-    Icon: SparklesIcon,
+    Icon: StarIcon,
     titulo: "Pontos que valem na cidade toda",
     texto:
       "Além da cartela de cada loja, toda compra rende pontos da cidade — e esses valem em qualquer parceiro da rede. É o comércio local se ajudando.",

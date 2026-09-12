@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GiftIcon, SparklesIcon, TrophyIcon, UserGroupIcon } from "@heroicons/react/24/outline";
+import { GiftIcon, RectangleStackIcon, TrophyIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 import { supabaseServer } from "~~/services/database/server";
 import { beneficioEmTexto, criterioEmTexto, dataCurta } from "~~/utils/colecao";
 import { urlDaMidia } from "~~/utils/midia";
@@ -93,7 +93,7 @@ export const ColecaoDoLocal = async ({ establishmentId }: { establishmentId: str
                   {r.description && <span className="text-xs opacity-70">{r.description}</span>}
                   {r.piece_id && (
                     <span className="mt-1 flex items-center gap-1 text-xs font-bold text-brand-ink">
-                      <SparklesIcon className="h-3.5 w-3.5" />
+                      <RectangleStackIcon className="h-3.5 w-3.5" />
                       vem com uma peça da coleção
                     </span>
                   )}
@@ -113,7 +113,7 @@ export const ColecaoDoLocal = async ({ establishmentId }: { establishmentId: str
       {(pecas ?? []).length > 0 && (
         <section className="flex flex-col gap-2">
           <h2 className="m-0 flex items-center gap-1.5 font-serif text-lg font-black text-secondary">
-            <SparklesIcon className="h-5 w-5 text-brand-ink" />A coleção
+            <RectangleStackIcon className="h-5 w-5 text-brand-ink" />A coleção
           </h2>
           <p className="m-0 text-xs opacity-70">
             Tiragem fechada. Se conseguem gastando carimbos ou conquistando — e podem ser passadas adiante.
@@ -129,7 +129,7 @@ export const ColecaoDoLocal = async ({ establishmentId }: { establishmentId: str
                     <img src={imagem} alt="" className="aspect-square w-full object-cover" />
                   ) : (
                     <div className="flex aspect-square w-full items-center justify-center bg-linear-to-br from-amber-800 to-stone-900">
-                      <SparklesIcon className="h-10 w-10 text-white/70" />
+                      <RectangleStackIcon className="h-10 w-10 text-white/70" />
                     </div>
                   )}
                   <div className="p-2.5">

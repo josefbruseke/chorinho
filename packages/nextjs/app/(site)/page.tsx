@@ -8,7 +8,6 @@ import {
   MapPinIcon,
   QrCodeIcon,
   ShoppingBagIcon,
-  SparklesIcon,
   SignalSlashIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
@@ -58,11 +57,6 @@ const Landing: NextPage = () => (
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] max-w-full bg-gradient-to-b from-primary/10 via-accent/5 to-transparent rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-5xl mx-auto px-5 pt-12 pb-10 text-center flex flex-col items-center relative z-10">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-brand-ink text-sm font-black tracking-wide mb-6 shadow-xs">
-          <SparklesIcon className="w-4 h-4 shrink-0" />
-          <span>Aquele agrado no final da conta que você só tem no bairro</span>
-        </div>
-
         <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif font-black m-0 tracking-tight max-w-3xl leading-[1.12] text-balance text-secondary">
           O carinho do comércio local, <br className="hidden sm:inline" />
           direto no seu{" "}

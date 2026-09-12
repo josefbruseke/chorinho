@@ -14,8 +14,16 @@ import { supabaseBrowser, supabaseConfigurado } from "~~/services/database/brows
 import type { EstabelecimentoNoMapa } from "~~/services/database/types";
 import { categoryInfo } from "~~/utils/vitrine";
 
-/** Centro padrão quando não há última posição nem permissão de localização. */
-const CENTRO_PADRAO: [number, number] = [-23.5558, -46.6905];
+/** Centro padrão quando não há última posição nem permissão de localização.
+    Não é o centro da cidade, e sim o centro do conjunto de comércios: eles vão
+    do Sapiens Parque, no norte da ilha, ao Campeche, no sul — 27,7 km de ponta
+    a ponta. Centrado na Praça XV o mapa nasceria com dois terços deles fora da
+    tela. */
+const CENTRO_PADRAO: [number, number] = [-27.5541, -48.5152];
+
+/** Zoom inicial. 11 é o primeiro que cabe os 27,7 km também no celular: numa
+    tela de 460px de altura ele mostra 31 km, enquanto o 12 mostra só 15,6. */
+const ZOOM_PADRAO = 11;
 const CHAVE_ULTIMO_CENTRO = "chorinho:mapa:centro";
 
 const TILE_URL = process.env.NEXT_PUBLIC_MAP_TILE_URL || "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
@@ -148,7 +156,7 @@ export const MapaCanvas = ({ className = "", centroSolicitado = null, aoCarregar
     <div className={`relative ${className}`}>
       <MapContainer
         center={centroInicial}
-        zoom={14}
+        zoom={ZOOM_PADRAO}
         scrollWheelZoom
         className="w-full h-full rounded-box z-0"
         // O Leaflet precisa saber o tamanho na montagem; sem altura explícita no

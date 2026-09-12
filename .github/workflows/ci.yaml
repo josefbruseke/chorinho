@@ -88,6 +88,31 @@ jobs:
             exit 1
           fi
 
+      # A conferencia acima e cega a rede: ela passa se o contrato existir sob
+      # QUALQUER chain id. E o `generateTsAbis.js` reescreve o arquivo inteiro a
+      # partir de `broadcast/`, onde o 31337 e ignorado pelo git -- entao um
+      # deploy publico feito de um clone limpo apaga o bloco local e ninguem
+      # percebe ate o desenvolvimento parar de compilar. Aqui as duas redes sao
+      # obrigatorias, e some uma, a build fica vermelha.
+      - name: deployedContracts.ts tem a rede local e a publica
+        run: |
+          faltou=0
+          for id in 31337 11155111; do
+            if grep -qE "^\s+$id: \{" packages/nextjs/contracts/deployedContracts.ts; then
+              echo "  ok      chain $id"
+            else
+              echo "  FALTOU  chain $id"
+              faltou=1
+            fi
+          done
+          if [ "$faltou" = "1" ]; then
+            echo
+            echo "31337 vem de 'bun run chain' + 'bun run deploy'."
+            echo "11155111 vem de 'bun run deploy:sepolia'."
+            echo "O gerador precisa dos DOIS historicos em packages/foundry/broadcast/."
+            exit 1
+          fi
+
       - name: Lint do frontend
         run: bun run next:lint --max-warnings=0
 

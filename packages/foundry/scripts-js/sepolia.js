@@ -1,5 +1,6 @@
 import { spawnSync } from "child_process";
 import { config } from "dotenv";
+import { existsSync, readdirSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
@@ -52,6 +53,51 @@ if (!process.env.ALCHEMY_API_KEY) {
    O endpoint da Sepolia no foundry.toml é montado com ela. A chave pública
    que vem no kit é compartilhada por todo mundo que usa o Scaffold-ETH e é
    limitada sob tráfego real — pegue uma sua em dashboard.alchemy.com.
+`);
+  process.exit(1);
+}
+
+/**
+ * O `generateTsAbis.js` REESCREVE o `deployedContracts.ts` inteiro a partir do
+ * que houver em `broadcast/`, sem mesclar — e `broadcast/*​/31337/` é ignorado
+ * pelo git. Publicar a partir de um clone limpo apagaria o bloco 31337 do
+ * arquivo, quebrando a compilação (`servidor.ts` indexa aquele id literal) e o
+ * desenvolvimento local junto, sem erro nenhum durante o deploy.
+ *
+ * A checagem é aqui, antes de gastar gás, e não depois.
+ */
+const temBroadcastLocal = () => {
+  const dir = join(__dirname, "..", "broadcast", "Deploy.s.sol", "31337");
+  if (!existsSync(dir)) return false;
+  return readdirSync(dir).some((f) => /^run-\d+\.json$/.test(f));
+};
+
+if (arquivo === "Deploy.s.sol" && !simular && !temBroadcastLocal()) {
+  console.error(`
+❌ Falta o histórico do deploy local em broadcast/Deploy.s.sol/31337/
+
+   Sem ele o gerador de ABIs apaga o bloco 31337 do deployedContracts.ts e o
+   desenvolvimento local para de compilar. Rode antes, noutro terminal:
+
+     bun run chain
+     bun run deploy
+`);
+  process.exit(1);
+}
+
+/**
+ * O `SeedColecao` grava esta URL DENTRO da URI dos NFTs, na cadeia. Como os
+ * seeds são idempotentes, re-semear não conserta: uma peça criada apontando
+ * para localhost aponta para localhost para sempre.
+ */
+if (arquivo === "SeedColecao.s.sol" && !simular && !process.env.SITE_URL) {
+  console.error(`
+❌ SITE_URL ausente em packages/foundry/.env
+
+   O metadado das peças e dos selos seria gravado como
+   http://localhost:3000/api/nft/… na cadeia, de forma permanente.
+
+     SITE_URL=https://chorinho.vercel.app
 `);
   process.exit(1);
 }

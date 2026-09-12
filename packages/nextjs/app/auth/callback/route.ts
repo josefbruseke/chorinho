@@ -15,6 +15,15 @@ export async function GET(request: NextRequest) {
   // de login vira redirecionamento aberto para qualquer site.
   const destino = proximo.startsWith("/") && !proximo.startsWith("//") ? proximo : INICIO_DO_APP;
 
+  // Quando o Google (ou a Supabase) recusa, o retorno vem com `error` e sem
+  // `code`. Sem tratar isto antes, a recusa cai no ramo do código ausente e o
+  // motivo real — provedor desligado, URI não autorizada, consentimento negado
+  // — se perde no caminho.
+  const recusa = searchParams.get("error_description") ?? searchParams.get("error");
+  if (recusa) {
+    return NextResponse.redirect(`${origin}/entrar?erro=${encodeURIComponent(recusa)}`);
+  }
+
   if (!code) {
     return NextResponse.redirect(`${origin}/entrar?erro=codigo_ausente`);
   }

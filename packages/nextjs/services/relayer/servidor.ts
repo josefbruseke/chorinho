@@ -5,6 +5,7 @@ import {
   ContractFunctionRevertedError,
   createPublicClient,
   createWalletClient,
+  fallback,
   http,
   keccak256,
   nonceManager,
@@ -66,9 +67,25 @@ const chaveDoRelayer = () => {
   return (chave.startsWith("0x") ? chave : `0x${chave}`) as `0x${string}`;
 };
 
+/**
+ * Um RPC só é ponto único de falha numa venda.
+ *
+ * O endpoint público da rede é compartilhado e limita taxa: basta uma recusa
+ * para o carimbo falhar no balcão, com o cliente esperando. Aqui a lista tenta
+ * em ordem e só desiste quando todos recusam.
+ *
+ * `CHORINHO_RPC_URL` aceita vários endereços separados por vírgula, então dá
+ * para pôr um provedor pago na frente e um gratuito atrás sem mexer no código.
+ * O `http()` sem URL — o padrão da rede — fica sempre por último, como rede de
+ * segurança, e é o único quando nada foi configurado.
+ */
 const transporte = () => {
-  const url = process.env.CHORINHO_RPC_URL;
-  return url ? http(url) : http();
+  const urls = (process.env.CHORINHO_RPC_URL ?? "")
+    .split(",")
+    .map(u => u.trim())
+    .filter(Boolean);
+
+  return fallback([...urls.map(u => http(u)), http()]);
 };
 
 /** Onde o contrato mora na rede configurada. */

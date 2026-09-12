@@ -22,27 +22,34 @@ cp packages/nextjs/.env.example packages/nextjs/.env.local   # e preencha
 bun dev
 ```
 
-A aplicação sobe em http://localhost:3000 apontando para a **Sepolia da
-Ethereum** — a mesma rede da demonstração, com os contratos já publicados. Não
-há blockchain local para subir.
-
-Isso é uma escolha, e ela custa doze segundos por venda. O anvil é ótimo
-enquanto a cadeia é detalhe de implementação, e é exatamente por isso que ele
-escondia o que a rede de verdade cobra: a espera do bloco, o nonce disputado
-entre dois envios, o teto de tempo da função. Cada um desses defeitos apareceu
-publicado, nunca na máquina de quem programou.
-
-<details>
-<summary>Voltar ao anvil por um momento (depurar um contrato, por exemplo)</summary>
+A aplicação sobe em http://localhost:3000. **Sem configuração, ela aponta para
+o anvil local** — então é preciso subir a cadeia antes:
 
 ```bash
 bun run chain                          # num terminal
 bun run deploy && bun run seed:tudo    # noutro
-CHORINHO_CHAIN_ID=31337 bun run start
 ```
 
-Lembre de trocar `targetNetworks` em `packages/nextjs/scaffold.config.ts` para
-`chains.foundry` enquanto estiver assim — e de voltar depois.
+<details>
+<summary>Programar contra a Sepolia, a mesma rede da demonstração</summary>
+
+Os contratos estão publicados lá, então dá para pular o anvil. Em
+`packages/nextjs/.env.local`:
+
+```bash
+CHORINHO_CHAIN_ID=11155111              # o servidor lê esta
+NEXT_PUBLIC_CHORINHO_CHAIN_ID=11155111  # o navegador lê ESTA, outra variável
+CHORINHO_TORNEIRA_ETH=                  # vazia: a torneira só existe no anvil
+```
+
+Não é preciso editar `scaffold.config.ts`: as duas redes já estão na lista e a
+variável escolhe qual é a alvo.
+
+É mais lento, e esse é o ponto. O anvil é ótimo enquanto a cadeia é detalhe de
+implementação, e é exatamente por isso que ele escondia o que a rede de verdade
+cobra: a espera de doze segundos pelo bloco, o nonce disputado entre dois
+envios, o teto de tempo da função. Cada um desses defeitos apareceu publicado,
+nunca na máquina de quem programou.
 
 </details>
 
@@ -71,7 +78,7 @@ Com o PDV aberto, desligue o wifi e registre três vendas. Elas ficam em `/pdv/f
 
 | Comando | O que faz |
 | :--- | :--- |
-| `bun dev` | Sobe o frontend apontando para a Sepolia |
+| `bun dev` | Sobe o frontend na rede do `.env.local` (padrão: anvil local) |
 | `bun run test` | Roda os testes dos contratos (precisa do `run` — `test` é comando embutido do Bun) |
 | `bun run lint` | Verifica contratos e frontend |
 | `bun run format` | Formata contratos e frontend |
@@ -143,10 +150,21 @@ outros ~0,02; e cada carimbo sai por menos de um milésimo. Faucets:
 [Google Cloud](https://cloud.google.com/application/web3/faucet/ethereum/sepolia),
 [pk910](https://sepolia-faucet.pk910.de) (sem conta).
 
-Depois do deploy, aponte a aplicação para lá com `CHORINHO_CHAIN_ID=11155111` e
-`targetNetworks: [chains.sepolia]` em `packages/nextjs/scaffold.config.ts`.
+Depois do deploy, aponte a aplicação para lá com **as duas** variáveis —
+`CHORINHO_CHAIN_ID=11155111` para o servidor e
+`NEXT_PUBLIC_CHORINHO_CHAIN_ID=11155111` para o navegador. São variáveis
+diferentes, com padrões diferentes; configurar só uma deixa metade da aplicação
+falando com a outra rede. Não é preciso editar `scaffold.config.ts`.
+
 Nessa ordem: virar a rede antes de publicar deixa o front falando com contrato
 que não existe.
+
+O `deploy:sepolia` se recusa a rodar se não houver histórico do deploy local em
+`broadcast/Deploy.s.sol/31337/`. Não é frescura: o gerador de ABIs reescreve o
+`deployedContracts.ts` inteiro a partir do que achar em `broadcast/`, e aquela
+pasta é ignorada pelo git — a partir de um clone limpo, publicar apagaria o
+bloco `31337` e o desenvolvimento local pararia de compilar, sem erro nenhum
+durante o deploy.
 
 Para outra rede pública, o caminho do kit continua valendo:
 `bun run deploy --network <rede>` com keystore e senha.
@@ -213,11 +231,12 @@ Rode `bun run test` para os testes. Depois de `bun run deploy`, os tipos aparece
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | sim | Chave pública do navegador; só alcança o que a RLS permitir |
 | `SUPABASE_SECRET_KEY` | sim | Chave de servidor, para as escritas do sistema. **Nunca com prefixo público** |
 | `NEXT_PUBLIC_PRIVY_APP_ID` | sim | Carteira embutida criada no cadastro |
-| `PRIVY_APP_SECRET` | sim | Lado servidor do Privy |
+| `PRIVY_APP_SECRET` | não | Lado servidor do Privy. **Nenhum código lê esta variável hoje** — a carteira é criada no navegador, com o JWT da Supabase. Só passa a fazer falta se algum dia o servidor falar com a API do Privy |
 | `PASS_HMAC_SECRET` | sim | Assina o passe do cliente. Sem ele, qualquer um forja um passe |
 | `RELAYER_PRIVATE_KEY` | sim | A conta que paga o gás dos carimbos |
 | `CHORINHO_ADMIN_PRIVATE_KEY` | não | Conta que escreve regra e registro. Em desenvolvimento usa a do relayer |
-| `CHORINHO_CHAIN_ID` | não | 31337 (local), 11155111 (Sepolia), 84532 (Base Sepolia), 8453 (Base). Padrão: 31337 |
+| `CHORINHO_CHAIN_ID` | não | Rede do **servidor**: 31337 (local), 11155111 (Sepolia), 84532 (Base Sepolia), 8453 (Base). Padrão: 31337 |
+| `NEXT_PUBLIC_CHORINHO_CHAIN_ID` | não | Rede do **navegador**. Variável separada, e é preciso definir as duas. Padrão: 31337 em desenvolvimento, 11155111 publicado |
 | `CHORINHO_RPC_URL` | não | RPC próprio; vazio usa o padrão da rede |
 | `CHORINHO_TORNEIRA_ETH` | não | Ambiente de teste: quanto ETH de mentira cada carteira nova ganha. Só funciona em nó de desenvolvimento. Vazio = desligada |
 | `NEXT_PUBLIC_SITE_URL` | não | Onde a aplicação responde. Só o metadado das peças precisa: carteira e marketplace não adivinham o domínio. Na Vercel cai na URL de produção |

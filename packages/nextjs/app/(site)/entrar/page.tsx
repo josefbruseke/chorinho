@@ -27,6 +27,22 @@ const MarcaGoogle = ({ className = "" }: { className?: string }) => (
   </svg>
 );
 
+/**
+ * Traduz o que a Supabase e o Google devolvem.
+ *
+ * Os dois caminhos que falham — o `signInWithOAuth` aqui e o `/auth/callback`,
+ * que volta com `?erro=` — passam por esta função. Separada de propósito: eram
+ * duas listas de mensagem, e a do callback não era desenhada em lugar nenhum,
+ * então provedor desligado virava tela muda.
+ */
+const mensagemDoErro = (bruto: string | null) => {
+  if (!bruto) return null;
+  if (bruto === "codigo_ausente") return "O link de entrada expirou ou já foi usado. Tente de novo.";
+  if (bruto.includes("provider is not enabled")) return "O login com Google ainda não foi ativado no projeto.";
+  if (bruto.includes("access_denied")) return "Você cancelou a entrada com o Google.";
+  return bruto;
+};
+
 const Formulario = () => {
   const router = useRouter();
   const params = useSearchParams();
@@ -36,7 +52,9 @@ const Formulario = () => {
   const [senha, setSenha] = useState("");
   const [modo, setModo] = useState<"entrar" | "criar">("entrar");
   const [carregando, setCarregando] = useState(false);
-  const [erro, setErro] = useState<string | null>(null);
+  // Semeado a partir da URL, e não fixo nela: o usuário precisa poder tentar de
+  // novo sem o erro antigo grudado na tela.
+  const [erro, setErro] = useState<string | null>(() => mensagemDoErro(params.get("erro")));
   const [aviso, setAviso] = useState<string | null>(null);
 
   const comEmail = async (e: React.SyntheticEvent) => {
@@ -80,11 +98,7 @@ const Formulario = () => {
     });
     if (error) {
       setCarregando(false);
-      setErro(
-        error.message.includes("provider is not enabled")
-          ? "O login com Google ainda não foi ativado no projeto."
-          : error.message,
-      );
+      setErro(mensagemDoErro(error.message));
     }
   };
 

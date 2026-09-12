@@ -29,11 +29,11 @@ export const DEFAULT_ALCHEMY_API_KEY = "IZYEU2cWBgnFmgiTAgpWD";
  * importa em tempo de execucao.
  */
 const ID_DA_REDE =
-  process.env.NEXT_PUBLIC_CHORINHO_CHAIN_ID ?? (process.env.NODE_ENV === "development" ? "31337" : "84532");
+  process.env.NEXT_PUBLIC_CHORINHO_CHAIN_ID ?? (process.env.NODE_ENV === "development" ? "31337" : "11155111");
 
 const REDES_CONFIGURADAS = (
-  ID_DA_REDE === "31337" ? [chains.foundry, chains.baseSepolia] : [chains.baseSepolia, chains.foundry]
-) as readonly [typeof chains.foundry, typeof chains.baseSepolia];
+  ID_DA_REDE === "31337" ? [chains.foundry, chains.sepolia] : [chains.sepolia, chains.foundry]
+) as readonly [typeof chains.foundry, typeof chains.sepolia];
 
 const scaffoldConfig = {
   // A rede alvo vem primeiro: e ela que o `useTargetNetwork` devolve, e era a

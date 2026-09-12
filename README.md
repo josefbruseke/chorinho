@@ -183,8 +183,9 @@ Rode `bun run test` para os testes. Depois de `bun run deploy`, os tipos aparece
 | `PASS_HMAC_SECRET` | sim | Assina o passe do cliente. Sem ele, qualquer um forja um passe |
 | `RELAYER_PRIVATE_KEY` | sim | A conta que paga o gás dos carimbos |
 | `CHORINHO_ADMIN_PRIVATE_KEY` | não | Conta que escreve regra e registro. Em desenvolvimento usa a do relayer |
-| `CHORINHO_CHAIN_ID` | não | 31337 (local), 84532 (Base Sepolia), 8453 (Base). Padrão: 31337 |
+| `CHORINHO_CHAIN_ID` | não | 31337 (local), 11155111 (Sepolia), 84532 (Base Sepolia), 8453 (Base). Padrão: 31337 |
 | `CHORINHO_RPC_URL` | não | RPC próprio; vazio usa o padrão da rede |
+| `NEXT_PUBLIC_SITE_URL` | não | Onde a aplicação responde. Só o metadado das peças precisa: carteira e marketplace não adivinham o domínio. Na Vercel cai na URL de produção |
 | `NEXT_PUBLIC_MAP_TILE_URL` | não | Servidor de ladrilhos do mapa. Padrão: OpenStreetMap |
 | `NEXT_PUBLIC_ALCHEMY_API_KEY` | não | RPC próprio em redes públicas |
 | `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID` | não | Conectar carteira externa (uso avançado) |
@@ -197,6 +198,7 @@ Gere um `PASS_HMAC_SECRET` com `openssl rand -base64 48`.
 | :--- | :--- |
 | `ALCHEMY_API_KEY` | Deploy em redes públicas |
 | `ETHERSCAN_API_KEY` | Verificar contratos no explorador |
+| `SITE_URL` | Base da URI de metadado que o `seed:colecao` grava nas peças. Padrão: `http://localhost:3000` |
 
 > Nunca versione um `.env`. O `.gitignore` já bloqueia todos eles, e nenhum segredo pode carregar o prefixo `NEXT_PUBLIC_`.
 

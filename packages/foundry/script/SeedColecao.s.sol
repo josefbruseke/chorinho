@@ -35,6 +35,18 @@ contract SeedColecao is Script {
     uint256 constant PECA_OURO = 2;
     uint256 constant PECA_ROTA = 3;
 
+    /// @dev O endereco que serve o metadado. E a mesma rota que o painel usa
+    ///      (`/api/nft/<familia>/<id>`), entao a peca criada aqui e a criada
+    ///      pela loja apontam para o mesmo lugar. Publicado, `SITE_URL` no
+    ///      `.env` manda; sem ele, a maquina de quem esta demonstrando.
+    function _site() private view returns (string memory) {
+        return vm.envOr("SITE_URL", string("http://localhost:3000"));
+    }
+
+    function _uri(string memory familia, uint256 id) private view returns (string memory) {
+        return string.concat(_site(), "/api/nft/", familia, "/", vm.toString(id));
+    }
+
     function run() external {
         DiscountProgram programs = DiscountProgram(_deployedAddress("DiscountProgram"));
         DiscountNFT discount = DiscountNFT(_deployedAddress("DiscountNFT"));
@@ -87,19 +99,19 @@ contract SeedColecao is Script {
         // ----------------------------------------------------------- pecas
 
         if (!discount.pieceExists(PECA_BRONZE)) {
-            discount.createPiece(PECA_BRONZE, _peca(PROGRAMA_CLUBE, 1, 50, 0, "Bronze do Clube"));
+            discount.createPiece(PECA_BRONZE, _peca(PROGRAMA_CLUBE, 1, 50, 0, PECA_BRONZE));
             console.log("Peca 1: Bronze do Clube -- 10%, tiragem de 50");
         }
 
         if (!discount.pieceExists(PECA_OURO)) {
             // Nivel 3 no mesmo programa: 30%, mas o teto de R$ 20 continua
             // valendo. E assim que uma colecao inteira sai de um programa so.
-            discount.createPiece(PECA_OURO, _peca(PROGRAMA_CLUBE, 3, 10, 1, "Ouro do Clube"));
+            discount.createPiece(PECA_OURO, _peca(PROGRAMA_CLUBE, 3, 10, 1, PECA_OURO));
             console.log("Peca 2: Ouro do Clube -- 30% ate o teto, tiragem de 10");
         }
 
         if (!discount.pieceExists(PECA_ROTA)) {
-            discount.createPiece(PECA_ROTA, _peca(PROGRAMA_ROTA, 1, 100, 0, "Rota da Vila"));
+            discount.createPiece(PECA_ROTA, _peca(PROGRAMA_ROTA, 1, 100, 0, PECA_ROTA));
             console.log("Peca 3: Rota da Vila -- R$ 5 em qualquer loja da pool");
         }
 
@@ -124,7 +136,7 @@ contract SeedColecao is Script {
                 PECA_BRONZE,
                 true,
                 0,
-                "https://chorinho.app/nft/selo/1.json",
+                _uri("selo", 1),
                 keccak256("tres-visitas")
             );
             console.log("Conquista 1: voltar tres vezes -- selo e peca de bronze");
@@ -141,7 +153,7 @@ contract SeedColecao is Script {
                 PECA_OURO,
                 true,
                 0,
-                "https://chorinho.app/nft/selo/2.json",
+                _uri("selo", 2),
                 keccak256("vinte-e-cinco-carimbos")
             );
             console.log("Conquista 2: 25 carimbos de sempre -- selo e peca de ouro");
@@ -151,16 +163,16 @@ contract SeedColecao is Script {
         console.log("Colecao no ar.");
     }
 
-    function _peca(uint256 programId, uint256 level, uint256 maxSupply, uint256 maxPerWallet, string memory nome)
+    function _peca(uint256 programId, uint256 level, uint256 maxSupply, uint256 maxPerWallet, uint256 tokenId)
         private
-        pure
+        view
         returns (DiscountNFT.PieceParams memory p)
     {
         p.programId = programId;
         p.level = level;
         p.maxSupply = maxSupply;
         p.maxPerWallet = maxPerWallet;
-        p.uri = string.concat("https://chorinho.app/nft/peca/", nome, ".json");
+        p.uri = _uri("peca", tokenId);
     }
 
     function _deployedAddress(string memory contractName) internal view returns (address) {

@@ -10,6 +10,180 @@ export type Database = {
   __InternalSupabase: { PostgrestVersion: "14.5" };
   public: {
     Tables: {
+      achievement_claims: {
+        Row: {
+          achievement_id: string;
+          badge_token_id: number | null;
+          claim_ref: string;
+          confirmed_at: string | null;
+          created_at: string;
+          customer_profile_id: string | null;
+          customer_wallet: string;
+          erro: string | null;
+          id: string;
+          piece_onchain_id: number | null;
+          status: Database["public"]["Enums"]["status_venda"];
+          tx_hash: string | null;
+        };
+        Insert: {
+          achievement_id: string;
+          badge_token_id?: number | null;
+          claim_ref: string;
+          confirmed_at?: string | null;
+          created_at?: string;
+          customer_profile_id?: string | null;
+          customer_wallet: string;
+          erro?: string | null;
+          id?: string;
+          piece_onchain_id?: number | null;
+          status?: Database["public"]["Enums"]["status_venda"];
+          tx_hash?: string | null;
+        };
+        Update: {
+          achievement_id?: string;
+          badge_token_id?: number | null;
+          claim_ref?: string;
+          confirmed_at?: string | null;
+          created_at?: string;
+          customer_profile_id?: string | null;
+          customer_wallet?: string;
+          erro?: string | null;
+          id?: string;
+          piece_onchain_id?: number | null;
+          status?: Database["public"]["Enums"]["status_venda"];
+          tx_hash?: string | null;
+        };
+        Relationships: [];
+      };
+      achievements: {
+        Row: {
+          active: boolean;
+          created_at: string;
+          criterion: number;
+          description: string | null;
+          ends_at: string | null;
+          establishment_id: string;
+          grants_badge: boolean;
+          id: string;
+          image_path: string | null;
+          max_winners: number;
+          metadata_hash: string | null;
+          onchain_id: number | null;
+          onchain_tx_hash: string | null;
+          piece_id: string | null;
+          route_id: number;
+          starts_at: string | null;
+          target: number;
+          title: string;
+          updated_at: string;
+          winners: number;
+        };
+        Insert: {
+          active?: boolean;
+          created_at?: string;
+          criterion: number;
+          description?: string | null;
+          ends_at?: string | null;
+          establishment_id: string;
+          grants_badge?: boolean;
+          id?: string;
+          image_path?: string | null;
+          max_winners?: number;
+          metadata_hash?: string | null;
+          onchain_id?: number | null;
+          onchain_tx_hash?: string | null;
+          piece_id?: string | null;
+          route_id?: number;
+          starts_at?: string | null;
+          target: number;
+          title: string;
+          updated_at?: string;
+          winners?: number;
+        };
+        Update: {
+          active?: boolean;
+          created_at?: string;
+          criterion?: number;
+          description?: string | null;
+          ends_at?: string | null;
+          establishment_id?: string;
+          grants_badge?: boolean;
+          id?: string;
+          image_path?: string | null;
+          max_winners?: number;
+          metadata_hash?: string | null;
+          onchain_id?: number | null;
+          onchain_tx_hash?: string | null;
+          piece_id?: string | null;
+          route_id?: number;
+          starts_at?: string | null;
+          target?: number;
+          title?: string;
+          updated_at?: string;
+          winners?: number;
+        };
+        Relationships: [];
+      };
+      discount_programs: {
+        Row: {
+          active: boolean;
+          base_benefit: number;
+          cap_cents: number;
+          created_at: string;
+          description: string | null;
+          ends_at: string | null;
+          establishment_id: string;
+          id: string;
+          joint: boolean;
+          kind: number;
+          metadata_hash: string | null;
+          name: string;
+          onchain_id: number | null;
+          onchain_tx_hash: string | null;
+          product: string | null;
+          starts_at: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          active?: boolean;
+          base_benefit: number;
+          cap_cents?: number;
+          created_at?: string;
+          description?: string | null;
+          ends_at?: string | null;
+          establishment_id: string;
+          id?: string;
+          joint?: boolean;
+          kind?: number;
+          metadata_hash?: string | null;
+          name: string;
+          onchain_id?: number | null;
+          onchain_tx_hash?: string | null;
+          product?: string | null;
+          starts_at?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          active?: boolean;
+          base_benefit?: number;
+          cap_cents?: number;
+          created_at?: string;
+          description?: string | null;
+          ends_at?: string | null;
+          establishment_id?: string;
+          id?: string;
+          joint?: boolean;
+          kind?: number;
+          metadata_hash?: string | null;
+          name?: string;
+          onchain_id?: number | null;
+          onchain_tx_hash?: string | null;
+          product?: string | null;
+          starts_at?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       establishment_members: {
         Row: {
           active: boolean;
@@ -151,6 +325,60 @@ export type Database = {
         };
         Relationships: [];
       };
+      pieces: {
+        Row: {
+          active: boolean;
+          created_at: string;
+          description: string | null;
+          ends_at: string | null;
+          id: string;
+          image_path: string | null;
+          level: number;
+          max_per_wallet: number;
+          max_supply: number;
+          onchain_id: number | null;
+          onchain_tx_hash: string | null;
+          program_id: string;
+          starts_at: string | null;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          active?: boolean;
+          created_at?: string;
+          description?: string | null;
+          ends_at?: string | null;
+          id?: string;
+          image_path?: string | null;
+          level?: number;
+          max_per_wallet?: number;
+          max_supply?: number;
+          onchain_id?: number | null;
+          onchain_tx_hash?: string | null;
+          program_id: string;
+          starts_at?: string | null;
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          active?: boolean;
+          created_at?: string;
+          description?: string | null;
+          ends_at?: string | null;
+          id?: string;
+          image_path?: string | null;
+          level?: number;
+          max_per_wallet?: number;
+          max_supply?: number;
+          onchain_id?: number | null;
+          onchain_tx_hash?: string | null;
+          program_id?: string;
+          starts_at?: string | null;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       platform_admins: {
         Row: { created_at: string; profile_id: string };
         Insert: { created_at?: string; profile_id: string };
@@ -238,6 +466,33 @@ export type Database = {
         };
         Relationships: [];
       };
+      program_members: {
+        Row: {
+          establishment_id: string;
+          id: string;
+          invited_at: string;
+          program_id: string;
+          responded_at: string | null;
+          status: Database["public"]["Enums"]["status_membro_programa"];
+        };
+        Insert: {
+          establishment_id: string;
+          id?: string;
+          invited_at?: string;
+          program_id: string;
+          responded_at?: string | null;
+          status?: Database["public"]["Enums"]["status_membro_programa"];
+        };
+        Update: {
+          establishment_id?: string;
+          id?: string;
+          invited_at?: string;
+          program_id?: string;
+          responded_at?: string | null;
+          status?: Database["public"]["Enums"]["status_membro_programa"];
+        };
+        Relationships: [];
+      };
       redemptions: {
         Row: {
           claim_ref: string;
@@ -303,6 +558,7 @@ export type Database = {
           image_path: string | null;
           max_redemptions: number;
           onchain_id: number | null;
+          piece_id: string | null;
           point_cost: number;
           point_type_id: number;
           redeemed: number;
@@ -321,6 +577,7 @@ export type Database = {
           image_path?: string | null;
           max_redemptions?: number;
           onchain_id?: number | null;
+          piece_id?: string | null;
           point_cost?: number;
           point_type_id?: number;
           redeemed?: number;
@@ -339,6 +596,7 @@ export type Database = {
           image_path?: string | null;
           max_redemptions?: number;
           onchain_id?: number | null;
+          piece_id?: string | null;
           point_cost?: number;
           point_type_id?: number;
           redeemed?: number;
@@ -489,6 +747,7 @@ export type Database = {
     Enums: {
       papel_membro: "owner" | "manager" | "operator";
       status_estabelecimento: "rascunho" | "pendente" | "ativo" | "suspenso";
+      status_membro_programa: "convidada" | "aceita" | "saiu";
       status_venda: "na_fila" | "enviada" | "confirmada" | "falhou";
     };
     CompositeTypes: { [_ in never]: never };
@@ -510,6 +769,7 @@ export const Constants = {
     Enums: {
       papel_membro: ["owner", "manager", "operator"],
       status_estabelecimento: ["rascunho", "pendente", "ativo", "suspenso"],
+      status_membro_programa: ["convidada", "aceita", "saiu"],
       status_venda: ["na_fila", "enviada", "confirmada", "falhou"],
     },
   },

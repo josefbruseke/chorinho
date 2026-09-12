@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=block" rel="stylesheet">
+<!--
+  A fonte do public/og.png — a imagem que aparece quando alguem compartilha o
+  link do Chorinho, e no topo do README.
+
+  Existe como HTML, e nao como PNG solto, porque a marca muda: quando a paleta
+  ou o logo mudarem, refazer a imagem e reabrir este arquivo, nao redesenhar do
+  zero num editor. O SVG do logo e copia literal de components/BrandLogo.tsx e
+  as cores sao as de styles/globals.css — se divergirem, a imagem passa a
+  prometer uma marca que o aplicativo nao tem.
+
+  Para refazer (1200x630, o formato que as redes cortam):
+
+    cp packages/nextjs/scripts/og.html packages/nextjs/public/_og-temp.html
+    # abra http://localhost:3000/_og-temp.html num navegador em 1200x630,
+    # capture a tela inteira e salve como packages/nextjs/public/og.png
+    rm packages/nextjs/public/_og-temp.html
+
+  O arquivo temporario em public/ e necessario porque navegador recusa `file:`
+  para fontes remotas; servir pelo Next resolve sem instalar nada.
+-->
+<style>
+  /* Tokens copiados de styles/globals.css — a imagem precisa ser a mesma
+     marca da tela, nao uma aproximacao de memoria. */
+  :root {
+    --cana:       #76c112;
+    --cana-clara: #8fd42e;
+    --tinta:      #1c2010;
+    --caldo:      #d8b301;
+    --papel:      #f9f8ee;
+    --kraft:      #fdfbf7;
+    --kraft-ink:  #57582a;
+    --bagaco:     #cec69c;
+    --brand-ink:  #376b04;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1200px; height: 630px;
+    background: var(--papel);
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* A faixa de cana no topo, do mesmo jeito que a versao antiga tinha a faixa
+     laranja: e o que da identidade a miniatura quando ela aparece pequena num
+     feed. */
+  .faixa { height: 14px; background: var(--cana); flex: none; }
+
+  .corpo { flex: 1; display: flex; align-items: center; gap: 56px; padding: 0 96px; }
+
+  .ladrilho { width: 208px; height: 208px; flex: none; }
+  .ladrilho svg { width: 100%; height: 100%; display: block; }
+
+  .texto { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+
+  h1 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 900;
+    font-size: 108px;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--tinta);
+    font-variation-settings: "opsz" 120;
+  }
+
+  .apoio { font-size: 30px; font-weight: 500; color: var(--kraft-ink); letter-spacing: -0.01em; }
+
+  .selos { display: flex; gap: 12px; margin-top: 8px; }
+  .selo {
+    font-size: 21px; font-weight: 800; letter-spacing: -0.01em;
+    padding: 11px 22px; border-radius: 999px; white-space: nowrap;
+  }
+  /* Verde da cana e claro, entao recebe tinta escura — a regra do
+     DESIGN_SYSTEM.md, nao uma escolha estetica avulsa. */
+  .selo.cana  { background: var(--cana);  color: var(--tinta); }
+  .selo.caldo { background: var(--caldo); color: var(--tinta); }
+  .selo.tinta { background: var(--tinta); color: var(--kraft); }
+
+  /* Chao de bagaco: a mesma linha que fecha o logo, repetida na base da peca. */
+  .rodape { height: 10px; background: var(--bagaco); opacity: 0.85; flex: none; }
+</style>
+</head>
+<body>
+  <div class="faixa"></div>
+
+  <div class="corpo">
+    <div class="ladrilho">
+      <!-- SVG identico ao components/BrandLogo.tsx -->
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Chorinho">
+        <rect width="48" height="48" rx="14" fill="#1C2010"/>
+        <rect x="1" y="1" width="46" height="46" rx="13" stroke="#76C112" stroke-opacity="0.4" stroke-width="1.5"/>
+        <path d="M22 16C17 11 12.5 9 8.5 10.5C11.5 15 16.5 17 22 17.5V16Z" fill="#8FD42E"/>
+        <path d="M24 15C27.5 8.5 32 6 37.5 6.5C34 12 29 15.5 24 16.5V15Z" fill="#A6DD5A"/>
+        <rect x="20" y="15" width="6" height="25" rx="3" fill="#76C112"/>
+        <path d="M20 23H26M20 31H26" stroke="#1C2010" stroke-width="1.6" stroke-linecap="round" stroke-opacity="0.85"/>
+        <path d="M33 22C33 22 36.5 25.2 36.5 27.2C36.5 29.133 34.933 30.7 33 30.7C31.067 30.7 29.5 29.133 29.5 27.2C29.5 25.2 33 22 33 22Z" fill="#D8B301"/>
+        <path d="M11 40C17 42 29 42 35 40" stroke="#CEC69C" stroke-width="3" stroke-linecap="round" stroke-opacity="0.9"/>
+      </svg>
+    </div>
+
+    <div class="texto">
+      <h1>Chorinho</h1>
+      <p class="apoio">O agrado do seu comércio local</p>
+      <div class="selos">
+        <span class="selo cana">carimbos</span>
+        <span class="selo caldo">recompensas</span>
+        <span class="selo tinta">multiloja</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="rodape"></div>
+</body>
+</html>

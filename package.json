@@ -6,6 +6,7 @@
     "packages/*"
   ],
   "scripts": {
+    "abastecer:testes": "bun --filter @se-2/nextjs abastecer:testes",
     "account": "bun run foundry:account",
     "account:generate": "bun run foundry:generate",
     "account:import": "bun run foundry:account-import",

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "abastecer:testes": "bun scripts/abastecer-testes.mjs",
     "build": "bun run lint && next build && serwist build",
     "check-types": "tsc --noEmit --incremental",
     "dev": "next dev",
@@ -11,9 +12,9 @@
     "lint": "eslint .",
     "serve": "next start",
     "start": "next dev",
+    "sw:build": "serwist build",
     "vercel": "vercel --build-env VERCEL_TELEMETRY_DISABLED=1",
-    "vercel:login": "vercel login",
-    "sw:build": "serwist build"
+    "vercel:login": "vercel login"
   },
   "dependencies": {
     "@heroicons/react": "~2.2.0",

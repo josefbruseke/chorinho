@@ -90,6 +90,7 @@ Com o PDV aberto, desligue o wifi e registre três vendas. Elas ficam em `/pdv/f
 | `bun run seed:tudo` | Os três acima, na ordem (rede local) |
 | `bun run deploy:sepolia` | Publica os nove contratos na Sepolia |
 | `bun run seed:sepolia` | Os três seeds, na Sepolia |
+| `bun run abastecer:testes` | Dá 1000 ETH de mentira a todas as carteiras (só em nó de desenvolvimento) |
 | `bun account` | Mostra a conta usada nos deploys |
 | `bun generate` | Cria uma conta nova de deploy |
 | `bun account:import` | Importa uma chave privada existente |
@@ -218,6 +219,7 @@ Rode `bun run test` para os testes. Depois de `bun run deploy`, os tipos aparece
 | `CHORINHO_ADMIN_PRIVATE_KEY` | não | Conta que escreve regra e registro. Em desenvolvimento usa a do relayer |
 | `CHORINHO_CHAIN_ID` | não | 31337 (local), 11155111 (Sepolia), 84532 (Base Sepolia), 8453 (Base). Padrão: 31337 |
 | `CHORINHO_RPC_URL` | não | RPC próprio; vazio usa o padrão da rede |
+| `CHORINHO_TORNEIRA_ETH` | não | Ambiente de teste: quanto ETH de mentira cada carteira nova ganha. Só funciona em nó de desenvolvimento. Vazio = desligada |
 | `NEXT_PUBLIC_SITE_URL` | não | Onde a aplicação responde. Só o metadado das peças precisa: carteira e marketplace não adivinham o domínio. Na Vercel cai na URL de produção |
 | `NEXT_PUBLIC_MAP_TILE_URL` | não | Servidor de ladrilhos do mapa. Padrão: OpenStreetMap |
 | `NEXT_PUBLIC_ALCHEMY_API_KEY` | não | RPC próprio em redes públicas |

@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { supabaseServer } from "~~/services/database/server";
+import { abastecerParaTestes } from "~~/services/relayer/torneira";
 
 const ENDERECO_EVM = /^0x[0-9a-fA-F]{40}$/;
 
@@ -40,5 +41,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ erro: error.message }, { status });
   }
 
-  return NextResponse.json({ ok: true });
+  // Ambiente de teste: a carteira nasce com saldo. Nenhuma tela precisa disso
+  // — o relayer paga o gás de tudo —, mas quem for cutucar os contratos pela
+  // MetaMask não deveria esbarrar numa torneira pública antes. Em rede pública
+  // esta chamada não faz nada e ninguém percebe.
+  const abastecida = await abastecerParaTestes(endereco.toLowerCase());
+
+  return NextResponse.json({ ok: true, ...(abastecida ? { saldoDeTeste: abastecida } : {}) });
 }

@@ -31,12 +31,12 @@ Localizados em `packages/nextjs/components/design-system/tokens.ts` e refletidos
 
 ### Paleta Principal
 
-- **Terracota Artesanal (`#c2410c` / `primary`):** Cor primária da marca. Evoca argila, tijolo à vista e calor de forno.
-- **Espresso Torrado (`#261c14` / `secondary`):** Tom de alto contraste para textos nobres, títulos escuros e botões de destaque.
-- **Mel & Rapadura (`#d97706` / `accent`):** Destaque das recompensas, estrelas e celebração do "Chorinho da Casa".
-- **Linho Suave (`#fbf8f2` / `base-200`):** Fundo acolhedor da aplicação, substituindo brancos clínicos.
-- **Borda Kraft (`#ebe3d5` / `base-300`):** Divisórias e contornos suaves táteis.
-- **Sálvia do Bairro (`#15803d` / `success`):** Validações de balcão e selo de estabelecimento verificado.
+- **Verde da Cana (`#76c112` / `primary`):** Cor primária da marca. Evoca a folha nova da cana e o frescor da garapa no balcão. Por ser clara, recebe sempre tinta escura.
+- **Tinta Oliva (`#1c2010` / `secondary`):** Tom de alto contraste para textos nobres, títulos escuros e botões de destaque.
+- **Amarelo do Caldo (`#d8b301` / `accent`):** Destaque das recompensas, estrelas e celebração do "Chorinho da Casa". O amarelo-lima `#d6cc3e` é o `warning`.
+- **Papel Claro (`#fbfaf1` / `base-200`):** Fundo acolhedor da aplicação, substituindo brancos clínicos.
+- **Bagaço (`#cec69c` / `base-300`):** Divisórias e contornos suaves táteis.
+- **Verde Fechado (`#3f7d05` / `success`):** Validações de balcão e selo de estabelecimento verificado.
 
 ---
 
@@ -95,7 +95,7 @@ import {
    - Cantos generosos `rounded-2xl` com micro-interação tátil `active:scale-[0.98]`.
 
 5. **`Card`** (`Card.tsx`):
-   - Elevação tátil suave, bordas artesanais `#ebe3d5` e opção `notched={true}` para recortes laterais de bilhete.
+   - Elevação tátil suave, bordas de bagaço `#cec69c` e opção `notched={true}` para recortes laterais de bilhete.
 
 6. **`FeaturedCarousel`** (`FeaturedCarousel.tsx`):
    - Carrossel tátil com rolagem suave por snap, setas de navegação, indicadores de posição e cards visuais de alta fidelidade para os comércios do bairro.

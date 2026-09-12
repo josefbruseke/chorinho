@@ -24,8 +24,8 @@ const MANIFESTOS = {
     // O cliente às vezes chega por link compartilhado; barra de navegação
     // ajuda ele a voltar.
     display: "standalone",
-    background_color: "#fbf8f2",
-    theme_color: "#c2410c",
+    background_color: "#fbfaf1",
+    theme_color: "#76c112",
     shortcuts: [
       { name: "Meu passe", short_name: "Passe", url: "/passe" },
       { name: "Minhas cartelas", short_name: "Cartelas", url: "/carteira" },
@@ -41,7 +41,7 @@ const MANIFESTOS = {
     display: "fullscreen",
     orientation: "portrait",
     background_color: "#ffffff",
-    theme_color: "#261c14",
+    theme_color: "#1c2010",
     shortcuts: [{ name: "Fila de envio", short_name: "Fila", url: "/pdv/fila" }],
   },
   lojista: {
@@ -50,8 +50,8 @@ const MANIFESTOS = {
     description: "Acompanhe carimbos, recompensas e clientes da sua loja.",
     start_url: "/painel",
     display: "standalone",
-    background_color: "#fbf8f2",
-    theme_color: "#261c14",
+    background_color: "#fbfaf1",
+    theme_color: "#1c2010",
   },
 } as const;
 

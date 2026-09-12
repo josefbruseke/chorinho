@@ -10,6 +10,9 @@ import {
   DevicePhoneMobileIcon,
   GiftIcon,
   ScaleIcon,
+  SparklesIcon,
+  TagIcon,
+  TrophyIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
 import { BrandLogo } from "~~/components/BrandLogo";
@@ -20,6 +23,9 @@ const ITENS = [
   { href: "/painel/loja", label: "Minha loja", Icon: BuildingStorefrontIcon },
   { href: "/painel/regras", label: "Regra de carimbo", Icon: ScaleIcon },
   { href: "/painel/recompensas", label: "Recompensas", Icon: GiftIcon },
+  { href: "/painel/programas", label: "Programas", Icon: TagIcon },
+  { href: "/painel/colecao", label: "Coleção", Icon: SparklesIcon },
+  { href: "/painel/conquistas", label: "Conquistas", Icon: TrophyIcon },
   { href: "/painel/pdv", label: "Terminais", Icon: DevicePhoneMobileIcon },
   { href: "/painel/auditoria", label: "Auditoria", Icon: ClipboardDocumentCheckIcon },
   { href: "/painel/equipe", label: "Equipe", Icon: UsersIcon },

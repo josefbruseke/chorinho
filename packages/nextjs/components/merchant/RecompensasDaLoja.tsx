@@ -13,12 +13,15 @@ type Recompensa = {
   ativa: boolean;
   maxResgates: number;
   resgatados: number;
+  pecaId: string | null;
   rascunho: boolean;
 };
 
-type Formulario = { titulo: string; descricao: string; selos: string; pontos: string };
+type PecaDoCatalogo = { id: string; titulo: string; nivel: number };
 
-const FORM_VAZIO: Formulario = { titulo: "", descricao: "", selos: "0", pontos: "0" };
+type Formulario = { titulo: string; descricao: string; selos: string; pontos: string; pecaId: string };
+
+const FORM_VAZIO: Formulario = { titulo: "", descricao: "", selos: "0", pontos: "0", pecaId: "" };
 
 /**
  * O que os carimbos e os pontos da cidade compram nesta loja.
@@ -29,7 +32,7 @@ const FORM_VAZIO: Formulario = { titulo: "", descricao: "", selos: "0", pontos: 
  * balcão ainda não sabe que ele existe.
  */
 export const RecompensasDaLoja = () => {
-  const [dados, setDados] = useState<{ loja: { nome: string }; recompensas: Recompensa[] }>();
+  const [dados, setDados] = useState<{ loja: { nome: string }; recompensas: Recompensa[]; pecas: PecaDoCatalogo[] }>();
   const [form, setForm] = useState<Formulario>(FORM_VAZIO);
   const [criando, setCriando] = useState(false);
   const [atualizando, setAtualizando] = useState<string>();
@@ -64,6 +67,7 @@ export const RecompensasDaLoja = () => {
           descricao: form.descricao,
           selos: Number(form.selos) || 0,
           pontos: Number(form.pontos) || 0,
+          pecaId: form.pecaId || null,
         }),
       });
       const corpo = await r.json();
@@ -177,6 +181,28 @@ export const RecompensasDaLoja = () => {
           </label>
         </div>
 
+        {/* O gatilho direto: o cliente gasta os próprios carimbos e leva a
+            peça junto do prêmio. É a única porta pela qual uma peça se compra,
+            e a moeda é carimbo — nenhum dinheiro de cliente passa por nós. */}
+        {dados.pecas.length > 0 && (
+          <label className="flex flex-col gap-1 text-xs font-semibold opacity-75">
+            Entregar também uma peça da coleção (opcional)
+            <select
+              value={form.pecaId}
+              onChange={e => setForm(f => ({ ...f, pecaId: e.target.value }))}
+              aria-label="Peça entregue com o prêmio"
+              className="select select-bordered h-12 w-full text-base"
+            >
+              <option value="">Nenhuma</option>
+              {dados.pecas.map(p => (
+                <option key={p.id} value={p.id}>
+                  {p.titulo} (nível {p.nivel})
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+
         {/* O aviso só aparece depois que o lojista começou a preencher: mostrar
             erro num formulário em branco faz a tela parecer quebrada antes de
             alguém ter feito nada. */}
@@ -226,6 +252,12 @@ export const RecompensasDaLoja = () => {
                       </>
                     )}
                   </span>
+                  {r.pecaId && (
+                    <span className="mt-1.5 ml-1.5 inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
+                      <SparklesIcon className="h-3.5 w-3.5" />
+                      vem com peça
+                    </span>
+                  )}
                 </div>
 
                 <label className="flex min-h-12 shrink-0 items-center gap-2">

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { NextPage } from "next";
 import { ArrowLeftIcon, MapPinIcon, PhoneIcon } from "@heroicons/react/24/outline";
+import { ColecaoDoLocal } from "~~/components/app/ColecaoDoLocal";
 import { CategoryIcon } from "~~/components/vitrine/CategoryIcon";
 import { VerifiedBadge } from "~~/components/vitrine/VerifiedBadge";
 import { supabaseServer } from "~~/services/database/server";
@@ -90,10 +91,7 @@ const Local: NextPage<Props> = async ({ params }) => {
         )}
       </section>
 
-      <p className="m-0 text-xs opacity-70 leading-relaxed">
-        A cartela de carimbos, o catálogo e as recompensas deste local aparecem aqui quando o programa de fidelidade for
-        publicado pelo comerciante.
-      </p>
+      <ColecaoDoLocal establishmentId={local.id} />
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { SparklesIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 import { type Cartela, CartelaCard } from "~~/components/carteira/CartelaCard";
+import { MinhaColecao } from "~~/components/carteira/MinhaColecao";
 import { supabaseBrowser, supabaseConfigurado } from "~~/services/database/browser";
 import { INICIO_DO_APP } from "~~/utils/rotas";
 
@@ -124,6 +125,10 @@ export const MinhasCartelas = () => {
           ))}
         </div>
       )}
+
+      {/* Depois das cartelas: o carimbo é a razão de abrir esta tela, a peça é
+          o que se descobre depois. A coleção some sozinha quando está vazia. */}
+      <MinhaColecao />
     </div>
   );
 };

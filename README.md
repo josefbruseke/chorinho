@@ -136,8 +136,9 @@ bun run seed:sepolia      # lojas, prêmios e a coleção de exemplo
 ```
 
 Os dois leem `DEPLOYER_PRIVATE_KEY` e `ALCHEMY_API_KEY` de
-`packages/foundry/.env`. A conta precisa de pelo menos **0,3 ETH de teste** —
-são nove deploys mais algumas dezenas de transações de seed. Faucets:
+`packages/foundry/.env`. A conta precisa de **0,1 ETH de teste** — o deploy dos
+nove contratos, simulado contra a Sepolia, custa 0,036 ETH; os seeds somam
+outros ~0,02; e cada carimbo sai por menos de um milésimo. Faucets:
 [Google Cloud](https://cloud.google.com/application/web3/faucet/ethereum/sepolia),
 [pk910](https://sepolia-faucet.pk910.de) (sem conta).
 

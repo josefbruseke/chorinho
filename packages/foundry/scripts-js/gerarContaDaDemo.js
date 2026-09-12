@@ -101,8 +101,12 @@ console.log(`
 
 Faltam duas coisas suas antes de publicar:
 
-1. Abastecer este endereço com ETH de teste da Sepolia — pelo menos 0,3 ETH.
-   São nove deploys mais algumas dezenas de transações de seed.
+1. Abastecer este endereço com ETH de teste da Sepolia — **0,1 ETH basta**.
+
+   O número vem de medir, não de chutar: o deploy dos nove contratos foi
+   simulado contra a Sepolia e custa 0,036 ETH. Os três seeds somam outros
+   ~0,02, e cada carimbo da demonstração sai por menos de um milésimo. Uma
+   única torneira cobre tudo com folga.
 
    · https://cloud.google.com/application/web3/faucet/ethereum/sepolia
    · https://sepolia-faucet.pk910.de  (sem conta, mineração no navegador)

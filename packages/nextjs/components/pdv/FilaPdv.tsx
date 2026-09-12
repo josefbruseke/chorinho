@@ -9,7 +9,6 @@ import {
   ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useFilaOffline } from "~~/hooks/pdv/useFilaOffline";
-import { formatarCentavos } from "~~/utils/dinheiro";
 
 /**
  * O que ainda não subiu.
@@ -57,7 +56,7 @@ export const FilaPdv = () => {
           fila.map(v => (
             <article key={v.saleRef} className="rounded-2xl border border-base-300 bg-base-100 p-4">
               <div className="flex items-baseline justify-between gap-3">
-                <span className="font-mono text-xl font-black text-secondary">{formatarCentavos(v.valorCentavos)}</span>
+                <span className="text-base font-black text-secondary">Carimbo pendente</span>
                 <span className="inline-flex items-center gap-1 text-xs opacity-65">
                   <ClockIcon className="h-3.5 w-3.5" />
                   {new Date(v.criadaEm).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}

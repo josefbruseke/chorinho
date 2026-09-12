@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { supabaseServer } from "~~/services/database/server";
-import { ErroDePdv, balcaoDoOperador } from "~~/services/pdv/emitir";
+import { ErroDePdv, VALOR_SIMBOLICO_CENTAVOS, balcaoDoOperador } from "~~/services/pdv/emitir";
 import { preverCarimbos, relayerConfigurado } from "~~/services/relayer/servidor";
 
 export const runtime = "nodejs";
@@ -16,23 +16,24 @@ export async function POST(request: NextRequest) {
   const { data: claims } = await supabase.auth.getClaims();
   const userId = claims?.claims?.sub;
 
-  let corpo: { valorCentavos?: unknown; boostBps?: unknown };
+  // O corpo virou opcional: sem valor de venda, a única coisa que ainda muda a
+  // conta é o bônus de produto.
+  let corpo: { boostBps?: unknown } = {};
   try {
     corpo = await request.json();
   } catch {
-    return NextResponse.json({ erro: "corpo inválido" }, { status: 400 });
-  }
-
-  const valor = Number(corpo.valorCentavos);
-  if (!Number.isInteger(valor) || valor <= 0) {
-    return NextResponse.json({ erro: "valor inválido" }, { status: 400 });
+    // prévia sem corpo é o caso normal agora
   }
 
   try {
     const balcao = await balcaoDoOperador(userId);
     if (!relayerConfigurado()) return NextResponse.json({ carimbos: null, loja: balcao.nome });
 
-    const carimbos = await preverCarimbos(BigInt(balcao.onchainId), BigInt(valor), Number(corpo.boostBps ?? 10_000));
+    const carimbos = await preverCarimbos(
+      BigInt(balcao.onchainId),
+      BigInt(VALOR_SIMBOLICO_CENTAVOS),
+      Number(corpo.boostBps ?? 10_000),
+    );
     return NextResponse.json({ carimbos, loja: balcao.nome });
   } catch (e) {
     if (e instanceof ErroDePdv) return NextResponse.json({ erro: e.message }, { status: e.status });

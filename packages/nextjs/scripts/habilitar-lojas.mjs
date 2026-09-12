@@ -44,6 +44,15 @@ carregarEnv(`${raiz}/.env`);
 
 const aplica = process.argv.includes("--aplica");
 
+/**
+ * Reaplica só a regra nas lojas que já estão na cadeia.
+ *
+ * O modo normal procura quem está de fora; este serve para quando a REGRA
+ * muda para todo mundo — como na virada do carimbo por valor para o carimbo
+ * por visita. `setAccrualRule` é atribuição, então repetir é seguro.
+ */
+const soRegras = process.argv.includes("--so-regras");
+
 const REDES = { [foundry.id]: foundry, [sepolia.id]: sepolia, [baseSepolia.id]: baseSepolia, [base.id]: base };
 const idDaRede = Number(process.env.CHORINHO_CHAIN_ID ?? foundry.id);
 const rede = REDES[idDaRede];
@@ -99,17 +108,24 @@ const escrever = async (contrato, abi, functionName, args) => {
 };
 
 /**
- * A regra padrão: R$ 10 de piso, um carimbo a cada R$ 10, até 5 por venda,
- * janela de sequência de 7 dias, sem carência.
+ * A regra: passou no balcão, ganhou um carimbo.
  *
- * Carência zero é deliberado, e o mesmo motivo do `SeedBalcao`: com ela não dá
- * para carimbar o mesmo cliente duas vezes seguidas ao demonstrar.
+ * Os três primeiros campos existem porque a struct do contrato pede, não
+ * porque alguém escolheu os números. A conta lá é
+ * `amountCents / centsPerStamp`, limitada por `maxStampsPerTx` — com divisor 1
+ * e teto 1, qualquer valor maior que zero rende exatamente um carimbo. Piso
+ * zero completa: nenhuma venda é pequena demais.
+ *
+ * A carência é o que passou a segurar o abuso. Antes era o piso de ticket que
+ * impedia o caixa de carimbar dez vezes seguidas; sem valor, sobra o relógio.
+ * Quatro horas deixam passar café de manhã e padaria à tarde — duas visitas no
+ * mesmo dia são reais — e barram a repetição no mesmo atendimento.
  */
 const REGRA = {
-  minTicketCents: 1000n,
-  centsPerStamp: 1000n,
-  maxStampsPerTx: 5,
-  cooldownSeconds: 0,
+  minTicketCents: 0n,
+  centsPerStamp: 1n,
+  maxStampsPerTx: 1,
+  cooldownSeconds: 4 * 60 * 60,
   streakWindowSeconds: 7 * 24 * 60 * 60,
   pointsPerStamp: 1,
   pointTypeId: 1n,
@@ -121,7 +137,7 @@ const UM_ANO = 365 * 24 * 60 * 60;
 const { data: lojas, error } = await supabase
   .from("establishments")
   .select("id, name, slug, status, onchain_id, owner_profile_id")
-  .is("onchain_id", null)
+  .filter("onchain_id", soRegras ? "not.is" : "is", null)
   .order("name");
 
 if (error) {
@@ -130,12 +146,12 @@ if (error) {
 }
 
 if (!lojas.length) {
-  console.log("Nenhuma loja fora da cadeia. Nada a fazer.");
+  console.log(soRegras ? "Nenhuma loja na cadeia. Nada a fazer." : "Nenhuma loja fora da cadeia. Nada a fazer.");
   process.exit(0);
 }
 
 console.log(`\nRede ${idDaRede} · admin ${conta.address}`);
-console.log(`${lojas.length} loja(s) fora da cadeia:\n`);
+console.log(`${lojas.length} loja(s) ${soRegras ? "na cadeia — só a regra será reescrita" : "fora da cadeia"}:\n`);
 for (const l of lojas) console.log(`  ${l.name}  (${l.slug}, status ${l.status})`);
 
 if (!aplica) {
@@ -176,15 +192,18 @@ const jaNaCadeia = async () => {
 const ate = Math.floor(Date.now() / 1000) + UM_ANO;
 let feitas = 0;
 
-process.stdout.write("\nprocurando quem já está na cadeia… ");
-const registradas = await jaNaCadeia();
-process.stdout.write(`${registradas.size} encontrada(s)\n`);
+let registradas = new Map();
+if (!soRegras) {
+  process.stdout.write("\nprocurando quem já está na cadeia… ");
+  registradas = await jaNaCadeia();
+  process.stdout.write(`${registradas.size} encontrada(s)\n`);
+}
 
 for (const loja of lojas) {
   process.stdout.write(`\n${loja.name}\n`);
   try {
     const hash = keccak256(toHex(loja.slug));
-    let onchainId = registradas.get(hash);
+    let onchainId = soRegras ? loja.onchain_id : registradas.get(hash);
     let txDoRegistro = null;
 
     if (onchainId) {
@@ -215,14 +234,16 @@ for (const loja of lojas) {
       .eq("id", loja.id);
     if (eId) throw new Error(`na cadeia (id ${onchainId}) mas falhou ao gravar no banco: ${eId.message}`);
 
-    process.stdout.write("  assinatura…  ");
-    await escrever("SubscriptionManager", ABI_ASSINATURA_ESCRITA, "setSubscription", [
-      BigInt(onchainId),
-      2,
-      BigInt(ate),
-      keccak256(toHex(`habilitar:${loja.slug}:${ate}`)),
-    ]);
-    process.stdout.write("ok\n");
+    if (!soRegras) {
+      process.stdout.write("  assinatura…  ");
+      await escrever("SubscriptionManager", ABI_ASSINATURA_ESCRITA, "setSubscription", [
+        BigInt(onchainId),
+        2,
+        BigInt(ate),
+        keccak256(toHex(`habilitar:${loja.slug}:${ate}`)),
+      ]);
+      process.stdout.write("ok\n");
+    }
 
     process.stdout.write("  regra…       ");
     await escrever("StampLedger", ABI_REGRA_ESCRITA, "setAccrualRule", [BigInt(onchainId), REGRA]);

@@ -62,27 +62,18 @@ export async function PUT(request: NextRequest) {
     return Number.isInteger(n) && n >= 0 ? n : null;
   };
 
-  const piso = inteiro(corpo.pisoDeTicketCentavos);
-  const porCarimbo = inteiro(corpo.centavosPorCarimbo);
-  const teto = inteiro(corpo.tetoPorVenda);
   const intervalo = inteiro(corpo.intervaloSegundos);
   const janela = inteiro(corpo.janelaDaSequenciaSegundos);
   const pontos = inteiro(corpo.pontosPorCarimbo);
   const ativa = corpo.ativa !== false;
 
-  // Cada limite aqui existe por um motivo prático, não por burocracia:
-  // centsPerStamp zero dividiria por zero no contrato; teto zero faria toda
-  // venda gerar zero carimbo; e janela de sequência absurda transformaria
-  // "voltou no mês passado" em hábito.
-  if (!porCarimbo || porCarimbo < 100) {
-    return NextResponse.json({ erro: "cada carimbo precisa valer pelo menos R$ 1,00 de compra" }, { status: 400 });
-  }
-  if (piso === null || piso > 1_000_000) {
-    return NextResponse.json({ erro: "piso de ticket inválido" }, { status: 400 });
-  }
-  if (!teto || teto > 500) {
-    return NextResponse.json({ erro: "o teto por venda precisa estar entre 1 e 500 carimbos" }, { status: 400 });
-  }
+  // O valor da compra saiu da conta: passou no balcão, ganhou um carimbo. Os
+  // três campos que dependiam dele — piso de ticket, centavos por carimbo e
+  // teto por venda — viraram constantes que fazem a cadeia render exatamente
+  // um carimbo, e não são mais escolha de ninguém.
+  //
+  // O que sobra decide de verdade: de quanto em quanto tempo a mesma pessoa
+  // pode ser carimbada naquela loja, e a janela que mantém a sequência viva.
   if (intervalo === null || intervalo > 24 * 60 * 60) {
     return NextResponse.json({ erro: "o intervalo entre carimbos não pode passar de 24 horas" }, { status: 400 });
   }
@@ -105,9 +96,9 @@ export async function PUT(request: NextRequest) {
     const hash = await escreverComoAdmin("StampLedger", ABI_REGRA_ESCRITA, "setAccrualRule", [
       BigInt(loja.onchainId),
       {
-        minTicketCents: BigInt(piso),
-        centsPerStamp: BigInt(porCarimbo),
-        maxStampsPerTx: teto,
+        minTicketCents: 0n,
+        centsPerStamp: 1n,
+        maxStampsPerTx: 1,
         cooldownSeconds: intervalo,
         streakWindowSeconds: janela,
         pointsPerStamp: pontos,

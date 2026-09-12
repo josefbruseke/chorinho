@@ -2,13 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { CheckCircleIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import { centavosParaVisor, digitosParaCentavos, formatarCentavos } from "~~/utils/dinheiro";
 
 type Regra = {
   ativa: boolean;
-  pisoDeTicketCentavos: number;
-  centavosPorCarimbo: number;
-  tetoPorVenda: number;
   intervaloSegundos: number;
   janelaDaSequenciaSegundos: number;
   pontosPorCarimbo: number;
@@ -16,10 +12,7 @@ type Regra = {
 
 const PADRAO: Regra = {
   ativa: true,
-  pisoDeTicketCentavos: 1000,
-  centavosPorCarimbo: 1000,
-  tetoPorVenda: 10,
-  intervaloSegundos: 0,
+  intervaloSegundos: 4 * 60 * 60,
   janelaDaSequenciaSegundos: 7 * 24 * 60 * 60,
   pontosPorCarimbo: 10,
 };
@@ -68,7 +61,7 @@ export const RegrasDeCarimbo = () => {
         // Loja ainda sem regra na rede: abrimos com um padrão sensato em vez de
         // campos vazios, porque "R$ 10 por carimbo" é um começo defensável e
         // zero não é.
-        setRegra(corpo.regra?.centavosPorCarimbo ? corpo.regra : PADRAO);
+        setRegra(corpo.regra ?? PADRAO);
       })
       .catch(() => setErro("Sem conexão."));
   }, []);
@@ -109,18 +102,13 @@ export const RegrasDeCarimbo = () => {
     );
   }
 
-  const exemplo = (centavos: number) =>
-    centavos < regra.pisoDeTicketCentavos
-      ? "nenhum carimbo"
-      : `${Math.min(regra.tetoPorVenda, Math.floor(centavos / regra.centavosPorCarimbo))} carimbo(s)`;
-
   return (
     <div className="flex flex-col gap-5">
       <header>
         <h1 className="m-0 font-serif text-2xl font-black text-secondary">Regra de carimbo</h1>
         <p className="m-0 mt-1 text-sm opacity-75">
-          {loja ? `${loja} — ` : ""}quanto de compra vale um carimbo. Vale para toda venda do balcão, a partir do
-          momento em que você salva.
+          {loja ? `${loja} — ` : ""}quem passa no balcão ganha um carimbo. O valor da compra não entra na conta; o que
+          você decide aqui é de quanto em quanto tempo a mesma pessoa pode ser carimbada.
         </p>
       </header>
 
@@ -132,35 +120,10 @@ export const RegrasDeCarimbo = () => {
       )}
 
       <section className="flex flex-col gap-4 rounded-2xl border border-base-300 bg-base-100 p-5">
-        <Campo rotulo="Cada carimbo custa" ajuda="Quanto o cliente precisa gastar para ganhar um carimbo.">
-          <EntradaDeDinheiro
-            valor={regra.centavosPorCarimbo}
-            aoMudar={v => setRegra({ ...regra, centavosPorCarimbo: v })}
-          />
-        </Campo>
-
         <Campo
-          rotulo="Compra mínima para carimbar"
-          ajuda="Abaixo disso a venda não gera carimbo. É o que torna o programa viável."
+          rotulo="Intervalo entre carimbos do mesmo cliente"
+          ajuda="Sem valor de compra, é isto que impede carimbar a mesma pessoa várias vezes seguidas."
         >
-          <EntradaDeDinheiro
-            valor={regra.pisoDeTicketCentavos}
-            aoMudar={v => setRegra({ ...regra, pisoDeTicketCentavos: v })}
-          />
-        </Campo>
-
-        <Campo rotulo="Máximo de carimbos por venda" ajuda="Protege contra um valor digitado errado no caixa.">
-          <input
-            type="number"
-            min={1}
-            max={500}
-            value={regra.tetoPorVenda}
-            onChange={e => setRegra({ ...regra, tetoPorVenda: Number(e.target.value) })}
-            className="input input-bordered h-12 w-32 font-mono text-lg font-bold"
-          />
-        </Campo>
-
-        <Campo rotulo="Intervalo entre carimbos do mesmo cliente" ajuda="Evita várias vendas seguidas no mesmo caixa.">
           <select
             value={regra.intervaloSegundos}
             onChange={e => setRegra({ ...regra, intervaloSegundos: Number(e.target.value) })}
@@ -205,14 +168,10 @@ export const RegrasDeCarimbo = () => {
 
       <section className="rounded-2xl border border-base-300 bg-kraft p-5">
         <h2 className="m-0 text-xs font-bold uppercase tracking-wide text-kraft-ink">Como fica no balcão</h2>
-        <ul className="m-0 mt-2 flex list-none flex-col gap-1 p-0 text-sm">
-          {[500, 1500, 3000, 12000].map(c => (
-            <li key={c} className="flex justify-between gap-3">
-              <span className="font-mono font-bold">{formatarCentavos(c)}</span>
-              <span className="opacity-80">{exemplo(c)}</span>
-            </li>
-          ))}
-        </ul>
+        <p className="m-0 mt-2 text-sm leading-relaxed opacity-80">
+          O caixa lê o passe e o carimbo cai — não digita valor nenhum. Se a mesma pessoa voltar antes do intervalo
+          acima, a rede recusa o segundo carimbo e o balcão mostra quanto falta.
+        </p>
       </section>
 
       {erro && <p className="m-0 rounded-2xl border border-error bg-error/10 p-4 text-sm font-semibold">{erro}</p>}
@@ -242,17 +201,4 @@ const Campo = ({ rotulo, ajuda, children }: { rotulo: string; ajuda: string; chi
     {children}
     <span className="text-xs opacity-70">{ajuda}</span>
   </div>
-);
-
-/** Dígitos entram pela direita, como na maquininha: o lojista não erra a vírgula. */
-const EntradaDeDinheiro = ({ valor, aoMudar }: { valor: number; aoMudar: (v: number) => void }) => (
-  <label className="input input-bordered flex h-12 w-40 items-center gap-1.5">
-    <span className="font-bold opacity-60">R$</span>
-    <input
-      inputMode="numeric"
-      value={centavosParaVisor(valor)}
-      onChange={e => aoMudar(digitosParaCentavos(e.target.value))}
-      className="w-full grow bg-transparent text-right font-mono text-lg font-bold outline-none"
-    />
-  </label>
 );

@@ -35,7 +35,6 @@ export async function POST(request: NextRequest) {
         saleRef: "",
         qr: typeof corpo.qr === "string" ? corpo.qr : undefined,
         codigo: typeof corpo.codigo === "string" ? corpo.codigo : undefined,
-        valorCentavos: 0,
       },
       // Aqui a janela é curta: o cliente está na frente do atendente agora.
       // A folga da fila offline não faz sentido numa entrega presencial.

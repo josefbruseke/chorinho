@@ -38,7 +38,6 @@ export async function POST(request: NextRequest) {
     saleRef: String(v?.saleRef ?? ""),
     qr: typeof v?.qr === "string" ? v.qr : undefined,
     codigo: typeof v?.codigo === "string" ? v.codigo : undefined,
-    valorCentavos: Number(v?.valorCentavos),
     boostBps: v?.boostBps === undefined ? undefined : Number(v.boostBps),
   }));
 

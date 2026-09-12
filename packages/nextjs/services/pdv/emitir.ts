@@ -50,12 +50,30 @@ const ORCAMENTO_DA_RETENTATIVA_MS = 45_000;
 const BPS_SEM_BONUS = 10_000;
 const BPS_TETO = 30_000;
 
+/**
+ * O carimbo não depende mais do valor da compra.
+ *
+ * Era "R$ 10 = 1 carimbo", com piso de ticket e teto por venda. Virou "passou
+ * no balcão, ganhou um carimbo" — o caixa não digita nada, só lê o passe.
+ * Quem decide agora é o lugar, não a conta.
+ *
+ * A cadeia continua recebendo um valor porque `issueStamps` pede um, e a
+ * conta lá é `amountCents / centsPerStamp` limitada por `maxStampsPerTx`. Com
+ * a regra em `centsPerStamp = 1` e `maxStampsPerTx = 1`, qualquer valor maior
+ * que zero rende exatamente um carimbo. Este é esse valor: o menor que a
+ * cadeia aceita, e sem nenhum significado de dinheiro.
+ *
+ * Trocar a struct do contrato para tirar o campo seria mais limpo de ler, e
+ * custaria republicar os nove contratos, re-registrar as lojas e abandonar os
+ * carimbos já emitidos. Não compensa por um campo que ninguém mais lê.
+ */
+export const VALOR_SIMBOLICO_CENTAVOS = 1;
+
 export type VendaEntrada = {
   /** Gerado no aparelho. É a chave de idempotência de ponta a ponta. */
   saleRef: string;
   qr?: string;
   codigo?: string;
-  valorCentavos: number;
   boostBps?: number;
 };
 
@@ -216,9 +234,6 @@ export const resolverCliente = async (entrada: VendaEntrada, janelaSegundos: num
   return { carteira: perfil.wallet_address.toLowerCase(), profileId: profileId!, nome: perfil.display_name };
 };
 
-const valorValido = (centavos: unknown): centavos is number =>
-  typeof centavos === "number" && Number.isInteger(centavos) && centavos > 0 && centavos <= 100_000_000;
-
 /**
  * Processa um lote de vendas: resolve cada passe, grava, envia para a rede e
  * devolve o veredito individual.
@@ -249,11 +264,6 @@ export const processarVendas = async (
       continue;
     }
     if (resultados.has(saleRef) || pendentes.some(p => p.saleRef === saleRef)) continue;
-
-    if (!valorValido(entrada.valorCentavos)) {
-      resultados.set(saleRef, { saleRef, ok: false, reter: false, erro: "valor da venda inválido" });
-      continue;
-    }
 
     const boostBps = entrada.boostBps ?? BPS_SEM_BONUS;
     if (!Number.isInteger(boostBps) || boostBps < BPS_SEM_BONUS || boostBps > BPS_TETO) {
@@ -313,7 +323,7 @@ export const processarVendas = async (
         pos_terminal_id: balcao.terminal?.id ?? null,
         customer_profile_id: cliente.profileId,
         customer_wallet: cliente.carteira,
-        amount_cents: entrada.valorCentavos,
+        amount_cents: VALOR_SIMBOLICO_CENTAVOS,
         status: "enviada",
       });
 
@@ -330,7 +340,7 @@ export const processarVendas = async (
       venda: {
         establishmentId: BigInt(balcao.onchainId),
         customer: cliente.carteira as `0x${string}`,
-        amountCents: BigInt(existente?.amount_cents ?? entrada.valorCentavos),
+        amountCents: BigInt(existente?.amount_cents ?? VALOR_SIMBOLICO_CENTAVOS),
         productBoostBps: boostBps,
         saleRef: refDaVenda(saleRef),
       },

@@ -74,7 +74,6 @@ export const useFilaOffline = () => {
             saleRef: v.saleRef,
             qr: v.qr,
             codigo: v.codigo,
-            valorCentavos: v.valorCentavos,
             boostBps: v.boostBps,
           })),
         }),

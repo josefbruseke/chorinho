@@ -24,7 +24,6 @@ export type VendaNaFila = {
   codigo?: string;
   /** Lida do próprio QR, só para mostrar na lista enquanto está offline. */
   carteira?: string;
-  valorCentavos: number;
   boostBps?: number;
   criadaEm: number;
   tentativas: number;

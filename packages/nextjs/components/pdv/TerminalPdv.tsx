@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
-  ArrowLeftIcon,
   CameraIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
@@ -12,11 +11,9 @@ import {
 } from "@heroicons/react/24/outline";
 import { BarraPdv } from "~~/components/pdv/BarraPdv";
 import { PareamentoPdv } from "~~/components/pdv/PareamentoPdv";
-import { TecladoDeValor } from "~~/components/pdv/TecladoDeValor";
 import { QrScanner } from "~~/components/vitrine/QrScanner";
 import { useFilaOffline } from "~~/hooks/pdv/useFilaOffline";
 import { useWakeLock } from "~~/hooks/pdv/useWakeLock";
-import { formatarCentavos } from "~~/utils/dinheiro";
 import { novaRefDeVenda } from "~~/utils/fila";
 import { codigoCurtoValido, decodificarPasse } from "~~/utils/pass";
 
@@ -36,7 +33,7 @@ import { codigoCurtoValido, decodificarPasse } from "~~/utils/pass";
  * travou e apertando tudo de novo — então a tela diz o número, e diz que o
  * cliente já pode ir embora.
  */
-const Esperando = ({ centavos }: { centavos: number }) => {
+const Esperando = () => {
   const [segundos, setSegundos] = useState(0);
 
   useEffect(() => {
@@ -47,7 +44,7 @@ const Esperando = ({ centavos }: { centavos: number }) => {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4 text-center">
       <span className="loading loading-spinner loading-lg text-brand-ink" />
-      <p className="m-0 font-bold opacity-70">Registrando {formatarCentavos(centavos)}…</p>
+      <p className="m-0 font-bold opacity-70">Registrando o carimbo…</p>
       <p className="m-0 max-w-xs text-sm opacity-60">
         A rede confirma em alguns segundos{segundos > 3 ? ` (${segundos}s)` : ""}. Pode liberar o cliente — o carimbo
         aparece na carteira dele sozinho.
@@ -57,17 +54,14 @@ const Esperando = ({ centavos }: { centavos: number }) => {
 };
 
 type Etapa =
-  | { nome: "valor" }
   | { nome: "cliente"; camera?: boolean; usarCodigo?: boolean; erroCamera?: boolean }
   | { nome: "enviando" }
   | { nome: "recibo"; carimbos: number; saldo?: number; sequencia?: number; cliente?: string; naFila?: boolean }
   | { nome: "erro"; mensagem: string };
 
 export const TerminalPdv = () => {
-  const [etapa, setEtapa] = useState<Etapa>({ nome: "valor" });
-  const [centavos, setCentavos] = useState(0);
+  const [etapa, setEtapa] = useState<Etapa>({ nome: "cliente" });
   const [codigo, setCodigo] = useState("");
-  const [previa, setPrevia] = useState<number | null>(null);
   const [loja, setLoja] = useState<string>();
 
   const [semAcesso, setSemAcesso] = useState<string>();
@@ -119,92 +113,64 @@ export const TerminalPdv = () => {
     void carregarBalcao();
   }, [carregarBalcao]);
 
-  // Prévia dos carimbos: o atendente confere o número antes de pedir o passe,
-  // e um valor abaixo do piso da loja aparece como zero, não como surpresa.
-  useEffect(() => {
-    if (centavos === 0 || !online) {
-      setPrevia(null);
+  const registrar = useCallback(async (leitura: { qr?: string; codigo?: string }) => {
+    if (enviando.current) return;
+    enviando.current = true;
+    setEtapa({ nome: "enviando" });
+
+    const saleRef = novaRefDeVenda();
+    const carteira = leitura.qr ? decodificarPasse(leitura.qr)?.a : undefined;
+
+    const paraFila = async (motivo?: string) => {
+      const { enfileirar } = await import("~~/utils/fila");
+      await enfileirar({ saleRef, qr: leitura.qr, codigo: leitura.codigo, carteira });
+      setEtapa({ nome: "recibo", carimbos: 0, naFila: true, cliente: motivo });
+    };
+
+    if (leitura.qr && !carteira) {
+      enviando.current = false;
+      setEtapa({ nome: "erro", mensagem: "Este QR não é um passe do Chorinho." });
       return;
     }
-    const id = setTimeout(async () => {
-      try {
-        const r = await fetch("/api/pos/previa", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ valorCentavos: centavos }),
+
+    if (!navigator.onLine) {
+      await paraFila();
+      enviando.current = false;
+      return;
+    }
+
+    try {
+      const r = await fetch("/api/pos/stamp", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ saleRef, ...leitura }),
+      });
+      const corpo = await r.json();
+
+      if (r.ok) {
+        setEtapa({
+          nome: "recibo",
+          carimbos: corpo.carimbos ?? 0,
+          saldo: corpo.saldo,
+          sequencia: corpo.sequencia,
+          cliente: corpo.cliente,
         });
-        const corpo = await r.json();
-        setPrevia(r.ok && typeof corpo?.carimbos === "number" ? corpo.carimbos : null);
-      } catch {
-        setPrevia(null);
-      }
-    }, 350);
-    return () => clearTimeout(id);
-  }, [centavos, online]);
-
-  const registrar = useCallback(
-    async (leitura: { qr?: string; codigo?: string }) => {
-      if (enviando.current) return;
-      enviando.current = true;
-      setEtapa({ nome: "enviando" });
-
-      const saleRef = novaRefDeVenda();
-      const carteira = leitura.qr ? decodificarPasse(leitura.qr)?.a : undefined;
-
-      const paraFila = async (motivo?: string) => {
-        const { enfileirar } = await import("~~/utils/fila");
-        await enfileirar({ saleRef, qr: leitura.qr, codigo: leitura.codigo, carteira, valorCentavos: centavos });
-        setEtapa({ nome: "recibo", carimbos: 0, naFila: true, cliente: motivo });
-      };
-
-      if (leitura.qr && !carteira) {
-        enviando.current = false;
-        setEtapa({ nome: "erro", mensagem: "Este QR não é um passe do Chorinho." });
-        return;
-      }
-
-      if (!navigator.onLine) {
+      } else if (r.status >= 500 || r.status === 503) {
+        // Problema nosso, não do atendente: guarda e tenta de novo sozinho.
         await paraFila();
-        enviando.current = false;
-        return;
+      } else {
+        setEtapa({ nome: "erro", mensagem: corpo?.erro ?? "Não foi possível registrar esta venda." });
       }
-
-      try {
-        const r = await fetch("/api/pos/stamp", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ saleRef, ...leitura, valorCentavos: centavos }),
-        });
-        const corpo = await r.json();
-
-        if (r.ok) {
-          setEtapa({
-            nome: "recibo",
-            carimbos: corpo.carimbos ?? 0,
-            saldo: corpo.saldo,
-            sequencia: corpo.sequencia,
-            cliente: corpo.cliente,
-          });
-        } else if (r.status >= 500 || r.status === 503) {
-          // Problema nosso, não do atendente: guarda e tenta de novo sozinho.
-          await paraFila();
-        } else {
-          setEtapa({ nome: "erro", mensagem: corpo?.erro ?? "Não foi possível registrar esta venda." });
-        }
-      } catch {
-        await paraFila();
-      } finally {
-        enviando.current = false;
-      }
-    },
-    [centavos],
-  );
+    } catch {
+      await paraFila();
+    } finally {
+      enviando.current = false;
+    }
+  }, []);
 
   const novaVenda = () => {
-    setCentavos(0);
     setCodigo("");
-    setPrevia(null);
-    setEtapa({ nome: "valor" });
+    setEtapa({ nome: "cliente", camera: cameraLiberada });
   };
 
   if (precisaParear) {
@@ -222,41 +188,8 @@ export const TerminalPdv = () => {
           </div>
         )}
 
-        {etapa.nome === "valor" && (
-          <>
-            <TecladoDeValor centavos={centavos} aoMudar={setCentavos} />
-
-            <div className="w-full max-w-sm">
-              {previa !== null && centavos > 0 && (
-                <p className="m-0 mb-2 text-center text-sm font-bold text-brand-ink">
-                  {previa === 0
-                    ? "Esta compra não atinge o mínimo para carimbo"
-                    : `Vale ${previa} ${previa === 1 ? "carimbo" : "carimbos"}`}
-                </p>
-              )}
-              <button
-                type="button"
-                disabled={centavos === 0}
-                onClick={() => setEtapa({ nome: "cliente", camera: cameraLiberada })}
-                className="btn btn-primary btn-block h-16 rounded-2xl text-lg font-black disabled:opacity-40"
-              >
-                Continuar
-              </button>
-            </div>
-          </>
-        )}
-
         {etapa.nome === "cliente" && (
           <div className="flex w-full max-w-sm flex-col items-center gap-4">
-            <button
-              type="button"
-              onClick={novaVenda}
-              className="btn btn-ghost btn-sm self-start gap-1 rounded-xl font-bold"
-            >
-              <ArrowLeftIcon className="h-4 w-4" />
-              {formatarCentavos(centavos)}
-            </button>
-
             {etapa.camera && !etapa.usarCodigo && !etapa.erroCamera ? (
               <>
                 <QrScanner
@@ -348,7 +281,7 @@ export const TerminalPdv = () => {
           </div>
         )}
 
-        {etapa.nome === "enviando" && <Esperando centavos={centavos} />}
+        {etapa.nome === "enviando" && <Esperando />}
 
         {etapa.nome === "recibo" && (
           <div className="flex w-full max-w-sm flex-1 flex-col items-center justify-center gap-5 text-center">
@@ -372,9 +305,8 @@ export const TerminalPdv = () => {
                       : "Venda registrada"}
                   </h2>
                   <p className="m-0 mt-1 text-sm opacity-75">
-                    {etapa.cliente ? `${etapa.cliente} — ` : ""}
-                    {formatarCentavos(centavos)}
-                    {etapa.saldo !== undefined ? ` · ${etapa.saldo} na cartela` : ""}
+                    {etapa.cliente ?? ""}
+                    {etapa.saldo !== undefined ? `${etapa.cliente ? " — " : ""}${etapa.saldo} na cartela` : ""}
                   </p>
                   {etapa.sequencia !== undefined && etapa.sequencia > 1 && (
                     <p className="m-0 mt-1 text-sm font-bold text-honey-ink">
@@ -418,7 +350,7 @@ export const TerminalPdv = () => {
         )}
       </div>
 
-      {fila.length > 0 && etapa.nome === "valor" && (
+      {fila.length > 0 && etapa.nome === "cliente" && (
         <footer className="border-t border-base-300 bg-base-100 px-4 py-2.5">
           <button
             type="button"

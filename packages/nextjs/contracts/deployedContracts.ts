@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     EstablishmentRegistry: {
-      address: "0x86b3e65cdd7f9321118d5d4901a9800200c11b8a",
+      address: "0x700b6a60ce7eaaea56f065753d8dcb9653dbad35",
       abi: [
         {
           type: "constructor",
@@ -704,10 +704,2682 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 27,
+      deployedOnBlock: 1,
+    },
+    SubscriptionManager: {
+      address: "0xa15bb66138824a1c7167f5e85b957d04dd34e468",
+      abi: [
+        {
+          type: "constructor",
+          inputs: [
+            {
+              name: "admin",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "BILLING_ORACLE_ROLE",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "DEFAULT_ADMIN_ROLE",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "MAX_TIER",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint8",
+              internalType: "uint8",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "expiresAt",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint64",
+              internalType: "uint64",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "getRoleAdmin",
+          inputs: [
+            {
+              name: "role",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "grantRole",
+          inputs: [
+            {
+              name: "role",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+            {
+              name: "account",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "hasRole",
+          inputs: [
+            {
+              name: "role",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+            {
+              name: "account",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "isActive",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "renounceRole",
+          inputs: [
+            {
+              name: "role",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+            {
+              name: "callerConfirmation",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "revokeRole",
+          inputs: [
+            {
+              name: "role",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+            {
+              name: "account",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "setSubscription",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "tier",
+              type: "uint8",
+              internalType: "uint8",
+            },
+            {
+              name: "validUntil",
+              type: "uint64",
+              internalType: "uint64",
+            },
+            {
+              name: "providerRefHash",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "subscriptions",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "tier",
+              type: "uint8",
+              internalType: "uint8",
+            },
+            {
+              name: "expiresAt",
+              type: "uint64",
+              internalType: "uint64",
+            },
+            {
+              name: "providerRefHash",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "supportsInterface",
+          inputs: [
+            {
+              name: "interfaceId",
+              type: "bytes4",
+              internalType: "bytes4",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "tierOf",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint8",
+              internalType: "uint8",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "event",
+          name: "RoleAdminChanged",
+          inputs: [
+            {
+              name: "role",
+              type: "bytes32",
+              indexed: true,
+              internalType: "bytes32",
+            },
+            {
+              name: "previousAdminRole",
+              type: "bytes32",
+              indexed: true,
+              internalType: "bytes32",
+            },
+            {
+              name: "newAdminRole",
+              type: "bytes32",
+              indexed: true,
+              internalType: "bytes32",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "RoleGranted",
+          inputs: [
+            {
+              name: "role",
+              type: "bytes32",
+              indexed: true,
+              internalType: "bytes32",
+            },
+            {
+              name: "account",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "sender",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "RoleRevoked",
+          inputs: [
+            {
+              name: "role",
+              type: "bytes32",
+              indexed: true,
+              internalType: "bytes32",
+            },
+            {
+              name: "account",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "sender",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "SubscriptionUpdated",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "tier",
+              type: "uint8",
+              indexed: false,
+              internalType: "uint8",
+            },
+            {
+              name: "expiresAt",
+              type: "uint64",
+              indexed: false,
+              internalType: "uint64",
+            },
+            {
+              name: "providerRefHash",
+              type: "bytes32",
+              indexed: false,
+              internalType: "bytes32",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "error",
+          name: "AccessControlBadConfirmation",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "AccessControlUnauthorizedAccount",
+          inputs: [
+            {
+              name: "account",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "neededRole",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "InvalidTier",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NotBillingOracle",
+          inputs: [],
+        },
+      ],
+      inheritedFunctions: {},
+      deployedOnBlock: 2,
+    },
+    PointsVault: {
+      address: "0xb19b36b1456e65e3a6d514d3f715f204bd59f431",
+      abi: [
+        {
+          type: "constructor",
+          inputs: [
+            {
+              name: "admin",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "uri_",
+              type: "string",
+              internalType: "string",
+            },
+          ],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "BURNER_ROLE",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "DEFAULT_ADMIN_ROLE",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "MINTER_ROLE",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "balanceOf",
+          inputs: [
+            {
+              name: "account",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "id",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "balanceOfBatch",
+          inputs: [
+            {
+              name: "accounts",
+              type: "address[]",
+              internalType: "address[]",
+            },
+            {
+              name: "ids",
+              type: "uint256[]",
+              internalType: "uint256[]",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256[]",
+              internalType: "uint256[]",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "burn",
+          inputs: [
+            {
+              name: "from",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "id",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "amount",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "createPointType",
+          inputs: [
+            {
+              name: "id",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "name",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+            {
+              name: "scope",
+              type: "uint8",
+              internalType: "enum PointsVault.Scope",
+            },
+            {
+              name: "scopeId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "exists",
+          inputs: [
+            {
+              name: "id",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "getRoleAdmin",
+          inputs: [
+            {
+              name: "role",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "grantRole",
+          inputs: [
+            {
+              name: "role",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+            {
+              name: "account",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "hasRole",
+          inputs: [
+            {
+              name: "role",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+            {
+              name: "account",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "isApprovedForAll",
+          inputs: [
+            {
+              name: "account",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "operator",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "mint",
+          inputs: [
+            {
+              name: "to",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "id",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "amount",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "pointTypes",
+          inputs: [
+            {
+              name: "id",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "name",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+            {
+              name: "scope",
+              type: "uint8",
+              internalType: "enum PointsVault.Scope",
+            },
+            {
+              name: "scopeId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "active",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "renounceRole",
+          inputs: [
+            {
+              name: "role",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+            {
+              name: "callerConfirmation",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "revokeRole",
+          inputs: [
+            {
+              name: "role",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+            {
+              name: "account",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "safeBatchTransferFrom",
+          inputs: [
+            {
+              name: "from",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "to",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "ids",
+              type: "uint256[]",
+              internalType: "uint256[]",
+            },
+            {
+              name: "values",
+              type: "uint256[]",
+              internalType: "uint256[]",
+            },
+            {
+              name: "data",
+              type: "bytes",
+              internalType: "bytes",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "safeTransferFrom",
+          inputs: [
+            {
+              name: "from",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "to",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "id",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "value",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "data",
+              type: "bytes",
+              internalType: "bytes",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "setApprovalForAll",
+          inputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          outputs: [],
+          stateMutability: "pure",
+        },
+        {
+          type: "function",
+          name: "setPointTypeActive",
+          inputs: [
+            {
+              name: "id",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "active",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "supportsInterface",
+          inputs: [
+            {
+              name: "interfaceId",
+              type: "bytes4",
+              internalType: "bytes4",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "totalSupply",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "totalSupply",
+          inputs: [
+            {
+              name: "id",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "uri",
+          inputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "string",
+              internalType: "string",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "event",
+          name: "ApprovalForAll",
+          inputs: [
+            {
+              name: "account",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "operator",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "approved",
+              type: "bool",
+              indexed: false,
+              internalType: "bool",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "PointTypeActiveSet",
+          inputs: [
+            {
+              name: "id",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "active",
+              type: "bool",
+              indexed: false,
+              internalType: "bool",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "PointTypeCreated",
+          inputs: [
+            {
+              name: "id",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "name",
+              type: "bytes32",
+              indexed: false,
+              internalType: "bytes32",
+            },
+            {
+              name: "scope",
+              type: "uint8",
+              indexed: false,
+              internalType: "enum PointsVault.Scope",
+            },
+            {
+              name: "scopeId",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "RoleAdminChanged",
+          inputs: [
+            {
+              name: "role",
+              type: "bytes32",
+              indexed: true,
+              internalType: "bytes32",
+            },
+            {
+              name: "previousAdminRole",
+              type: "bytes32",
+              indexed: true,
+              internalType: "bytes32",
+            },
+            {
+              name: "newAdminRole",
+              type: "bytes32",
+              indexed: true,
+              internalType: "bytes32",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "RoleGranted",
+          inputs: [
+            {
+              name: "role",
+              type: "bytes32",
+              indexed: true,
+              internalType: "bytes32",
+            },
+            {
+              name: "account",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "sender",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "RoleRevoked",
+          inputs: [
+            {
+              name: "role",
+              type: "bytes32",
+              indexed: true,
+              internalType: "bytes32",
+            },
+            {
+              name: "account",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "sender",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "TransferBatch",
+          inputs: [
+            {
+              name: "operator",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "from",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "to",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "ids",
+              type: "uint256[]",
+              indexed: false,
+              internalType: "uint256[]",
+            },
+            {
+              name: "values",
+              type: "uint256[]",
+              indexed: false,
+              internalType: "uint256[]",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "TransferSingle",
+          inputs: [
+            {
+              name: "operator",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "from",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "to",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "id",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+            {
+              name: "value",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "URI",
+          inputs: [
+            {
+              name: "value",
+              type: "string",
+              indexed: false,
+              internalType: "string",
+            },
+            {
+              name: "id",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "error",
+          name: "AccessControlBadConfirmation",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "AccessControlUnauthorizedAccount",
+          inputs: [
+            {
+              name: "account",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "neededRole",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "ERC1155InsufficientBalance",
+          inputs: [
+            {
+              name: "sender",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "balance",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "needed",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "tokenId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "ERC1155InvalidApprover",
+          inputs: [
+            {
+              name: "approver",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "ERC1155InvalidArrayLength",
+          inputs: [
+            {
+              name: "idsLength",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "valuesLength",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "ERC1155InvalidOperator",
+          inputs: [
+            {
+              name: "operator",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "ERC1155InvalidReceiver",
+          inputs: [
+            {
+              name: "receiver",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "ERC1155InvalidSender",
+          inputs: [
+            {
+              name: "sender",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "ERC1155MissingApprovalForAll",
+          inputs: [
+            {
+              name: "operator",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "owner",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "InactivePointType",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "SoulboundApprovalNotAllowed",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "SoulboundTransferNotAllowed",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "UnknownPointType",
+          inputs: [],
+        },
+      ],
+      inheritedFunctions: {},
+      deployedOnBlock: 3,
+    },
+    StampLedger: {
+      address: "0x8ce361602b935680e8dec218b820ff5056beb7af",
+      abi: [
+        {
+          type: "constructor",
+          inputs: [
+            {
+              name: "_registry",
+              type: "address",
+              internalType: "contract EstablishmentRegistry",
+            },
+            {
+              name: "_subscriptions",
+              type: "address",
+              internalType: "contract SubscriptionManager",
+            },
+            {
+              name: "_pointsVault",
+              type: "address",
+              internalType: "contract PointsVault",
+            },
+            {
+              name: "_admin",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "BPS_DENOMINATOR",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint16",
+              internalType: "uint16",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "MAX_BOOST_BPS",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint16",
+              internalType: "uint16",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "admin",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "burnStamps",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "customer",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "amount",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "claimRef",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "issueStamps",
+          inputs: [
+            {
+              name: "sale",
+              type: "tuple",
+              internalType: "struct StampLedger.Sale",
+              components: [
+                {
+                  name: "establishmentId",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "customer",
+                  type: "address",
+                  internalType: "address",
+                },
+                {
+                  name: "amountCents",
+                  type: "uint64",
+                  internalType: "uint64",
+                },
+                {
+                  name: "productBoostBps",
+                  type: "uint16",
+                  internalType: "uint16",
+                },
+                {
+                  name: "saleRef",
+                  type: "bytes32",
+                  internalType: "bytes32",
+                },
+              ],
+            },
+          ],
+          outputs: [
+            {
+              name: "stamps",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "points",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "issueStampsBatch",
+          inputs: [
+            {
+              name: "vendas",
+              type: "tuple[]",
+              internalType: "struct StampLedger.Sale[]",
+              components: [
+                {
+                  name: "establishmentId",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "customer",
+                  type: "address",
+                  internalType: "address",
+                },
+                {
+                  name: "amountCents",
+                  type: "uint64",
+                  internalType: "uint64",
+                },
+                {
+                  name: "productBoostBps",
+                  type: "uint16",
+                  internalType: "uint16",
+                },
+                {
+                  name: "saleRef",
+                  type: "bytes32",
+                  internalType: "bytes32",
+                },
+              ],
+            },
+          ],
+          outputs: [
+            {
+              name: "totalStamps",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "totalPoints",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "lifetimeStampsOf",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "customer",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "pointsVault",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "contract PointsVault",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "previewStamps",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "amountCents",
+              type: "uint64",
+              internalType: "uint64",
+            },
+            {
+              name: "productBoostBps",
+              type: "uint16",
+              internalType: "uint16",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "registry",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "contract EstablishmentRegistry",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "rules",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "minTicketCents",
+              type: "uint64",
+              internalType: "uint64",
+            },
+            {
+              name: "centsPerStamp",
+              type: "uint64",
+              internalType: "uint64",
+            },
+            {
+              name: "maxStampsPerTx",
+              type: "uint16",
+              internalType: "uint16",
+            },
+            {
+              name: "cooldownSeconds",
+              type: "uint32",
+              internalType: "uint32",
+            },
+            {
+              name: "streakWindowSeconds",
+              type: "uint32",
+              internalType: "uint32",
+            },
+            {
+              name: "pointsPerStamp",
+              type: "uint32",
+              internalType: "uint32",
+            },
+            {
+              name: "pointTypeId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "active",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "setAccrualRule",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "rule",
+              type: "tuple",
+              internalType: "struct StampLedger.AccrualRule",
+              components: [
+                {
+                  name: "minTicketCents",
+                  type: "uint64",
+                  internalType: "uint64",
+                },
+                {
+                  name: "centsPerStamp",
+                  type: "uint64",
+                  internalType: "uint64",
+                },
+                {
+                  name: "maxStampsPerTx",
+                  type: "uint16",
+                  internalType: "uint16",
+                },
+                {
+                  name: "cooldownSeconds",
+                  type: "uint32",
+                  internalType: "uint32",
+                },
+                {
+                  name: "streakWindowSeconds",
+                  type: "uint32",
+                  internalType: "uint32",
+                },
+                {
+                  name: "pointsPerStamp",
+                  type: "uint32",
+                  internalType: "uint32",
+                },
+                {
+                  name: "pointTypeId",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "active",
+                  type: "bool",
+                  internalType: "bool",
+                },
+              ],
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "setSubscriptionManager",
+          inputs: [
+            {
+              name: "novo",
+              type: "address",
+              internalType: "contract SubscriptionManager",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "stampsOf",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "customer",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "subscriptions",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "contract SubscriptionManager",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "transferAdmin",
+          inputs: [
+            {
+              name: "novo",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "usedSaleRef",
+          inputs: [
+            {
+              name: "saleRef",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "walletOf",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "customer",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "balance",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "lifetime",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "lifetimeCents",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "streakCurrent",
+              type: "uint32",
+              internalType: "uint32",
+            },
+            {
+              name: "streakBest",
+              type: "uint32",
+              internalType: "uint32",
+            },
+            {
+              name: "visits",
+              type: "uint32",
+              internalType: "uint32",
+            },
+            {
+              name: "lastVisitAt",
+              type: "uint64",
+              internalType: "uint64",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "event",
+          name: "AccrualRuleSet",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "rule",
+              type: "tuple",
+              indexed: false,
+              internalType: "struct StampLedger.AccrualRule",
+              components: [
+                {
+                  name: "minTicketCents",
+                  type: "uint64",
+                  internalType: "uint64",
+                },
+                {
+                  name: "centsPerStamp",
+                  type: "uint64",
+                  internalType: "uint64",
+                },
+                {
+                  name: "maxStampsPerTx",
+                  type: "uint16",
+                  internalType: "uint16",
+                },
+                {
+                  name: "cooldownSeconds",
+                  type: "uint32",
+                  internalType: "uint32",
+                },
+                {
+                  name: "streakWindowSeconds",
+                  type: "uint32",
+                  internalType: "uint32",
+                },
+                {
+                  name: "pointsPerStamp",
+                  type: "uint32",
+                  internalType: "uint32",
+                },
+                {
+                  name: "pointTypeId",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "active",
+                  type: "bool",
+                  internalType: "bool",
+                },
+              ],
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "AdminTransferred",
+          inputs: [
+            {
+              name: "novo",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "StampsIssued",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "customer",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "operator",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "stamps",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+            {
+              name: "points",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+            {
+              name: "amountCents",
+              type: "uint64",
+              indexed: false,
+              internalType: "uint64",
+            },
+            {
+              name: "saleRef",
+              type: "bytes32",
+              indexed: false,
+              internalType: "bytes32",
+            },
+            {
+              name: "newBalance",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+            {
+              name: "streakCurrent",
+              type: "uint32",
+              indexed: false,
+              internalType: "uint32",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "StampsRedeemed",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "customer",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "stamps",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+            {
+              name: "claimRef",
+              type: "bytes32",
+              indexed: false,
+              internalType: "bytes32",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "SubscriptionManagerSet",
+          inputs: [
+            {
+              name: "subscriptions",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "error",
+          name: "BoostTooHigh",
+          inputs: [
+            {
+              name: "boostBps",
+              type: "uint16",
+              internalType: "uint16",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "CooldownActive",
+          inputs: [
+            {
+              name: "secondsRemaining",
+              type: "uint64",
+              internalType: "uint64",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "EstablishmentInactive",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "InsufficientStamps",
+          inputs: [
+            {
+              name: "balance",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "requested",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "InvalidRule",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NotAdmin",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NotOperator",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NothingToIssue",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "RuleInactive",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "SaleAlreadyProcessed",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "SubscriptionInactive",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "TicketBelowFloor",
+          inputs: [
+            {
+              name: "amountCents",
+              type: "uint64",
+              internalType: "uint64",
+            },
+            {
+              name: "minTicketCents",
+              type: "uint64",
+              internalType: "uint64",
+            },
+          ],
+        },
+      ],
+      inheritedFunctions: {},
+      deployedOnBlock: 4,
+    },
+    DiscountProgram: {
+      address: "0xe1aa25618fa0c7a1cfdab5d6b456af611873b629",
+      abi: [
+        {
+          type: "constructor",
+          inputs: [
+            {
+              name: "_registry",
+              type: "address",
+              internalType: "contract EstablishmentRegistry",
+            },
+          ],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "BPS_DENOMINATOR",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "acceptInvite",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "createProgram",
+          inputs: [
+            {
+              name: "ownerEstablishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "name",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+            {
+              name: "kind",
+              type: "uint8",
+              internalType: "enum DiscountProgram.DiscountKind",
+            },
+            {
+              name: "baseBenefit",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "capCents",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "product",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+            {
+              name: "startTime",
+              type: "uint64",
+              internalType: "uint64",
+            },
+            {
+              name: "endTime",
+              type: "uint64",
+              internalType: "uint64",
+            },
+            {
+              name: "joint",
+              type: "bool",
+              internalType: "bool",
+            },
+            {
+              name: "metadataHash",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          outputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "discountFor",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "level",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "billCents",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "getProgram",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "tuple",
+              internalType: "struct DiscountProgram.Program",
+              components: [
+                {
+                  name: "ownerEstablishmentId",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "name",
+                  type: "bytes32",
+                  internalType: "bytes32",
+                },
+                {
+                  name: "kind",
+                  type: "uint8",
+                  internalType: "enum DiscountProgram.DiscountKind",
+                },
+                {
+                  name: "baseBenefit",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "capCents",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "product",
+                  type: "bytes32",
+                  internalType: "bytes32",
+                },
+                {
+                  name: "startTime",
+                  type: "uint64",
+                  internalType: "uint64",
+                },
+                {
+                  name: "endTime",
+                  type: "uint64",
+                  internalType: "uint64",
+                },
+                {
+                  name: "joint",
+                  type: "bool",
+                  internalType: "bool",
+                },
+                {
+                  name: "active",
+                  type: "bool",
+                  internalType: "bool",
+                },
+                {
+                  name: "exists",
+                  type: "bool",
+                  internalType: "bool",
+                },
+                {
+                  name: "metadataHash",
+                  type: "bytes32",
+                  internalType: "bytes32",
+                },
+              ],
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "invite",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "leaveProgram",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "membersOf",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256[]",
+              internalType: "uint256[]",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "membershipOf",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint8",
+              internalType: "enum DiscountProgram.Membership",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "programExists",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "registry",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "contract EstablishmentRegistry",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "setProgramActive",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "active",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "validAt",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "event",
+          name: "EstablishmentInvited",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "EstablishmentJoined",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "EstablishmentLeft",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "ProgramActiveSet",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "active",
+              type: "bool",
+              indexed: false,
+              internalType: "bool",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "ProgramCreated",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "ownerEstablishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "name",
+              type: "bytes32",
+              indexed: false,
+              internalType: "bytes32",
+            },
+            {
+              name: "joint",
+              type: "bool",
+              indexed: false,
+              internalType: "bool",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "error",
+          name: "AlreadyAMember",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "InvalidBenefit",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "InvalidWindow",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NotAMember",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NotEstablishmentOwner",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NotInvited",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "ProgramIsNotJoint",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "UnknownEstablishment",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "UnknownProgram",
+          inputs: [],
+        },
+      ],
+      inheritedFunctions: {},
+      deployedOnBlock: 5,
     },
     DiscountNFT: {
-      address: "0x2fb5e98f1efe95ae50f9becafce660701ad8d9be",
+      address: "0xe1da8919f262ee86f9be05059c9280142cf23f48",
       abi: [
         {
           type: "constructor",
@@ -1876,10 +4548,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 33,
+      deployedOnBlock: 6,
     },
     BonusNFT: {
-      address: "0x5e388db7c3aef7dea9585fbe3c077f0c98857d0d",
+      address: "0x0c8e79f3534b00d9a3d4a856b665bf4ebc22f2ba",
       abi: [
         {
           type: "constructor",
@@ -2879,2154 +5551,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 33,
-    },
-    SubscriptionManager: {
-      address: "0xc624801dd98bef87c0718ddb43ad3a566cc51ecc",
-      abi: [
-        {
-          type: "constructor",
-          inputs: [
-            {
-              name: "admin",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "BILLING_ORACLE_ROLE",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "DEFAULT_ADMIN_ROLE",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "MAX_TIER",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "uint8",
-              internalType: "uint8",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "expiresAt",
-          inputs: [
-            {
-              name: "establishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "uint64",
-              internalType: "uint64",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "getRoleAdmin",
-          inputs: [
-            {
-              name: "role",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "grantRole",
-          inputs: [
-            {
-              name: "role",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-            {
-              name: "account",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "hasRole",
-          inputs: [
-            {
-              name: "role",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-            {
-              name: "account",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "isActive",
-          inputs: [
-            {
-              name: "establishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "renounceRole",
-          inputs: [
-            {
-              name: "role",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-            {
-              name: "callerConfirmation",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "revokeRole",
-          inputs: [
-            {
-              name: "role",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-            {
-              name: "account",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "setSubscription",
-          inputs: [
-            {
-              name: "establishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "tier",
-              type: "uint8",
-              internalType: "uint8",
-            },
-            {
-              name: "validUntil",
-              type: "uint64",
-              internalType: "uint64",
-            },
-            {
-              name: "providerRefHash",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "subscriptions",
-          inputs: [
-            {
-              name: "establishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "tier",
-              type: "uint8",
-              internalType: "uint8",
-            },
-            {
-              name: "expiresAt",
-              type: "uint64",
-              internalType: "uint64",
-            },
-            {
-              name: "providerRefHash",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "supportsInterface",
-          inputs: [
-            {
-              name: "interfaceId",
-              type: "bytes4",
-              internalType: "bytes4",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "tierOf",
-          inputs: [
-            {
-              name: "establishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "uint8",
-              internalType: "uint8",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "event",
-          name: "RoleAdminChanged",
-          inputs: [
-            {
-              name: "role",
-              type: "bytes32",
-              indexed: true,
-              internalType: "bytes32",
-            },
-            {
-              name: "previousAdminRole",
-              type: "bytes32",
-              indexed: true,
-              internalType: "bytes32",
-            },
-            {
-              name: "newAdminRole",
-              type: "bytes32",
-              indexed: true,
-              internalType: "bytes32",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "RoleGranted",
-          inputs: [
-            {
-              name: "role",
-              type: "bytes32",
-              indexed: true,
-              internalType: "bytes32",
-            },
-            {
-              name: "account",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "sender",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "RoleRevoked",
-          inputs: [
-            {
-              name: "role",
-              type: "bytes32",
-              indexed: true,
-              internalType: "bytes32",
-            },
-            {
-              name: "account",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "sender",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "SubscriptionUpdated",
-          inputs: [
-            {
-              name: "establishmentId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-            {
-              name: "tier",
-              type: "uint8",
-              indexed: false,
-              internalType: "uint8",
-            },
-            {
-              name: "expiresAt",
-              type: "uint64",
-              indexed: false,
-              internalType: "uint64",
-            },
-            {
-              name: "providerRefHash",
-              type: "bytes32",
-              indexed: false,
-              internalType: "bytes32",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "error",
-          name: "AccessControlBadConfirmation",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "AccessControlUnauthorizedAccount",
-          inputs: [
-            {
-              name: "account",
-              type: "address",
-              internalType: "address",
-            },
-            {
-              name: "neededRole",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "InvalidTier",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "NotBillingOracle",
-          inputs: [],
-        },
-      ],
-      inheritedFunctions: {},
-      deployedOnBlock: 28,
-    },
-    PointsVault: {
-      address: "0x5d1ce2a19aa885765abcef89b7590e213422a8b9",
-      abi: [
-        {
-          type: "constructor",
-          inputs: [
-            {
-              name: "admin",
-              type: "address",
-              internalType: "address",
-            },
-            {
-              name: "uri_",
-              type: "string",
-              internalType: "string",
-            },
-          ],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "BURNER_ROLE",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "DEFAULT_ADMIN_ROLE",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "MINTER_ROLE",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "balanceOf",
-          inputs: [
-            {
-              name: "account",
-              type: "address",
-              internalType: "address",
-            },
-            {
-              name: "id",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "balanceOfBatch",
-          inputs: [
-            {
-              name: "accounts",
-              type: "address[]",
-              internalType: "address[]",
-            },
-            {
-              name: "ids",
-              type: "uint256[]",
-              internalType: "uint256[]",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "uint256[]",
-              internalType: "uint256[]",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "burn",
-          inputs: [
-            {
-              name: "from",
-              type: "address",
-              internalType: "address",
-            },
-            {
-              name: "id",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "amount",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "createPointType",
-          inputs: [
-            {
-              name: "id",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "name",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-            {
-              name: "scope",
-              type: "uint8",
-              internalType: "enum PointsVault.Scope",
-            },
-            {
-              name: "scopeId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "exists",
-          inputs: [
-            {
-              name: "id",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "getRoleAdmin",
-          inputs: [
-            {
-              name: "role",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "grantRole",
-          inputs: [
-            {
-              name: "role",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-            {
-              name: "account",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "hasRole",
-          inputs: [
-            {
-              name: "role",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-            {
-              name: "account",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "isApprovedForAll",
-          inputs: [
-            {
-              name: "account",
-              type: "address",
-              internalType: "address",
-            },
-            {
-              name: "operator",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "mint",
-          inputs: [
-            {
-              name: "to",
-              type: "address",
-              internalType: "address",
-            },
-            {
-              name: "id",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "amount",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "pointTypes",
-          inputs: [
-            {
-              name: "id",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "name",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-            {
-              name: "scope",
-              type: "uint8",
-              internalType: "enum PointsVault.Scope",
-            },
-            {
-              name: "scopeId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "active",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "renounceRole",
-          inputs: [
-            {
-              name: "role",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-            {
-              name: "callerConfirmation",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "revokeRole",
-          inputs: [
-            {
-              name: "role",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-            {
-              name: "account",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "safeBatchTransferFrom",
-          inputs: [
-            {
-              name: "from",
-              type: "address",
-              internalType: "address",
-            },
-            {
-              name: "to",
-              type: "address",
-              internalType: "address",
-            },
-            {
-              name: "ids",
-              type: "uint256[]",
-              internalType: "uint256[]",
-            },
-            {
-              name: "values",
-              type: "uint256[]",
-              internalType: "uint256[]",
-            },
-            {
-              name: "data",
-              type: "bytes",
-              internalType: "bytes",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "safeTransferFrom",
-          inputs: [
-            {
-              name: "from",
-              type: "address",
-              internalType: "address",
-            },
-            {
-              name: "to",
-              type: "address",
-              internalType: "address",
-            },
-            {
-              name: "id",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "value",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "data",
-              type: "bytes",
-              internalType: "bytes",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "setApprovalForAll",
-          inputs: [
-            {
-              name: "",
-              type: "address",
-              internalType: "address",
-            },
-            {
-              name: "",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          outputs: [],
-          stateMutability: "pure",
-        },
-        {
-          type: "function",
-          name: "setPointTypeActive",
-          inputs: [
-            {
-              name: "id",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "active",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "supportsInterface",
-          inputs: [
-            {
-              name: "interfaceId",
-              type: "bytes4",
-              internalType: "bytes4",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "totalSupply",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "totalSupply",
-          inputs: [
-            {
-              name: "id",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "uri",
-          inputs: [
-            {
-              name: "",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "string",
-              internalType: "string",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "event",
-          name: "ApprovalForAll",
-          inputs: [
-            {
-              name: "account",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "operator",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "approved",
-              type: "bool",
-              indexed: false,
-              internalType: "bool",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "PointTypeActiveSet",
-          inputs: [
-            {
-              name: "id",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-            {
-              name: "active",
-              type: "bool",
-              indexed: false,
-              internalType: "bool",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "PointTypeCreated",
-          inputs: [
-            {
-              name: "id",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-            {
-              name: "name",
-              type: "bytes32",
-              indexed: false,
-              internalType: "bytes32",
-            },
-            {
-              name: "scope",
-              type: "uint8",
-              indexed: false,
-              internalType: "enum PointsVault.Scope",
-            },
-            {
-              name: "scopeId",
-              type: "uint256",
-              indexed: false,
-              internalType: "uint256",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "RoleAdminChanged",
-          inputs: [
-            {
-              name: "role",
-              type: "bytes32",
-              indexed: true,
-              internalType: "bytes32",
-            },
-            {
-              name: "previousAdminRole",
-              type: "bytes32",
-              indexed: true,
-              internalType: "bytes32",
-            },
-            {
-              name: "newAdminRole",
-              type: "bytes32",
-              indexed: true,
-              internalType: "bytes32",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "RoleGranted",
-          inputs: [
-            {
-              name: "role",
-              type: "bytes32",
-              indexed: true,
-              internalType: "bytes32",
-            },
-            {
-              name: "account",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "sender",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "RoleRevoked",
-          inputs: [
-            {
-              name: "role",
-              type: "bytes32",
-              indexed: true,
-              internalType: "bytes32",
-            },
-            {
-              name: "account",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "sender",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "TransferBatch",
-          inputs: [
-            {
-              name: "operator",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "from",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "to",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "ids",
-              type: "uint256[]",
-              indexed: false,
-              internalType: "uint256[]",
-            },
-            {
-              name: "values",
-              type: "uint256[]",
-              indexed: false,
-              internalType: "uint256[]",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "TransferSingle",
-          inputs: [
-            {
-              name: "operator",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "from",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "to",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "id",
-              type: "uint256",
-              indexed: false,
-              internalType: "uint256",
-            },
-            {
-              name: "value",
-              type: "uint256",
-              indexed: false,
-              internalType: "uint256",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "URI",
-          inputs: [
-            {
-              name: "value",
-              type: "string",
-              indexed: false,
-              internalType: "string",
-            },
-            {
-              name: "id",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "error",
-          name: "AccessControlBadConfirmation",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "AccessControlUnauthorizedAccount",
-          inputs: [
-            {
-              name: "account",
-              type: "address",
-              internalType: "address",
-            },
-            {
-              name: "neededRole",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "ERC1155InsufficientBalance",
-          inputs: [
-            {
-              name: "sender",
-              type: "address",
-              internalType: "address",
-            },
-            {
-              name: "balance",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "needed",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "tokenId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "ERC1155InvalidApprover",
-          inputs: [
-            {
-              name: "approver",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "ERC1155InvalidArrayLength",
-          inputs: [
-            {
-              name: "idsLength",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "valuesLength",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "ERC1155InvalidOperator",
-          inputs: [
-            {
-              name: "operator",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "ERC1155InvalidReceiver",
-          inputs: [
-            {
-              name: "receiver",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "ERC1155InvalidSender",
-          inputs: [
-            {
-              name: "sender",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "ERC1155MissingApprovalForAll",
-          inputs: [
-            {
-              name: "operator",
-              type: "address",
-              internalType: "address",
-            },
-            {
-              name: "owner",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "InactivePointType",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "SoulboundApprovalNotAllowed",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "SoulboundTransferNotAllowed",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "UnknownPointType",
-          inputs: [],
-        },
-      ],
-      inheritedFunctions: {},
-      deployedOnBlock: 33,
-    },
-    StampLedger: {
-      address: "0xd3497ab25da369b3ee5a239890348ea542b0f479",
-      abi: [
-        {
-          type: "constructor",
-          inputs: [
-            {
-              name: "_registry",
-              type: "address",
-              internalType: "contract EstablishmentRegistry",
-            },
-            {
-              name: "_subscriptions",
-              type: "address",
-              internalType: "contract SubscriptionManager",
-            },
-            {
-              name: "_pointsVault",
-              type: "address",
-              internalType: "contract PointsVault",
-            },
-            {
-              name: "_admin",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "BPS_DENOMINATOR",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "uint16",
-              internalType: "uint16",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "MAX_BOOST_BPS",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "uint16",
-              internalType: "uint16",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "admin",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "burnStamps",
-          inputs: [
-            {
-              name: "establishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "customer",
-              type: "address",
-              internalType: "address",
-            },
-            {
-              name: "amount",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "claimRef",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "issueStamps",
-          inputs: [
-            {
-              name: "sale",
-              type: "tuple",
-              internalType: "struct StampLedger.Sale",
-              components: [
-                {
-                  name: "establishmentId",
-                  type: "uint256",
-                  internalType: "uint256",
-                },
-                {
-                  name: "customer",
-                  type: "address",
-                  internalType: "address",
-                },
-                {
-                  name: "amountCents",
-                  type: "uint64",
-                  internalType: "uint64",
-                },
-                {
-                  name: "productBoostBps",
-                  type: "uint16",
-                  internalType: "uint16",
-                },
-                {
-                  name: "saleRef",
-                  type: "bytes32",
-                  internalType: "bytes32",
-                },
-              ],
-            },
-          ],
-          outputs: [
-            {
-              name: "stamps",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "points",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "issueStampsBatch",
-          inputs: [
-            {
-              name: "vendas",
-              type: "tuple[]",
-              internalType: "struct StampLedger.Sale[]",
-              components: [
-                {
-                  name: "establishmentId",
-                  type: "uint256",
-                  internalType: "uint256",
-                },
-                {
-                  name: "customer",
-                  type: "address",
-                  internalType: "address",
-                },
-                {
-                  name: "amountCents",
-                  type: "uint64",
-                  internalType: "uint64",
-                },
-                {
-                  name: "productBoostBps",
-                  type: "uint16",
-                  internalType: "uint16",
-                },
-                {
-                  name: "saleRef",
-                  type: "bytes32",
-                  internalType: "bytes32",
-                },
-              ],
-            },
-          ],
-          outputs: [
-            {
-              name: "totalStamps",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "totalPoints",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "lifetimeStampsOf",
-          inputs: [
-            {
-              name: "establishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "customer",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "pointsVault",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "address",
-              internalType: "contract PointsVault",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "previewStamps",
-          inputs: [
-            {
-              name: "establishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "amountCents",
-              type: "uint64",
-              internalType: "uint64",
-            },
-            {
-              name: "productBoostBps",
-              type: "uint16",
-              internalType: "uint16",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "registry",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "address",
-              internalType: "contract EstablishmentRegistry",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "rules",
-          inputs: [
-            {
-              name: "establishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "minTicketCents",
-              type: "uint64",
-              internalType: "uint64",
-            },
-            {
-              name: "centsPerStamp",
-              type: "uint64",
-              internalType: "uint64",
-            },
-            {
-              name: "maxStampsPerTx",
-              type: "uint16",
-              internalType: "uint16",
-            },
-            {
-              name: "cooldownSeconds",
-              type: "uint32",
-              internalType: "uint32",
-            },
-            {
-              name: "streakWindowSeconds",
-              type: "uint32",
-              internalType: "uint32",
-            },
-            {
-              name: "pointsPerStamp",
-              type: "uint32",
-              internalType: "uint32",
-            },
-            {
-              name: "pointTypeId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "active",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "setAccrualRule",
-          inputs: [
-            {
-              name: "establishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "rule",
-              type: "tuple",
-              internalType: "struct StampLedger.AccrualRule",
-              components: [
-                {
-                  name: "minTicketCents",
-                  type: "uint64",
-                  internalType: "uint64",
-                },
-                {
-                  name: "centsPerStamp",
-                  type: "uint64",
-                  internalType: "uint64",
-                },
-                {
-                  name: "maxStampsPerTx",
-                  type: "uint16",
-                  internalType: "uint16",
-                },
-                {
-                  name: "cooldownSeconds",
-                  type: "uint32",
-                  internalType: "uint32",
-                },
-                {
-                  name: "streakWindowSeconds",
-                  type: "uint32",
-                  internalType: "uint32",
-                },
-                {
-                  name: "pointsPerStamp",
-                  type: "uint32",
-                  internalType: "uint32",
-                },
-                {
-                  name: "pointTypeId",
-                  type: "uint256",
-                  internalType: "uint256",
-                },
-                {
-                  name: "active",
-                  type: "bool",
-                  internalType: "bool",
-                },
-              ],
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "setSubscriptionManager",
-          inputs: [
-            {
-              name: "novo",
-              type: "address",
-              internalType: "contract SubscriptionManager",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "stampsOf",
-          inputs: [
-            {
-              name: "establishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "customer",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "subscriptions",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "address",
-              internalType: "contract SubscriptionManager",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "transferAdmin",
-          inputs: [
-            {
-              name: "novo",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "usedSaleRef",
-          inputs: [
-            {
-              name: "saleRef",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "walletOf",
-          inputs: [
-            {
-              name: "establishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "customer",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          outputs: [
-            {
-              name: "balance",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "lifetime",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "lifetimeCents",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "streakCurrent",
-              type: "uint32",
-              internalType: "uint32",
-            },
-            {
-              name: "streakBest",
-              type: "uint32",
-              internalType: "uint32",
-            },
-            {
-              name: "visits",
-              type: "uint32",
-              internalType: "uint32",
-            },
-            {
-              name: "lastVisitAt",
-              type: "uint64",
-              internalType: "uint64",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "event",
-          name: "AccrualRuleSet",
-          inputs: [
-            {
-              name: "establishmentId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-            {
-              name: "rule",
-              type: "tuple",
-              indexed: false,
-              internalType: "struct StampLedger.AccrualRule",
-              components: [
-                {
-                  name: "minTicketCents",
-                  type: "uint64",
-                  internalType: "uint64",
-                },
-                {
-                  name: "centsPerStamp",
-                  type: "uint64",
-                  internalType: "uint64",
-                },
-                {
-                  name: "maxStampsPerTx",
-                  type: "uint16",
-                  internalType: "uint16",
-                },
-                {
-                  name: "cooldownSeconds",
-                  type: "uint32",
-                  internalType: "uint32",
-                },
-                {
-                  name: "streakWindowSeconds",
-                  type: "uint32",
-                  internalType: "uint32",
-                },
-                {
-                  name: "pointsPerStamp",
-                  type: "uint32",
-                  internalType: "uint32",
-                },
-                {
-                  name: "pointTypeId",
-                  type: "uint256",
-                  internalType: "uint256",
-                },
-                {
-                  name: "active",
-                  type: "bool",
-                  internalType: "bool",
-                },
-              ],
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "AdminTransferred",
-          inputs: [
-            {
-              name: "novo",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "StampsIssued",
-          inputs: [
-            {
-              name: "establishmentId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-            {
-              name: "customer",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "operator",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "stamps",
-              type: "uint256",
-              indexed: false,
-              internalType: "uint256",
-            },
-            {
-              name: "points",
-              type: "uint256",
-              indexed: false,
-              internalType: "uint256",
-            },
-            {
-              name: "amountCents",
-              type: "uint64",
-              indexed: false,
-              internalType: "uint64",
-            },
-            {
-              name: "saleRef",
-              type: "bytes32",
-              indexed: false,
-              internalType: "bytes32",
-            },
-            {
-              name: "newBalance",
-              type: "uint256",
-              indexed: false,
-              internalType: "uint256",
-            },
-            {
-              name: "streakCurrent",
-              type: "uint32",
-              indexed: false,
-              internalType: "uint32",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "StampsRedeemed",
-          inputs: [
-            {
-              name: "establishmentId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-            {
-              name: "customer",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "stamps",
-              type: "uint256",
-              indexed: false,
-              internalType: "uint256",
-            },
-            {
-              name: "claimRef",
-              type: "bytes32",
-              indexed: false,
-              internalType: "bytes32",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "SubscriptionManagerSet",
-          inputs: [
-            {
-              name: "subscriptions",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "error",
-          name: "BoostTooHigh",
-          inputs: [
-            {
-              name: "boostBps",
-              type: "uint16",
-              internalType: "uint16",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "CooldownActive",
-          inputs: [
-            {
-              name: "secondsRemaining",
-              type: "uint64",
-              internalType: "uint64",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "EstablishmentInactive",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "InsufficientStamps",
-          inputs: [
-            {
-              name: "balance",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "requested",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "InvalidRule",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "NotAdmin",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "NotOperator",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "NothingToIssue",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "RuleInactive",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "SaleAlreadyProcessed",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "SubscriptionInactive",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "TicketBelowFloor",
-          inputs: [
-            {
-              name: "amountCents",
-              type: "uint64",
-              internalType: "uint64",
-            },
-            {
-              name: "minTicketCents",
-              type: "uint64",
-              internalType: "uint64",
-            },
-          ],
-        },
-      ],
-      inheritedFunctions: {},
-      deployedOnBlock: 29,
+      deployedOnBlock: 7,
     },
     RewardCatalog: {
-      address: "0x270fbc6a0f1007eb41863237eefb773795fd1f9c",
+      address: "0xed1db453c3156ff3155a97ad217b3087d5dc5f6e",
       abi: [
         {
           type: "constructor",
@@ -5488,538 +6016,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 29,
-    },
-    DiscountProgram: {
-      address: "0x49ea5126fd67f877b62ddc0144dbeb42591df7bb",
-      abi: [
-        {
-          type: "constructor",
-          inputs: [
-            {
-              name: "_registry",
-              type: "address",
-              internalType: "contract EstablishmentRegistry",
-            },
-          ],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "BPS_DENOMINATOR",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "acceptInvite",
-          inputs: [
-            {
-              name: "programId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "establishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "createProgram",
-          inputs: [
-            {
-              name: "ownerEstablishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "name",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-            {
-              name: "kind",
-              type: "uint8",
-              internalType: "enum DiscountProgram.DiscountKind",
-            },
-            {
-              name: "baseBenefit",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "capCents",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "product",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-            {
-              name: "startTime",
-              type: "uint64",
-              internalType: "uint64",
-            },
-            {
-              name: "endTime",
-              type: "uint64",
-              internalType: "uint64",
-            },
-            {
-              name: "joint",
-              type: "bool",
-              internalType: "bool",
-            },
-            {
-              name: "metadataHash",
-              type: "bytes32",
-              internalType: "bytes32",
-            },
-          ],
-          outputs: [
-            {
-              name: "programId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "discountFor",
-          inputs: [
-            {
-              name: "programId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "level",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "billCents",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "getProgram",
-          inputs: [
-            {
-              name: "programId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "tuple",
-              internalType: "struct DiscountProgram.Program",
-              components: [
-                {
-                  name: "ownerEstablishmentId",
-                  type: "uint256",
-                  internalType: "uint256",
-                },
-                {
-                  name: "name",
-                  type: "bytes32",
-                  internalType: "bytes32",
-                },
-                {
-                  name: "kind",
-                  type: "uint8",
-                  internalType: "enum DiscountProgram.DiscountKind",
-                },
-                {
-                  name: "baseBenefit",
-                  type: "uint256",
-                  internalType: "uint256",
-                },
-                {
-                  name: "capCents",
-                  type: "uint256",
-                  internalType: "uint256",
-                },
-                {
-                  name: "product",
-                  type: "bytes32",
-                  internalType: "bytes32",
-                },
-                {
-                  name: "startTime",
-                  type: "uint64",
-                  internalType: "uint64",
-                },
-                {
-                  name: "endTime",
-                  type: "uint64",
-                  internalType: "uint64",
-                },
-                {
-                  name: "joint",
-                  type: "bool",
-                  internalType: "bool",
-                },
-                {
-                  name: "active",
-                  type: "bool",
-                  internalType: "bool",
-                },
-                {
-                  name: "exists",
-                  type: "bool",
-                  internalType: "bool",
-                },
-                {
-                  name: "metadataHash",
-                  type: "bytes32",
-                  internalType: "bytes32",
-                },
-              ],
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "invite",
-          inputs: [
-            {
-              name: "programId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "establishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "leaveProgram",
-          inputs: [
-            {
-              name: "programId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "establishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "membersOf",
-          inputs: [
-            {
-              name: "programId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "uint256[]",
-              internalType: "uint256[]",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "membershipOf",
-          inputs: [
-            {
-              name: "programId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "establishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "uint8",
-              internalType: "enum DiscountProgram.Membership",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "programExists",
-          inputs: [
-            {
-              name: "programId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "registry",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "address",
-              internalType: "contract EstablishmentRegistry",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "setProgramActive",
-          inputs: [
-            {
-              name: "programId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "active",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "validAt",
-          inputs: [
-            {
-              name: "programId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "establishmentId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "event",
-          name: "EstablishmentInvited",
-          inputs: [
-            {
-              name: "programId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-            {
-              name: "establishmentId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "EstablishmentJoined",
-          inputs: [
-            {
-              name: "programId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-            {
-              name: "establishmentId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "EstablishmentLeft",
-          inputs: [
-            {
-              name: "programId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-            {
-              name: "establishmentId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "ProgramActiveSet",
-          inputs: [
-            {
-              name: "programId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-            {
-              name: "active",
-              type: "bool",
-              indexed: false,
-              internalType: "bool",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "ProgramCreated",
-          inputs: [
-            {
-              name: "programId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-            {
-              name: "ownerEstablishmentId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-            {
-              name: "name",
-              type: "bytes32",
-              indexed: false,
-              internalType: "bytes32",
-            },
-            {
-              name: "joint",
-              type: "bool",
-              indexed: false,
-              internalType: "bool",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "error",
-          name: "AlreadyAMember",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "InvalidBenefit",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "InvalidWindow",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "NotAMember",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "NotEstablishmentOwner",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "NotInvited",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "ProgramIsNotJoint",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "UnknownEstablishment",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "UnknownProgram",
-          inputs: [],
-        },
-      ],
-      inheritedFunctions: {},
-      deployedOnBlock: 33,
+      deployedOnBlock: 8,
     },
     Achievements: {
-      address: "0x9db9797733fe5f734724aa05d29fa39563563af5",
+      address: "0xf7cd8fa9b94db2aa972023b379c7f72c65e4de9d",
       abi: [
         {
           type: "constructor",
@@ -6586,7 +6586,7 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 33,
+      deployedOnBlock: 9,
     },
   },
 } as const;

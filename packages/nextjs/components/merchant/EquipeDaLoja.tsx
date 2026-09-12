@@ -117,7 +117,7 @@ export const EquipeDaLoja = () => {
   if (!dados) {
     return (
       <div className="flex justify-center py-16">
-        <span className="loading loading-spinner loading-lg text-primary" />
+        <span className="loading loading-spinner loading-lg text-brand-ink" />
       </div>
     );
   }
@@ -134,7 +134,7 @@ export const EquipeDaLoja = () => {
       </header>
 
       <p className="m-0 flex items-start gap-2 rounded-2xl border border-base-300 bg-base-200 p-4 text-sm opacity-80">
-        <InformationCircleIcon className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+        <InformationCircleIcon className="mt-0.5 h-5 w-5 shrink-0 text-brand-ink" />
         Atendente de balcão não precisa de conta nenhuma: quem carimba no dia a dia usa um terminal pareado em{" "}
         <span className="font-semibold text-secondary">/painel/pdv</span>. Cadastre alguém aqui só se essa pessoa também
         vai abrir este painel.
@@ -193,7 +193,7 @@ export const EquipeDaLoja = () => {
             >
               <span
                 className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
-                  m.ativo ? "bg-primary/10 text-primary" : "bg-base-200 text-base-content/50"
+                  m.ativo ? "bg-primary/10 text-brand-ink" : "bg-base-200 text-base-content/50"
                 }`}
               >
                 <ShieldCheckIcon className="h-6 w-6" />

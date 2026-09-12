@@ -34,7 +34,7 @@ export const CatalogoRecompensas = () => {
   if (!dados) {
     return (
       <div className="flex flex-1 items-center justify-center py-20">
-        <span className="loading loading-spinner loading-lg text-primary" />
+        <span className="loading loading-spinner loading-lg text-brand-ink" />
       </div>
     );
   }
@@ -96,7 +96,7 @@ export const CatalogoRecompensas = () => {
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex min-w-0 gap-3">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-base-200 text-primary">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-base-200 text-brand-ink">
                       <CategoryIcon iconKey={info.iconKey} className="h-5 w-5" />
                     </span>
                     <div className="min-w-0">
@@ -126,7 +126,7 @@ export const CatalogoRecompensas = () => {
                     {r.esgotada ? (
                       <span className="opacity-60">esgotado por enquanto</span>
                     ) : r.pronta ? (
-                      <span className="inline-flex items-center gap-1 text-primary">
+                      <span className="inline-flex items-center gap-1 text-brand-ink">
                         <CheckCircleIcon className="h-4 w-4" />
                         pronto — peça no balcão
                       </span>

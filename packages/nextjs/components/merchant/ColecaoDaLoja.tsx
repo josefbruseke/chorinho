@@ -144,7 +144,7 @@ export const ColecaoDaLoja = () => {
   if (!dados) {
     return (
       <div className="flex justify-center py-16">
-        <span className="loading loading-spinner loading-lg text-primary" />
+        <span className="loading loading-spinner loading-lg text-brand-ink" />
       </div>
     );
   }
@@ -330,7 +330,7 @@ export const ColecaoDaLoja = () => {
                     {p.terminaEm && ` • até ${dataCurta(p.terminaEm)}`}
                   </p>
                   {p.rascunho && (
-                    <span className="mt-1.5 inline-flex items-center gap-1 rounded-full border border-warning bg-warning/10 px-2 py-0.5 text-xs font-bold text-warning">
+                    <span className="mt-1.5 inline-flex items-center gap-1 rounded-full border border-warning bg-warning/10 px-2 py-0.5 text-xs font-bold text-honey-ink">
                       rascunho — ainda não existe na rede
                     </span>
                   )}

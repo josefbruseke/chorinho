@@ -37,6 +37,17 @@
   /* honey-ink escurecido (era #92400e, 6.37:1) para vencer 7:1 no pos-light. */
   --color-honey-ink: #5a4a00;
 
+  /* Tinta da marca. O verde da cana (--color-primary, #76c112) e claro: otimo
+     como PREENCHIMENTO, com tinta escura por cima (7,45:1 no botao primario), e
+     ilegivel como TEXTO sobre superficie clara (2,23:1 no branco).
+     Um token so nao cobre as duas funcoes: um verde que alcance 4,5:1 sobre
+     branco precisa de luminancia <= 0,183, e nesse limite faz apenas 3,69:1
+     contra a tinta escura. Por isso a marca tem dois valores -- `primary`
+     preenche, `brand-ink` escreve. Para texto e icone use text-brand-ink;
+     text-primary so se o fundo for escuro.
+     #376b04: 6,43:1 no branco, 5,68:1 sobre o tint mais forte (bg-primary/12). */
+  --color-brand-ink: #376b04;
+
   /* A tela do QR e a unica superficie que NAO acompanha o tema: camera de
      celular barato le muito mais rapido codigo escuro sobre fundo claro, e no
      balcao isso e a diferenca entre escanear de primeira ou segurar a fila.
@@ -252,6 +263,10 @@
     --color-honey-soft: #33300f;
     --color-honey-edge: #57511c;
     --color-honey-ink: #e5d44a;
+
+    /* No escuro o problema se inverte: o verde claro e que le bem. brand-ink
+       volta a ser o mesmo verde do primary (9,54:1 sobre base-100). */
+    --color-brand-ink: #8fd42e;
   }
 
   /* Antes da hidratacao o next-themes ainda nao escreveu data-theme; o daisyUI
@@ -267,6 +282,7 @@
       --color-honey-soft: #33300f;
       --color-honey-edge: #57511c;
       --color-honey-ink: #e5d44a;
+      --color-brand-ink: #8fd42e;
     }
   }
 }

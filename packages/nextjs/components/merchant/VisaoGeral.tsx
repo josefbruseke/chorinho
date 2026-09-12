@@ -67,7 +67,7 @@ export const VisaoGeral = () => {
   if (!dados) {
     return (
       <div className="flex justify-center py-20">
-        <span className="loading loading-spinner loading-lg text-primary" />
+        <span className="loading loading-spinner loading-lg text-brand-ink" />
       </div>
     );
   }
@@ -114,7 +114,7 @@ export const VisaoGeral = () => {
               href={p.para}
               className="flex min-h-14 items-center gap-3 rounded-2xl border border-warning bg-warning/10 p-4 no-underline"
             >
-              <ExclamationTriangleIcon className="h-6 w-6 shrink-0 text-warning" />
+              <ExclamationTriangleIcon className="h-6 w-6 shrink-0 text-honey-ink" />
               <span className="flex-1 text-sm font-semibold">{p.texto}</span>
               <ArrowRightIcon className="h-5 w-5 shrink-0 opacity-60" />
             </Link>

@@ -200,17 +200,17 @@ const Entrar: NextPage = () => (
       </p>
     </header>
 
-    <Suspense fallback={<span className="loading loading-spinner loading-lg text-primary" />}>
+    <Suspense fallback={<span className="loading loading-spinner loading-lg text-brand-ink" />}>
       <Formulario />
     </Suspense>
 
     <p className="m-0 text-center text-xs leading-relaxed opacity-75">
       Ao entrar você concorda com os{" "}
-      <Link href="/termos" className="text-primary underline underline-offset-2">
+      <Link href="/termos" className="text-brand-ink underline underline-offset-2">
         Termos
       </Link>{" "}
       e a{" "}
-      <Link href="/privacidade" className="text-primary underline underline-offset-2">
+      <Link href="/privacidade" className="text-brand-ink underline underline-offset-2">
         Política de Privacidade
       </Link>
       .

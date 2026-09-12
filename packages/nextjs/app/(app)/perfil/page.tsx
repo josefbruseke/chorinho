@@ -44,7 +44,7 @@ const Perfil: NextPage = () => {
   if (carregando) {
     return (
       <div className="flex justify-center items-center grow py-20">
-        <span className="loading loading-spinner loading-lg text-primary" />
+        <span className="loading loading-spinner loading-lg text-brand-ink" />
       </div>
     );
   }
@@ -64,7 +64,7 @@ const Perfil: NextPage = () => {
     <div className="w-full max-w-lg mx-auto px-4 py-5 flex flex-col gap-5">
       {/* Quem sou eu é a informação nº 1 desta tela: avatar e nome ganham mais peso que o resto. */}
       <header className="flex items-center gap-4">
-        <span className="w-16 h-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center text-2xl font-serif font-black shrink-0">
+        <span className="w-16 h-16 rounded-2xl bg-primary/10 text-brand-ink flex items-center justify-center text-2xl font-serif font-black shrink-0">
           {(perfil?.display_name ?? usuario.email ?? "?").charAt(0).toUpperCase()}
         </span>
         <div className="min-w-0">
@@ -77,7 +77,7 @@ const Perfil: NextPage = () => {
 
       <section className="rounded-box border border-base-300 bg-base-100 divide-y divide-base-300">
         <div className="flex gap-3 p-4 min-h-12">
-          <WalletIcon className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+          <WalletIcon className="w-5 h-5 text-brand-ink shrink-0 mt-0.5" />
           <div className="min-w-0 flex-1">
             <strong className="block text-sm">Sua carteira</strong>
             {perfil?.wallet_address ? (
@@ -95,7 +95,7 @@ const Perfil: NextPage = () => {
           href="/carteira-e-seguranca"
           className="flex items-center gap-3 p-4 min-h-12 hover:bg-base-200 active:bg-base-200 transition-colors"
         >
-          <ShieldCheckIcon className="w-5 h-5 text-primary shrink-0" />
+          <ShieldCheckIcon className="w-5 h-5 text-brand-ink shrink-0" />
           <div>
             <strong className="block text-sm">Carteira e segurança</strong>
             <span className="text-xs opacity-70">O que fica público na blockchain e como se proteger</span>
@@ -106,7 +106,7 @@ const Perfil: NextPage = () => {
           href="/ajuda"
           className="flex items-center gap-3 p-4 min-h-12 hover:bg-base-200 active:bg-base-200 transition-colors"
         >
-          <SparklesIcon className="w-5 h-5 text-primary shrink-0" />
+          <SparklesIcon className="w-5 h-5 text-brand-ink shrink-0" />
           <div>
             <strong className="block text-sm">Ajuda</strong>
             <span className="text-xs opacity-70">Perguntas frequentes</span>

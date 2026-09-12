@@ -80,7 +80,7 @@ export const ColecaoDoLocal = async ({ establishmentId }: { establishmentId: str
       {(recompensas ?? []).length > 0 && (
         <section className="flex flex-col gap-2">
           <h2 className="m-0 flex items-center gap-1.5 font-serif text-lg font-black text-secondary">
-            <GiftIcon className="h-5 w-5 text-primary" />O que os carimbos compram
+            <GiftIcon className="h-5 w-5 text-brand-ink" />O que os carimbos compram
           </h2>
           <ul className="m-0 flex list-none flex-col gap-2 p-0">
             {(recompensas ?? []).map(r => (
@@ -92,7 +92,7 @@ export const ColecaoDoLocal = async ({ establishmentId }: { establishmentId: str
                   <strong className="block truncate text-sm text-secondary">{r.title}</strong>
                   {r.description && <span className="text-xs opacity-70">{r.description}</span>}
                   {r.piece_id && (
-                    <span className="mt-1 flex items-center gap-1 text-xs font-bold text-primary">
+                    <span className="mt-1 flex items-center gap-1 text-xs font-bold text-brand-ink">
                       <SparklesIcon className="h-3.5 w-3.5" />
                       vem com uma peça da coleção
                     </span>
@@ -113,7 +113,7 @@ export const ColecaoDoLocal = async ({ establishmentId }: { establishmentId: str
       {(pecas ?? []).length > 0 && (
         <section className="flex flex-col gap-2">
           <h2 className="m-0 flex items-center gap-1.5 font-serif text-lg font-black text-secondary">
-            <SparklesIcon className="h-5 w-5 text-primary" />A coleção
+            <SparklesIcon className="h-5 w-5 text-brand-ink" />A coleção
           </h2>
           <p className="m-0 text-xs opacity-70">
             Tiragem fechada. Se conseguem gastando carimbos ou conquistando — e podem ser passadas adiante.
@@ -135,7 +135,7 @@ export const ColecaoDoLocal = async ({ establishmentId }: { establishmentId: str
                   <div className="p-2.5">
                     <strong className="block truncate text-sm text-secondary">{p.title}</strong>
                     {programa && (
-                      <span className="block text-xs font-black text-primary">
+                      <span className="block text-xs font-black text-brand-ink">
                         {beneficioEmTexto(
                           programa.kind === 1 ? "valor" : "percentual",
                           programa.base_benefit,
@@ -175,7 +175,7 @@ export const ColecaoDoLocal = async ({ establishmentId }: { establishmentId: str
       {(conquistas ?? []).length > 0 && (
         <section className="flex flex-col gap-2">
           <h2 className="m-0 flex items-center gap-1.5 font-serif text-lg font-black text-secondary">
-            <TrophyIcon className="h-5 w-5 text-primary" />
+            <TrophyIcon className="h-5 w-5 text-brand-ink" />
             Conquistas em aberto
           </h2>
           <ul className="m-0 flex list-none flex-col gap-2 p-0">
@@ -184,7 +184,7 @@ export const ColecaoDoLocal = async ({ establishmentId }: { establishmentId: str
                 <strong className="block text-sm text-secondary">{c.title}</strong>
                 <span className="text-xs opacity-75">{criterioEmTexto(c.criterion, Number(c.target))}</span>
                 {c.max_winners > 0 && (
-                  <span className="mt-1 block text-xs font-bold text-primary">
+                  <span className="mt-1 block text-xs font-bold text-brand-ink">
                     {Math.max(0, c.max_winners - c.winners)} de {c.max_winners} ainda disponíveis
                   </span>
                 )}

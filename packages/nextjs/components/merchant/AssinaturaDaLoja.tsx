@@ -51,7 +51,7 @@ export const AssinaturaDaLoja = () => {
   if (!dados) {
     return (
       <div className="flex justify-center py-16">
-        <span className="loading loading-spinner loading-lg text-primary" />
+        <span className="loading loading-spinner loading-lg text-brand-ink" />
       </div>
     );
   }
@@ -72,7 +72,7 @@ export const AssinaturaDaLoja = () => {
 
       {motivo && (
         <p className="m-0 flex items-start gap-2 rounded-2xl border border-warning bg-warning/10 p-4 text-sm font-semibold">
-          <ExclamationTriangleIcon className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
+          <ExclamationTriangleIcon className="mt-0.5 h-5 w-5 shrink-0 text-honey-ink" />
           Não deu para consultar o estado da assinatura agora ({motivo}). Os planos abaixo continuam valendo — só a
           validade atual não está disponível nesta tela.
         </p>
@@ -103,7 +103,7 @@ export const AssinaturaDaLoja = () => {
 
           {vencimentoProximo && (
             <p className="m-0 flex items-start gap-2 rounded-xl border border-warning bg-warning/10 p-3 text-sm font-semibold">
-              <ExclamationTriangleIcon className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
+              <ExclamationTriangleIcon className="mt-0.5 h-4 w-4 shrink-0 text-honey-ink" />
               Vence em {diasParaVencer} dia(s). Fale com a gente para o carimbo do balcão não parar.
             </p>
           )}

@@ -24,25 +24,25 @@ const LegalLayout = ({ children }: { children: React.ReactNode }) => (
       <div className="max-w-3xl mx-auto px-5 py-3 flex flex-wrap gap-x-2 gap-y-1 text-sm font-semibold text-base-content/70">
         <Link
           href="/privacidade"
-          className="flex items-center min-h-12 px-2 rounded-xl hover:bg-base-200 hover:text-primary transition-colors"
+          className="flex items-center min-h-12 px-2 rounded-xl hover:bg-base-200 hover:text-brand-ink transition-colors"
         >
           Privacidade
         </Link>
         <Link
           href="/termos"
-          className="flex items-center min-h-12 px-2 rounded-xl hover:bg-base-200 hover:text-primary transition-colors"
+          className="flex items-center min-h-12 px-2 rounded-xl hover:bg-base-200 hover:text-brand-ink transition-colors"
         >
           Termos de uso
         </Link>
         <Link
           href="/carteira-e-seguranca"
-          className="flex items-center min-h-12 px-2 rounded-xl hover:bg-base-200 hover:text-primary transition-colors"
+          className="flex items-center min-h-12 px-2 rounded-xl hover:bg-base-200 hover:text-brand-ink transition-colors"
         >
           Carteira e segurança
         </Link>
         <Link
           href="/cookies"
-          className="flex items-center min-h-12 px-2 rounded-xl hover:bg-base-200 hover:text-primary transition-colors"
+          className="flex items-center min-h-12 px-2 rounded-xl hover:bg-base-200 hover:text-brand-ink transition-colors"
         >
           Cookies
         </Link>

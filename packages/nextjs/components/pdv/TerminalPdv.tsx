@@ -46,7 +46,7 @@ const Esperando = ({ centavos }: { centavos: number }) => {
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4 text-center">
-      <span className="loading loading-spinner loading-lg text-primary" />
+      <span className="loading loading-spinner loading-lg text-brand-ink" />
       <p className="m-0 font-bold opacity-70">Registrando {formatarCentavos(centavos)}…</p>
       <p className="m-0 max-w-xs text-sm opacity-60">
         A rede confirma em alguns segundos{segundos > 3 ? ` (${segundos}s)` : ""}. Pode liberar o cliente — o carimbo
@@ -228,7 +228,7 @@ export const TerminalPdv = () => {
 
             <div className="w-full max-w-sm">
               {previa !== null && centavos > 0 && (
-                <p className="m-0 mb-2 text-center text-sm font-bold text-primary">
+                <p className="m-0 mb-2 text-center text-sm font-bold text-brand-ink">
                   {previa === 0
                     ? "Esta compra não atinge o mínimo para carimbo"
                     : `Vale ${previa} ${previa === 1 ? "carimbo" : "carimbos"}`}
@@ -354,7 +354,7 @@ export const TerminalPdv = () => {
           <div className="flex w-full max-w-sm flex-1 flex-col items-center justify-center gap-5 text-center">
             {etapa.naFila ? (
               <>
-                <InboxArrowDownIcon className="h-20 w-20 text-warning" />
+                <InboxArrowDownIcon className="h-20 w-20 text-honey-ink" />
                 <div>
                   <h2 className="m-0 text-2xl font-serif font-black text-secondary">Guardado na fila</h2>
                   <p className="m-0 mt-1 text-sm opacity-75">
@@ -377,7 +377,7 @@ export const TerminalPdv = () => {
                     {etapa.saldo !== undefined ? ` · ${etapa.saldo} na cartela` : ""}
                   </p>
                   {etapa.sequencia !== undefined && etapa.sequencia > 1 && (
-                    <p className="m-0 mt-1 text-sm font-bold text-accent">
+                    <p className="m-0 mt-1 text-sm font-bold text-honey-ink">
                       {etapa.sequencia} visitas seguidas — avise o cliente!
                     </p>
                   )}

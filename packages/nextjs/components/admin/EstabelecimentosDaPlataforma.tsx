@@ -81,7 +81,7 @@ export const EstabelecimentosDaPlataforma = () => {
   if (!lojas) {
     return (
       <div className="flex justify-center py-16">
-        <span className="loading loading-spinner loading-lg text-primary" />
+        <span className="loading loading-spinner loading-lg text-brand-ink" />
       </div>
     );
   }

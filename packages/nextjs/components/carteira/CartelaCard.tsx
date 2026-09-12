@@ -48,7 +48,7 @@ export const CartelaCard = ({ cartela }: { cartela: Cartela }) => {
       className="block rounded-3xl border-2 border-dashed border-kraft-edge bg-gradient-to-br from-base-200 via-kraft to-craft p-5 no-underline shadow-sm transition active:scale-[0.99]"
     >
       <header className="flex items-center gap-3">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/12 text-primary">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/12 text-brand-ink">
           <CategoryIcon iconKey={info.iconKey} className="h-6.5 w-6.5" />
         </span>
 

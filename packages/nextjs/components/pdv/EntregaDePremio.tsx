@@ -359,7 +359,7 @@ export const EntregaDePremio = () => {
 
         {etapa.nome === "entregando" && (
           <div className="flex flex-1 flex-col items-center justify-center gap-3">
-            <span className="loading loading-spinner loading-lg text-primary" />
+            <span className="loading loading-spinner loading-lg text-brand-ink" />
             <p className="m-0 font-bold opacity-75">Entregando…</p>
           </div>
         )}
@@ -391,7 +391,7 @@ export const EntregaDePremio = () => {
               <h2 className="m-0 font-serif text-2xl font-black text-secondary">Desconto aplicado</h2>
               <p className="m-0 mt-1 text-base font-bold">{etapa.titulo}</p>
               {etapa.descontoCentavos > 0 ? (
-                <p className="m-0 mt-2 font-mono text-4xl font-black leading-none text-primary">
+                <p className="m-0 mt-2 font-mono text-4xl font-black leading-none text-brand-ink">
                   −{formatarCentavos(etapa.descontoCentavos)}
                 </p>
               ) : (
@@ -462,7 +462,7 @@ const Pecas = ({
 
     {!pecas ? (
       <div className="flex justify-center py-8">
-        <span className="loading loading-spinner loading-md text-primary" />
+        <span className="loading loading-spinner loading-md text-brand-ink" />
       </div>
     ) : pecas.length === 0 ? (
       <p className="m-0 rounded-2xl border border-dashed border-base-300 p-6 text-center text-sm opacity-75">
@@ -483,7 +483,7 @@ const Pecas = ({
               {p.quantidade > 1 && ` • tem ${p.quantidade}`}
             </span>
           </span>
-          <span className="shrink-0 rounded-xl bg-base-200 px-3 py-1.5 text-center font-mono text-lg font-black text-primary">
+          <span className="shrink-0 rounded-xl bg-base-200 px-3 py-1.5 text-center font-mono text-lg font-black text-brand-ink">
             {p.descontoCentavos !== null && p.descontoCentavos > 0
               ? `−${formatarCentavos(p.descontoCentavos)}`
               : "usar"}

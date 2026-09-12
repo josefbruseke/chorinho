@@ -49,7 +49,7 @@ const Local: NextPage<Props> = async ({ params }) => {
       </Link>
 
       <header className="flex gap-4 items-start">
-        <span className="w-16 h-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/20">
+        <span className="w-16 h-16 rounded-2xl bg-primary/10 text-brand-ink flex items-center justify-center shrink-0 border border-primary/20">
           <CategoryIcon iconKey={categoria.iconKey} className="w-8 h-8" />
         </span>
         <div className="flex flex-col gap-1 min-w-0">
@@ -68,7 +68,7 @@ const Local: NextPage<Props> = async ({ params }) => {
       <section className="rounded-box border border-base-300 bg-base-100 divide-y divide-base-300">
         {(local.address_line || local.neighborhood) && (
           <div className="flex gap-3 p-4">
-            <MapPinIcon className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+            <MapPinIcon className="w-5 h-5 text-brand-ink shrink-0 mt-0.5" />
             <div className="text-base">
               {local.address_line && <span className="block">{local.address_line}</span>}
               <span className="text-sm opacity-70">
@@ -85,7 +85,7 @@ const Local: NextPage<Props> = async ({ params }) => {
             href={`tel:${local.phone}`}
             className="flex items-center gap-3 p-4 min-h-12 hover:bg-base-200 active:bg-base-200 transition-colors"
           >
-            <PhoneIcon className="w-5 h-5 text-primary shrink-0" />
+            <PhoneIcon className="w-5 h-5 text-brand-ink shrink-0" />
             <span className="text-base font-bold text-secondary">{local.phone}</span>
           </a>
         )}

@@ -29,8 +29,8 @@ export const Heading: React.FC<HeadingProps> = ({
 
   const toneStyles = {
     espresso: "text-secondary",
-    terracotta: "text-primary",
-    honey: "text-accent",
+    terracotta: "text-brand-ink",
+    honey: "text-honey-ink",
   }[tone];
 
   // h1-h3 sao titulo de destaque (nome de estabelecimento, headline de tela) e
@@ -72,8 +72,8 @@ export const Text: React.FC<TextProps> = ({
   const toneStyles = {
     espresso: "text-secondary",
     muted: "text-kraft-ink",
-    terracotta: "text-primary",
-    honey: "text-accent",
+    terracotta: "text-brand-ink",
+    honey: "text-honey-ink",
     sage: "text-success",
   }[tone];
 

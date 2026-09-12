@@ -79,7 +79,7 @@ export const CartelaDaLoja = ({ slug }: { slug: string }) => {
   if (!dados) {
     return (
       <div className="flex flex-1 items-center justify-center py-20">
-        <span className="loading loading-spinner loading-lg text-primary" />
+        <span className="loading loading-spinner loading-lg text-brand-ink" />
       </div>
     );
   }
@@ -95,7 +95,7 @@ export const CartelaDaLoja = ({ slug }: { slug: string }) => {
       </Link>
 
       <header className="flex items-start gap-3">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-brand-ink">
           <CategoryIcon iconKey={info.iconKey} className="h-7 w-7" />
         </span>
         <div className="min-w-0">
@@ -116,7 +116,7 @@ export const CartelaDaLoja = ({ slug }: { slug: string }) => {
           <div>
             <dt className="m-0 text-[11px] font-bold uppercase tracking-wide opacity-60">Sequência</dt>
             <dd className="m-0 inline-flex items-center gap-1 font-mono text-lg font-black text-secondary">
-              {dados.cartela.sequencia > 1 && <FireIcon className="h-4 w-4 text-accent" />}
+              {dados.cartela.sequencia > 1 && <FireIcon className="h-4 w-4 text-honey-ink" />}
               {dados.cartela.sequencia}
             </dd>
           </div>
@@ -135,7 +135,9 @@ export const CartelaDaLoja = ({ slug }: { slug: string }) => {
         <div className="flex items-baseline justify-between gap-3">
           <h2 className="m-0 font-serif text-lg font-black text-secondary">O que dá para trocar</h2>
           {prontas > 0 && (
-            <span className="text-xs font-bold text-primary">{prontas === 1 ? "1 pronto" : `${prontas} prontos`}</span>
+            <span className="text-xs font-bold text-brand-ink">
+              {prontas === 1 ? "1 pronto" : `${prontas} prontos`}
+            </span>
           )}
         </div>
 
@@ -175,7 +177,7 @@ export const CartelaDaLoja = ({ slug }: { slug: string }) => {
                   {r.esgotada ? (
                     <span className="opacity-60">esgotado por enquanto</span>
                   ) : r.pronta ? (
-                    <span className="inline-flex items-center gap-1 text-primary">
+                    <span className="inline-flex items-center gap-1 text-brand-ink">
                       <CheckCircleIcon className="h-4 w-4" />
                       pronto — peça no balcão
                     </span>

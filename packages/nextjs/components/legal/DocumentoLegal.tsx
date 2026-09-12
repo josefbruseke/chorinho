@@ -43,9 +43,9 @@ export const DocumentoLegal = ({
             <li key={id}>
               <a
                 href={`#${id}`}
-                className="flex items-center gap-2.5 min-h-12 px-2.5 rounded-xl text-sm font-semibold text-base-content/85 hover:bg-base-100 hover:text-primary transition-colors"
+                className="flex items-center gap-2.5 min-h-12 px-2.5 rounded-xl text-sm font-semibold text-base-content/85 hover:bg-base-100 hover:text-brand-ink transition-colors"
               >
-                <span className="text-xs font-mono font-black text-primary/70 shrink-0 w-5 text-right">
+                <span className="text-xs font-mono font-black text-brand-ink/70 shrink-0 w-5 text-right">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 {tituloSecao}
@@ -64,7 +64,7 @@ export const DocumentoLegal = ({
         [&_ul]:m-0 [&_ul]:pl-5 [&_ul]:list-disc [&_ul]:flex [&_ul]:flex-col [&_ul]:gap-1.5
         [&_li]:text-base-content/85
         [&_section]:flex [&_section]:flex-col [&_section]:gap-3 [&_section]:scroll-mt-6
-        [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2"
+        [&_a]:text-brand-ink [&_a]:underline [&_a]:underline-offset-2"
     >
       {children}
     </div>

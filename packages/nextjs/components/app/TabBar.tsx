@@ -73,7 +73,7 @@ export const TabBar = () => {
             >
               <QrCodeIcon className="h-7 w-7 stroke-[2.2]" />
             </span>
-            <span className="text-[11px] font-black text-primary">Passe</span>
+            <span className="text-[11px] font-black text-brand-ink">Passe</span>
           </Link>
         </li>
 
@@ -93,7 +93,7 @@ const ItemAba = ({ aba, ativo }: { aba: Aba; ativo: boolean }) => {
         href={aba.href}
         aria-current={ativo ? "page" : undefined}
         className={`mx-0.5 my-1 flex min-h-14 flex-col items-center justify-center gap-1 rounded-2xl transition-colors ${
-          ativo ? "bg-primary/12 text-primary" : "text-base-content/60 active:bg-base-200"
+          ativo ? "bg-primary/12 text-brand-ink" : "text-base-content/70 active:bg-base-200"
         }`}
       >
         <Icone className="h-6.5 w-6.5" />

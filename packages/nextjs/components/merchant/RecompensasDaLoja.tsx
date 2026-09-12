@@ -112,7 +112,7 @@ export const RecompensasDaLoja = () => {
   if (!dados) {
     return (
       <div className="flex justify-center py-16">
-        <span className="loading loading-spinner loading-lg text-primary" />
+        <span className="loading loading-spinner loading-lg text-brand-ink" />
       </div>
     );
   }
@@ -207,7 +207,7 @@ export const RecompensasDaLoja = () => {
             erro num formulário em branco faz a tela parecer quebrada antes de
             alguém ter feito nada. */}
         {semCusto && tituloValido && (
-          <p className="m-0 text-xs font-semibold text-warning">
+          <p className="m-0 text-xs font-semibold text-honey-ink">
             defina carimbos, pontos, ou os dois — um prêmio de graça não é permitido
           </p>
         )}
@@ -253,7 +253,7 @@ export const RecompensasDaLoja = () => {
                     )}
                   </span>
                   {r.pecaId && (
-                    <span className="mt-1.5 ml-1.5 inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
+                    <span className="mt-1.5 ml-1.5 inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-brand-ink">
                       <SparklesIcon className="h-3.5 w-3.5" />
                       vem com peça
                     </span>
@@ -278,7 +278,7 @@ export const RecompensasDaLoja = () => {
                   {r.resgatados} {r.resgatados === 1 ? "resgate" : "resgates"}
                 </span>
                 {r.rascunho && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-warning bg-warning/10 px-2 py-0.5 font-bold text-warning">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-warning bg-warning/10 px-2 py-0.5 font-bold text-honey-ink">
                     rascunho — o balcão ainda não consegue entregar este prêmio
                   </span>
                 )}

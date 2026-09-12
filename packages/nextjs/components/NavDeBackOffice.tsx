@@ -68,7 +68,7 @@ export const NavDeBackOffice = ({
           <Link href={raiz} className="group flex min-w-0 shrink items-center gap-2.5">
             <BrandLogo className="h-8 w-8 shrink-0 transition-transform group-hover:scale-105" />
             <span className="truncate font-black tracking-tight">
-              Chorinho <span className="font-medium text-base-content/60">{titulo}</span>
+              Chorinho <span className="font-medium text-base-content/70">{titulo}</span>
             </span>
           </Link>
           <ContaDoUsuario entrarEm={`/entrar?proximo=${raiz}`} />
@@ -83,7 +83,7 @@ export const NavDeBackOffice = ({
             aria-haspopup="menu"
             className="flex min-h-12 w-full items-center gap-2 rounded-2xl bg-base-200 px-4 font-bold"
           >
-            <atual.Icon className="h-5 w-5 shrink-0 text-primary" />
+            <atual.Icon className="h-5 w-5 shrink-0 text-brand-ink" />
             <span className="min-w-0 flex-1 truncate text-left">{atual.label}</span>
             <ChevronDownIcon className={`h-5 w-5 shrink-0 transition-transform ${aberto ? "rotate-180" : ""}`} />
           </button>
@@ -102,7 +102,7 @@ export const NavDeBackOffice = ({
                         href={href}
                         aria-current={ativo ? "page" : undefined}
                         className={`flex min-h-12 items-center gap-2 rounded-xl px-3 text-sm transition-colors ${
-                          ativo ? "bg-primary/12 font-bold text-primary" : "font-semibold active:bg-base-200"
+                          ativo ? "bg-primary/12 font-bold text-brand-ink" : "font-semibold active:bg-base-200"
                         }`}
                       >
                         <Icon className="h-5 w-5 shrink-0" />
@@ -133,7 +133,7 @@ export const NavDeBackOffice = ({
                     aria-current={ativo ? "page" : undefined}
                     className={`flex min-h-12 items-center gap-2 whitespace-nowrap rounded-2xl px-4 text-sm transition-colors ${
                       ativo
-                        ? "bg-primary/10 font-bold text-primary"
+                        ? "bg-primary/10 font-bold text-brand-ink"
                         : "font-semibold text-base-content/70 hover:bg-base-200 hover:text-base-content"
                     }`}
                   >

@@ -60,12 +60,12 @@ const ComoFunciona: NextPage = () => (
     <ol className="list-none p-0 m-0 flex flex-col gap-4">
       {ETAPAS.map(({ Icon, titulo, texto }, i) => (
         <li key={titulo} className="flex gap-4 p-5 rounded-box border border-base-300 bg-base-100">
-          <span className="w-11 h-11 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+          <span className="w-11 h-11 rounded-2xl bg-primary/10 text-brand-ink flex items-center justify-center shrink-0">
             <Icon className="w-5 h-5" />
           </span>
           <div className="flex flex-col gap-1">
             <div className="flex items-baseline gap-2">
-              <span className="text-xs font-mono font-black text-accent">{String(i + 1).padStart(2, "0")}</span>
+              <span className="text-xs font-mono font-black text-honey-ink">{String(i + 1).padStart(2, "0")}</span>
               <h2 className="font-serif font-extrabold text-lg m-0 text-secondary">{titulo}</h2>
             </div>
             <p className="m-0 text-sm opacity-80 leading-relaxed">{texto}</p>

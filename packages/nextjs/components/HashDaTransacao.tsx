@@ -26,7 +26,7 @@ export const HashDaTransacao = ({ hash }: { hash: string }) => {
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-1 font-mono opacity-75 hover:text-primary hover:opacity-100"
+      className="inline-flex items-center gap-1 font-mono opacity-75 hover:text-brand-ink hover:opacity-100"
     >
       {curto}
       <ArrowTopRightOnSquareIcon className="h-3 w-3" />

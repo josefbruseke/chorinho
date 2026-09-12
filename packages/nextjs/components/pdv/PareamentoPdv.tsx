@@ -95,7 +95,7 @@ export const PareamentoPdv = ({ aoParear }: { aoParear: () => void }) => {
   if (doLink && enviando) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
-        <span className="loading loading-spinner loading-lg text-primary" />
+        <span className="loading loading-spinner loading-lg text-brand-ink" />
         <p className="m-0 font-bold opacity-75">Ligando este aparelho ao balcão…</p>
       </div>
     );
@@ -170,7 +170,7 @@ export const PareamentoPdv = ({ aoParear }: { aoParear: () => void }) => {
 
       {erro && (
         <p className="m-0 inline-flex max-w-xs items-start gap-2 rounded-2xl border border-warning bg-warning/10 p-3 text-sm font-semibold">
-          <ExclamationTriangleIcon className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
+          <ExclamationTriangleIcon className="mt-0.5 h-5 w-5 shrink-0 text-honey-ink" />
           {erro}
         </p>
       )}

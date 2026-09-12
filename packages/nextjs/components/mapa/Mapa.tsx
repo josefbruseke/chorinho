@@ -11,7 +11,7 @@ const MapaCanvas = dynamic(() => import("./MapaCanvas").then(m => m.MapaCanvas),
   ssr: false,
   loading: () => (
     <div className="w-full h-full rounded-box bg-base-300/40 flex items-center justify-center">
-      <span className="loading loading-spinner loading-lg text-primary" />
+      <span className="loading loading-spinner loading-lg text-brand-ink" />
     </div>
   ),
 });
@@ -66,7 +66,7 @@ export const Mapa = ({ className = "" }: { className?: string }) => {
         <div className="absolute inset-x-3 bottom-3 z-10 rounded-box border border-base-300 bg-base-100/95 backdrop-blur-md p-4 shadow-lg flex flex-col gap-3 sm:max-w-sm">
           <div className="flex items-start justify-between gap-3">
             <div className="flex gap-2.5">
-              <span className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <span className="w-9 h-9 rounded-xl bg-primary/10 text-brand-ink flex items-center justify-center shrink-0">
                 <MapPinIcon className="w-5 h-5" />
               </span>
               <div>

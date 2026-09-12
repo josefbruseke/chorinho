@@ -110,7 +110,7 @@ export const TiposDePonto = () => {
 
       {!tipos && !erro ? (
         <div className="flex justify-center py-16">
-          <span className="loading loading-spinner loading-lg text-primary" />
+          <span className="loading loading-spinner loading-lg text-brand-ink" />
         </div>
       ) : (
         tipos && (

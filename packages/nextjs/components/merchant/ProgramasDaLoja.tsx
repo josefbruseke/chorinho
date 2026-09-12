@@ -157,7 +157,7 @@ export const ProgramasDaLoja = () => {
   if (!dados) {
     return (
       <div className="flex justify-center py-16">
-        <span className="loading loading-spinner loading-lg text-primary" />
+        <span className="loading loading-spinner loading-lg text-brand-ink" />
       </div>
     );
   }
@@ -197,7 +197,7 @@ export const ProgramasDaLoja = () => {
           className="input input-bordered h-12 w-full text-base"
         />
         {nomeAparado.length >= 2 && bytesDoNome > 32 && (
-          <p className="m-0 text-xs font-semibold text-warning">
+          <p className="m-0 text-xs font-semibold text-honey-ink">
             o nome não cabe na rede: são 32 caracteres, e cada acento conta por dois
           </p>
         )}
@@ -379,7 +379,7 @@ export const ProgramasDaLoja = () => {
               </div>
 
               {p.rascunho && (
-                <span className="inline-flex w-fit items-center gap-1 rounded-full border border-warning bg-warning/10 px-2 py-0.5 text-xs font-bold text-warning">
+                <span className="inline-flex w-fit items-center gap-1 rounded-full border border-warning bg-warning/10 px-2 py-0.5 text-xs font-bold text-honey-ink">
                   rascunho — ainda não existe na rede
                 </span>
               )}

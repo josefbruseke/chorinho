@@ -91,7 +91,7 @@ export const MinhaColecao = () => {
   if (!dados) {
     return (
       <div className="flex justify-center py-10">
-        <span className="loading loading-spinner loading-md text-primary" />
+        <span className="loading loading-spinner loading-md text-brand-ink" />
       </div>
     );
   }
@@ -119,7 +119,7 @@ export const MinhaColecao = () => {
           {aReceber.map(c => (
             <li key={c.id} className="flex flex-col gap-3 rounded-2xl border-2 border-primary bg-primary/5 p-4">
               <div className="flex items-start gap-3">
-                <TrophyIcon className="h-8 w-8 shrink-0 text-primary" />
+                <TrophyIcon className="h-8 w-8 shrink-0 text-brand-ink" />
                 <div className="min-w-0">
                   <strong className="block text-base text-secondary">Você conquistou: {c.titulo}</strong>
                   {c.loja && <span className="text-xs opacity-70">{c.loja.nome}</span>}
@@ -212,7 +212,7 @@ const PecaCard = ({ peca }: { peca: Peca }) => {
           </div>
 
           {desconto && (
-            <p className="m-0 mt-0.5 text-sm font-black text-primary">
+            <p className="m-0 mt-0.5 text-sm font-black text-brand-ink">
               {desconto} de desconto
               {peca.programa?.produto ? ` em ${peca.programa.produto}` : ""}
             </p>
@@ -225,7 +225,7 @@ const PecaCard = ({ peca }: { peca: Peca }) => {
           </p>
 
           {peca.programa && !peca.programa.ativo && (
-            <p className="m-0 mt-1 text-xs font-bold text-warning">a loja pausou este programa</p>
+            <p className="m-0 mt-1 text-xs font-bold text-honey-ink">a loja pausou este programa</p>
           )}
 
           {/* Onde vale. Numa peça de programa conjunto isto é a informação

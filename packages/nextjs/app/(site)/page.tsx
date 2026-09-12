@@ -8,8 +8,8 @@ import {
   MapPinIcon,
   QrCodeIcon,
   ShoppingBagIcon,
-  SignalSlashIcon,
   SparklesIcon,
+  SignalSlashIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
 import { Mapa } from "~~/components/mapa/Mapa";
@@ -58,7 +58,7 @@ const Landing: NextPage = () => (
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] max-w-full bg-gradient-to-b from-primary/10 via-accent/5 to-transparent rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-5xl mx-auto px-5 pt-12 pb-10 text-center flex flex-col items-center relative z-10">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-black tracking-wide mb-6 shadow-xs">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-brand-ink text-sm font-black tracking-wide mb-6 shadow-xs">
           <SparklesIcon className="w-4 h-4 shrink-0" />
           <span>Aquele agrado no final da conta que você só tem no bairro</span>
         </div>
@@ -66,7 +66,7 @@ const Landing: NextPage = () => (
         <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif font-black m-0 tracking-tight max-w-3xl leading-[1.12] text-balance text-secondary">
           O carinho do comércio local, <br className="hidden sm:inline" />
           direto no seu{" "}
-          <span className="text-primary italic underline decoration-accent/40 underline-offset-8">celular</span>.
+          <span className="text-brand-ink italic underline decoration-accent/40 underline-offset-8">celular</span>.
         </h1>
 
         <p className="text-base sm:text-xl opacity-80 mt-6 mb-0 max-w-2xl text-balance leading-relaxed">
@@ -95,7 +95,7 @@ const Landing: NextPage = () => (
     <section className="w-full max-w-6xl mx-auto px-5 py-14 flex flex-col gap-5">
       <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <span className="inline-flex items-center gap-1.5 self-start px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-wider">
+          <span className="inline-flex items-center gap-1.5 self-start px-3 py-1.5 rounded-full bg-primary/10 text-brand-ink text-xs font-black uppercase tracking-wider">
             <MapPinIcon className="w-3.5 h-3.5 shrink-0" />O coração do Chorinho
           </span>
           <h2 className="text-2xl sm:text-4xl font-serif font-black m-0 tracking-tight text-secondary text-balance">
@@ -136,10 +136,10 @@ const Landing: NextPage = () => (
               className="flex flex-col items-start gap-2 p-5 rounded-box border border-base-300 bg-base-200/60"
             >
               <div className="flex items-center justify-between w-full">
-                <span className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                <span className="w-10 h-10 rounded-xl bg-primary/10 text-brand-ink flex items-center justify-center">
                   <Icon className="w-5 h-5" />
                 </span>
-                <span className="text-xs font-mono font-black text-accent">{String(i + 1).padStart(2, "0")}</span>
+                <span className="text-xs font-mono font-black text-honey-ink">{String(i + 1).padStart(2, "0")}</span>
               </div>
               <h3 className="font-serif font-extrabold text-lg m-0 text-secondary">{titulo}</h3>
               <p className="m-0 text-sm opacity-80 leading-relaxed">{texto}</p>
@@ -182,7 +182,7 @@ const Landing: NextPage = () => (
         <div className="grid sm:grid-cols-3 gap-4">
           {PARA_LOJISTA.map(({ Icon, titulo, texto }) => (
             <div key={titulo} className="p-5 rounded-box border border-base-300 bg-base-200/60 flex flex-col gap-2">
-              <span className="w-10 h-10 rounded-xl bg-accent/15 text-accent flex items-center justify-center">
+              <span className="w-10 h-10 rounded-xl bg-accent/15 text-honey-ink flex items-center justify-center">
                 <Icon className="w-5 h-5" />
               </span>
               <h3 className="font-serif font-extrabold text-base m-0 text-secondary">{titulo}</h3>

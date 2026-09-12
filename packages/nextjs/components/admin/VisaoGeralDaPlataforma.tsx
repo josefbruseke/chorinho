@@ -46,7 +46,7 @@ export const VisaoGeralDaPlataforma = () => {
   if (!dados) {
     return (
       <div className="flex justify-center py-16">
-        <span className="loading loading-spinner loading-lg text-primary" />
+        <span className="loading loading-spinner loading-lg text-brand-ink" />
       </div>
     );
   }
@@ -119,7 +119,7 @@ const ItemDeAtencao = ({ href, titulo, detalhe }: { href: string; titulo: string
     className="flex min-h-12 items-center justify-between gap-3 rounded-2xl border border-warning bg-warning/10 p-4 text-sm transition-colors hover:bg-warning/20"
   >
     <span className="flex min-w-0 items-start gap-2">
-      <ExclamationTriangleIcon className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
+      <ExclamationTriangleIcon className="mt-0.5 h-5 w-5 shrink-0 text-honey-ink" />
       <span className="min-w-0">
         <strong className="block font-bold text-secondary">{titulo}</strong>
         <span className="block truncate opacity-70">{detalhe}</span>

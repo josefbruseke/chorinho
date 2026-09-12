@@ -99,7 +99,7 @@ export const ListaDeLugares = () => {
         <p className="m-0 rounded-2xl border border-warning bg-warning/10 p-4 text-sm font-semibold">{erro}</p>
       ) : !lugares ? (
         <div className="flex justify-center py-16">
-          <span className="loading loading-spinner loading-lg text-primary" />
+          <span className="loading loading-spinner loading-lg text-brand-ink" />
         </div>
       ) : filtrados.length === 0 ? (
         <div className="flex flex-col items-center gap-3 rounded-3xl border-2 border-dashed border-base-300 px-6 py-14 text-center">
@@ -131,7 +131,7 @@ export const ListaDeLugares = () => {
                   href={`/local/${lugar.slug}`}
                   className="flex min-h-16 items-center gap-3 rounded-2xl border border-base-300 bg-base-100 p-4 no-underline transition active:scale-[0.99]"
                 >
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/12 text-primary">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/12 text-brand-ink">
                     <CategoryIcon iconKey={info.iconKey} className="h-6 w-6" />
                   </span>
                   <span className="min-w-0 flex-1">

@@ -74,7 +74,7 @@ export const Footer = () => {
           <div className="flex items-center gap-4 text-xs">
             <Link
               href="/cadastro"
-              className="flex items-center min-h-12 px-3 rounded-xl font-semibold hover:bg-base-200 hover:text-primary transition-colors"
+              className="flex items-center min-h-12 px-3 rounded-xl font-semibold hover:bg-base-200 hover:text-brand-ink transition-colors"
             >
               Cadastrar meu estabelecimento
             </Link>

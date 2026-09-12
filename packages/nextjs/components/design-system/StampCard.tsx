@@ -56,7 +56,7 @@ export const StampCard: React.FC<StampCardProps> = ({
                   isPunched
                     ? "bg-primary text-primary-content shadow-md scale-105 rotate-[-3deg]"
                     : isRewardSlot
-                      ? "border-2 border-dashed border-accent bg-honey-soft/60 text-accent"
+                      ? "border-2 border-dashed border-accent bg-honey-soft/60 text-honey-ink"
                       : "border-2 border-dashed border-kraft-edge bg-base-100/70 text-base-content/70"
                 }`}
               >

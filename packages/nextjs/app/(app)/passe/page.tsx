@@ -80,7 +80,7 @@ const Passe: NextPage = () => {
   if (carregando) {
     return (
       <div className="flex justify-center items-center grow py-20">
-        <span className="loading loading-spinner loading-lg text-primary" />
+        <span className="loading loading-spinner loading-lg text-brand-ink" />
       </div>
     );
   }
@@ -88,7 +88,7 @@ const Passe: NextPage = () => {
   if (erro) {
     return (
       <div className="flex flex-col items-center justify-center grow gap-4 px-6 py-16 text-center">
-        <ExclamationTriangleIcon className="w-12 h-12 text-warning" />
+        <ExclamationTriangleIcon className="w-12 h-12 text-honey-ink" />
         <h1 className="text-xl font-serif font-black m-0 text-secondary">Não deu para gerar seu passe</h1>
         <p className="m-0 text-sm opacity-75 max-w-xs leading-relaxed">{erro}</p>
         <button type="button" onClick={renovar} className="btn btn-primary h-14 rounded-2xl font-black gap-2 px-8">

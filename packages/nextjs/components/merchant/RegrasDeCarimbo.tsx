@@ -104,7 +104,7 @@ export const RegrasDeCarimbo = () => {
   if (!regra) {
     return (
       <div className="flex justify-center py-16">
-        <span className="loading loading-spinner loading-lg text-primary" />
+        <span className="loading loading-spinner loading-lg text-brand-ink" />
       </div>
     );
   }
@@ -126,7 +126,7 @@ export const RegrasDeCarimbo = () => {
 
       {motivo && (
         <p className="m-0 inline-flex items-start gap-2 rounded-2xl border border-warning bg-warning/10 p-4 text-sm font-semibold">
-          <ExclamationTriangleIcon className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
+          <ExclamationTriangleIcon className="mt-0.5 h-5 w-5 shrink-0 text-honey-ink" />
           {motivo}
         </p>
       )}

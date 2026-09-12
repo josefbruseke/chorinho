@@ -77,7 +77,7 @@ export const HeaderMenuLinks = ({ links = menuLinks }: { links?: HeaderMenuLink[
                 passHref
                 className={`${
                   isActive
-                    ? "bg-primary/10 text-primary font-bold border border-primary/20"
+                    ? "bg-primary/10 text-brand-ink font-bold border border-primary/20"
                     : "text-base-content/80 hover:bg-base-200 hover:text-base-content border border-transparent"
                 } rounded-xl px-4 min-h-12 text-sm font-semibold gap-2 flex items-center whitespace-nowrap transition-all`}
               >
@@ -127,7 +127,7 @@ export const Header = ({ links = menuLinks, homeHref = "/" }: { links?: HeaderMe
           <div className="flex flex-col leading-tight">
             <div className="flex items-center gap-1.5">
               <span className="font-black text-lg tracking-tight">Chorinho</span>
-              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-primary/10 text-brand-ink">
                 do bairro
               </span>
             </div>

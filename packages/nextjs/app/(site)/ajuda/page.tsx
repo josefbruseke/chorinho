@@ -42,7 +42,7 @@ const CLIENTE: Pergunta[] = [
       <>
         Não. Eles ficam registrados numa blockchain e nem nós nem o comerciante conseguimos apagá-los. Se o
         estabelecimento sair da plataforma, ele ainda deve honrar as cartelas completas. Veja{" "}
-        <Link href="/carteira-e-seguranca" className="text-primary underline underline-offset-2">
+        <Link href="/carteira-e-seguranca" className="text-brand-ink underline underline-offset-2">
           Carteira e segurança
         </Link>
         .
@@ -74,7 +74,7 @@ const CARTEIRA: Pergunta[] = [
       <>
         O registro na blockchain é público, mas anônimo: mostra um endereço, não o seu nome. Seu nome, e-mail e
         localização nunca vão para lá. O detalhe está em{" "}
-        <Link href="/carteira-e-seguranca" className="text-primary underline underline-offset-2">
+        <Link href="/carteira-e-seguranca" className="text-brand-ink underline underline-offset-2">
           Carteira e segurança
         </Link>
         .
@@ -89,7 +89,7 @@ const COMERCIANTE: Pergunta[] = [
     a: (
       <>
         Crie a conta, cadastre a loja e escolha um plano. Veja{" "}
-        <Link href="/para-comerciantes" className="text-primary underline underline-offset-2">
+        <Link href="/para-comerciantes" className="text-brand-ink underline underline-offset-2">
           Para comerciantes
         </Link>
         .
@@ -117,7 +117,7 @@ const COMERCIANTE: Pergunta[] = [
 const Bloco = ({ titulo, Icon, perguntas }: { titulo: string; Icon: typeof UserIcon; perguntas: Pergunta[] }) => (
   <section className="flex flex-col gap-3">
     <h2 className="flex items-center gap-2.5 text-xl font-serif font-extrabold text-secondary m-0">
-      <span className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+      <span className="w-9 h-9 rounded-xl bg-primary/10 text-brand-ink flex items-center justify-center shrink-0">
         <Icon className="w-5 h-5" />
       </span>
       {titulo}
@@ -127,7 +127,7 @@ const Bloco = ({ titulo, Icon, perguntas }: { titulo: string; Icon: typeof UserI
         <details key={q} className="group rounded-box border border-base-300 bg-base-100 overflow-hidden">
           <summary className="cursor-pointer list-none px-4 min-h-12 font-bold text-sm flex items-center justify-between gap-3 hover:bg-base-200 transition-colors">
             <span>{q}</span>
-            <span className="text-primary text-lg leading-none shrink-0 transition-transform group-open:rotate-45">
+            <span className="text-brand-ink text-lg leading-none shrink-0 transition-transform group-open:rotate-45">
               +
             </span>
           </summary>

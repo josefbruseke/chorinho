@@ -174,7 +174,7 @@ export const MapaCanvas = ({ className = "", centroSolicitado = null, aoCarregar
                     toque generosa em vez do texto pequeno "cru" que existia antes. */}
                 <Link
                   href={`/local/${local.slug}`}
-                  className="mt-1 block rounded-lg bg-primary/10 px-3 py-2 text-center text-sm font-bold text-primary no-underline"
+                  className="mt-1 block rounded-lg bg-primary/10 px-3 py-2 text-center text-sm font-bold text-brand-ink no-underline"
                 >
                   Ver o local
                 </Link>

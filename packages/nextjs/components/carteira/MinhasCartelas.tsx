@@ -75,7 +75,7 @@ export const MinhasCartelas = () => {
   if (!dados) {
     return (
       <div className="flex flex-1 items-center justify-center py-20">
-        <span className="loading loading-spinner loading-lg text-primary" />
+        <span className="loading loading-spinner loading-lg text-brand-ink" />
       </div>
     );
   }

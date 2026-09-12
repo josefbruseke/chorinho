@@ -30,13 +30,13 @@ export const ReceiptTicket: React.FC<ReceiptTicketProps> = ({
       <div className="p-6 bg-kraft border-b border-base-300">
         <div className="flex items-center justify-between gap-2">
           <span className="text-[11px] font-bold uppercase tracking-wider text-kraft-ink">{category}</span>
-          <span className="inline-flex items-center gap-1 text-xs font-bold text-accent bg-honey-soft px-2.5 py-0.5 rounded-full border border-honey-edge">
+          <span className="inline-flex items-center gap-1 text-xs font-bold text-honey-ink bg-honey-soft px-2.5 py-0.5 rounded-full border border-honey-edge">
             <SparklesIcon className="w-3.5 h-3.5" />
             Chorinho
           </span>
         </div>
         <h3 className="font-serif text-xl font-extrabold text-secondary mt-1">{establishmentName}</h3>
-        <p className="text-base font-semibold text-primary mt-0.5">{offerTitle}</p>
+        <p className="text-base font-semibold text-brand-ink mt-0.5">{offerTitle}</p>
       </div>
 
       {/* Perforation Line com entalhes circulares clássicos de bilhete físico */}

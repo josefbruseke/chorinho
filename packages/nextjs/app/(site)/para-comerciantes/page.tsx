@@ -63,7 +63,7 @@ const ParaComerciantes: NextPage = () => (
     <section className="grid sm:grid-cols-3 gap-4">
       {ARGUMENTOS.map(({ Icon, titulo, texto }) => (
         <div key={titulo} className="p-5 rounded-box border border-base-300 bg-base-100 flex flex-col gap-2">
-          <span className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+          <span className="w-10 h-10 rounded-xl bg-primary/10 text-brand-ink flex items-center justify-center">
             <Icon className="w-5 h-5" />
           </span>
           <h2 className="font-serif font-extrabold text-base m-0 text-secondary">{titulo}</h2>
@@ -89,7 +89,7 @@ const ParaComerciantes: NextPage = () => (
             <ul className="list-none p-0 m-0 flex flex-col gap-1.5">
               {itens.map(item => (
                 <li key={item} className="flex items-start gap-2 text-sm opacity-85">
-                  <CheckIcon className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                  <CheckIcon className="w-4 h-4 text-brand-ink shrink-0 mt-0.5" />
                   {item}
                 </li>
               ))}

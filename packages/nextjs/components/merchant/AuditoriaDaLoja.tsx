@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { CheckBadgeIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { HashDaTransacao } from "~~/components/HashDaTransacao";
 import { formatarCentavos } from "~~/utils/dinheiro";
 
 type Venda = {
@@ -192,7 +193,7 @@ export const AuditoriaDaLoja = () => {
                         <td className="font-mono text-xs opacity-75">{curta(v.carteira)}</td>
                         <td className="text-xs">
                           {v.tx ? (
-                            <span className="font-mono opacity-75">{v.tx.slice(0, 10)}…</span>
+                            <HashDaTransacao hash={v.tx} />
                           ) : (
                             <span className="font-bold text-error">{v.erro ?? v.status}</span>
                           )}

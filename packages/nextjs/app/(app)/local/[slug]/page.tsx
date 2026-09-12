@@ -5,6 +5,7 @@ import { ArrowLeftIcon, MapPinIcon, PhoneIcon } from "@heroicons/react/24/outlin
 import { CategoryIcon } from "~~/components/vitrine/CategoryIcon";
 import { VerifiedBadge } from "~~/components/vitrine/VerifiedBadge";
 import { supabaseServer } from "~~/services/database/server";
+import { INICIO_DO_APP } from "~~/utils/rotas";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
 import { categoryInfo } from "~~/utils/vitrine";
 
@@ -41,9 +42,9 @@ const Local: NextPage<Props> = async ({ params }) => {
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4 py-5 flex flex-col gap-5">
-      <Link href="/mapa" className="btn btn-ghost h-12 rounded-2xl gap-1.5 self-start -ml-2">
+      <Link href={INICIO_DO_APP} className="btn btn-ghost h-12 rounded-2xl gap-1.5 self-start -ml-2">
         <ArrowLeftIcon className="w-5 h-5" />
-        Voltar ao mapa
+        Voltar aos lugares
       </Link>
 
       <header className="flex gap-4 items-start">

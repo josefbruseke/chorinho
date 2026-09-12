@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { HashDaTransacao } from "~~/components/HashDaTransacao";
 import { formatarCentavos } from "~~/utils/dinheiro";
 
 type Venda = {
@@ -151,7 +152,7 @@ export const AuditoriaDaPlataforma = () => {
                         </td>
                         <td className="text-xs">
                           {v.tx ? (
-                            <span className="font-mono opacity-75">{v.tx.slice(0, 10)}…</span>
+                            <HashDaTransacao hash={v.tx} />
                           ) : (
                             <span className="font-bold text-error">{v.erro ?? "sem registro"}</span>
                           )}

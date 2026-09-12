@@ -9,14 +9,15 @@ import {
   BugAntIcon,
   BuildingStorefrontIcon,
   LifebuoyIcon,
-  MapIcon,
   SparklesIcon,
+  Squares2X2Icon,
 } from "@heroicons/react/24/outline";
 import { BrandLogo } from "~~/components/BrandLogo";
 import { ContaDoUsuario } from "~~/components/ContaDoUsuario";
 import { FaucetButton } from "~~/components/scaffold-eth";
 import { useOutsideClick, useTargetNetwork } from "~~/hooks/scaffold-eth";
 import { emDesenvolvimento } from "~~/utils/desenvolvimento";
+import { INICIO_DO_APP } from "~~/utils/rotas";
 
 type HeaderMenuLink = {
   label: string;
@@ -44,8 +45,8 @@ export const menuLinks: HeaderMenuLink[] = [
   },
   {
     label: "Abrir o app",
-    href: "/mapa",
-    icon: <MapIcon className="h-4 w-4" />,
+    href: INICIO_DO_APP,
+    icon: <Squares2X2Icon className="h-4 w-4" />,
   },
   {
     label: "Debug Contracts",

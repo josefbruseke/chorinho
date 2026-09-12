@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { NextPage } from "next";
 import { GiftIcon, MapIcon, QrCodeIcon, SparklesIcon, TicketIcon, TrophyIcon } from "@heroicons/react/24/outline";
+import { INICIO_DO_APP } from "~~/utils/rotas";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
 
 export const metadata = getMetadata({
@@ -74,7 +75,7 @@ const ComoFunciona: NextPage = () => (
     </ol>
 
     <div className="flex flex-col sm:flex-row gap-3">
-      <Link href="/mapa" className="btn btn-primary min-h-14 rounded-2xl font-black gap-2">
+      <Link href={INICIO_DO_APP} className="btn btn-primary min-h-14 rounded-2xl font-black gap-2">
         <MapIcon className="w-5 h-5" />
         Ver comércios perto de mim
       </Link>

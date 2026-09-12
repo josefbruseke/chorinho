@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { NextPage } from "next";
 import { LockClosedIcon } from "@heroicons/react/24/outline";
+import { INICIO_DO_APP } from "~~/utils/rotas";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
 
 export const metadata = getMetadata({
@@ -19,7 +20,7 @@ const SemAcesso: NextPage = () => (
       comércio parceiro, peça a quem administra a loja para incluir você na equipe.
     </p>
     <div className="flex flex-col sm:flex-row gap-2 mt-2">
-      <Link href="/mapa" className="btn btn-primary min-h-14 rounded-2xl font-black">
+      <Link href={INICIO_DO_APP} className="btn btn-primary min-h-14 rounded-2xl font-black">
         Ir para o mapa
       </Link>
       <Link href="/ajuda" className="btn btn-ghost min-h-12 rounded-2xl font-bold">

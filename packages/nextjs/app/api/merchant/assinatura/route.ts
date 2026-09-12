@@ -18,7 +18,7 @@ const PLANOS = [
     tier: 2,
     nome: "Bairro",
     resumo: "Quem quer aparecer mais para o bairro.",
-    recursos: ["Destaque no mapa", "Campanhas relâmpago", "Selos evolutivos"],
+    recursos: ["Destaque no mapa", "Peças colecionáveis", "Conquistas e selos"],
   },
   {
     tier: 3,

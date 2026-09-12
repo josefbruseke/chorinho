@@ -2,23 +2,24 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { GiftIcon, MapIcon, QrCodeIcon, TicketIcon, UserIcon } from "@heroicons/react/24/outline";
+import { GiftIcon, QrCodeIcon, Squares2X2Icon, TicketIcon, UserIcon } from "@heroicons/react/24/outline";
 import {
   GiftIcon as GiftSolid,
-  MapIcon as MapSolid,
+  Squares2X2Icon as GradeSolid,
   TicketIcon as TicketSolid,
   UserIcon as UserSolid,
 } from "@heroicons/react/24/solid";
+import { INICIO_DO_APP } from "~~/utils/rotas";
 
 type Aba = {
   href: string;
   label: string;
-  Icon: typeof MapIcon;
-  IconAtivo: typeof MapIcon;
+  Icon: typeof Squares2X2Icon;
+  IconAtivo: typeof Squares2X2Icon;
 };
 
 const ABAS: Aba[] = [
-  { href: "/mapa", label: "Mapa", Icon: MapIcon, IconAtivo: MapSolid },
+  { href: INICIO_DO_APP, label: "Lugares", Icon: Squares2X2Icon, IconAtivo: GradeSolid },
   { href: "/carteira", label: "Carteira", Icon: TicketIcon, IconAtivo: TicketSolid },
   { href: "/recompensas", label: "Prêmios", Icon: GiftIcon, IconAtivo: GiftSolid },
   { href: "/perfil", label: "Perfil", Icon: UserIcon, IconAtivo: UserSolid },
@@ -29,6 +30,14 @@ const ABAS: Aba[] = [
  *
  * O passe fica no centro, elevado, porque é a ação que se faz de pé no balcão
  * com uma mão só — e é a única que tem hora marcada.
+ *
+ * A primeira aba é a grade de lugares, não o mapa. Quem abre o aplicativo
+ * quase sempre quer *um lugar* — procurar pelo nome, ver quem tem prêmio hoje —
+ * e o mapa só responde "o que está perto de mim agora", que é a pergunta mais
+ * rara das duas. Além disso o mapa depende de GPS, de permissão e de baixar
+ * ladrilhos: uma tela inicial que pode nascer vazia, cinza ou pedindo
+ * autorização. A grade abre pronta. O mapa continua a um toque, no botão da
+ * própria grade.
  *
  * Cada alvo tem 56px de altura e ocupa a largura inteira da célula: o dedo de
  * quem está com uma sacola na outra mão não acerta alvo de 32px. A aba ativa

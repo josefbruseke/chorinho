@@ -1,12 +1,17 @@
 import { NextResponse } from "next/server";
+import { INICIO } from "~~/utils/rotas";
 
 /**
  * Três aplicativos instaláveis, um código.
  *
  * O `app/manifest.ts` do Next só permite um manifesto por projeto, e aqui são
- * três públicos com necessidades diferentes: o cliente instala o mapa, o
- * atendente instala o balcão, o lojista instala o painel. Cada um abre na sua
- * tela inicial e aparece com o nome certo na gaveta de aplicativos.
+ * três públicos com necessidades diferentes: o cliente instala a vitrine do
+ * bairro, o atendente instala o balcão, o lojista instala o painel. Cada um
+ * abre na sua tela inicial e aparece com o nome certo na gaveta.
+ *
+ * As `start_url` vêm de `INICIO`: instalar o aplicativo e cair na página de
+ * apresentação — que era o que acontecia com o cliente — é a primeira coisa que
+ * faz alguém desinstalar.
  */
 
 const ICONES = [
@@ -19,8 +24,8 @@ const MANIFESTOS = {
   cliente: {
     name: "Chorinho — comércio do bairro",
     short_name: "Chorinho",
-    description: "O mapa das lojas do seu bairro, sua cartela de carimbos e suas recompensas.",
-    start_url: "/",
+    description: "Os comércios do seu bairro, sua cartela de carimbos e suas recompensas.",
+    start_url: INICIO.cliente,
     // O cliente às vezes chega por link compartilhado; barra de navegação
     // ajuda ele a voltar.
     display: "standalone",
@@ -35,7 +40,7 @@ const MANIFESTOS = {
     name: "Chorinho Balcão",
     short_name: "Balcão",
     description: "Registre a venda e carimbe o cliente, com ou sem internet.",
-    start_url: "/pdv",
+    start_url: INICIO.pos,
     // Sem barra nenhuma: o tablet do caixa é um aparelho de uma função só, e
     // um botão de voltar visível é um jeito de o atendente se perder.
     display: "fullscreen",
@@ -48,7 +53,7 @@ const MANIFESTOS = {
     name: "Chorinho para lojistas",
     short_name: "Chorinho Loja",
     description: "Acompanhe carimbos, recompensas e clientes da sua loja.",
-    start_url: "/painel",
+    start_url: INICIO.merchant,
     display: "standalone",
     background_color: "#fbf8f2",
     theme_color: "#261c14",

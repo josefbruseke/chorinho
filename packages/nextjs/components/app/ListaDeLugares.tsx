@@ -72,9 +72,11 @@ export const ListaDeLugares = () => {
               Os comércios que participam. Mostre seu passe no balcão de qualquer um deles.
             </p>
           </div>
-          <Link href="/mapa" className="btn btn-ghost h-12 shrink-0 gap-1.5 rounded-2xl" aria-label="Ver no mapa">
+          {/* Ação de igual peso, não um enfeite: esta é a porta do mapa agora que
+              a grade é a tela inicial, e um ícone mudo no canto não é porta. */}
+          <Link href="/mapa" className="btn btn-outline h-12 shrink-0 gap-1.5 rounded-2xl font-bold">
             <MapIcon className="h-5 w-5" />
-            <span className="hidden sm:inline">Mapa</span>
+            Mapa
           </Link>
         </div>
 

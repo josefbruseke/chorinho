@@ -20,6 +20,9 @@ export const Footer = () => {
   // apontado para o anvil por engano nao pode publicar torneira de ETH e link
   // de explorador de blocos para o mundo.
   const isLocalNetwork = emDesenvolvimento() && targetNetwork.id === hardhat.id;
+  // Em rede publica o atalho util e o explorador dela, nao o nosso. Continua
+  // preso a desenvolvimento: no aplicativo do cliente nada disso faz sentido.
+  const explorador = targetNetwork.blockExplorers?.default;
   const { price: nativeCurrencyPrice } = useFetchNativeCurrencyPrice();
 
   return (
@@ -43,6 +46,17 @@ export const Footer = () => {
                   <span>Block Explorer</span>
                 </Link>
               </>
+            )}
+            {!isLocalNetwork && emDesenvolvimento() && explorador && (
+              <a
+                href={explorador.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary btn-sm gap-1 font-normal"
+              >
+                <MagnifyingGlassIcon className="h-4 w-4" />
+                <span>{explorador.name}</span>
+              </a>
             )}
           </div>
           <SwitchTheme className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} />

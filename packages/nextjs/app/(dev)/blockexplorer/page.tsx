@@ -1,75 +1,52 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { PaginationButton, SearchBar, TransactionsTable } from "./_components";
 import type { NextPage } from "next";
-import { hardhat } from "viem/chains";
+import { foundry, hardhat } from "viem/chains";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 import { useFetchBlocks } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
-import { notification } from "~~/utils/scaffold-eth";
 
+/**
+ * O explorador de blocos do Scaffold-ETH, que só fala com a cadeia local.
+ *
+ * O `useFetchBlocks` abre um websocket cravado em `ws://127.0.0.1:8545` e
+ * reconecta sozinho. Fora da cadeia local isso é um martelo batendo numa porta
+ * que não existe — então a rede pública nem chega a montar o componente que usa
+ * o hook, e a tela vira o que ela deveria ter sido desde sempre: um ponteiro
+ * para o explorador de verdade daquela rede.
+ */
 const BlockExplorer: NextPage = () => {
-  const { blocks, transactionReceipts, currentPage, hasNextPage, setCurrentPage, error } = useFetchBlocks();
   const { targetNetwork } = useTargetNetwork();
-  const [isLocalNetwork, setIsLocalNetwork] = useState(true);
-  const [hasError, setHasError] = useState(false);
+  const local = targetNetwork.id === hardhat.id || targetNetwork.id === foundry.id;
 
-  useEffect(() => {
-    if (targetNetwork.id !== hardhat.id) {
-      setIsLocalNetwork(false);
-    }
-  }, [targetNetwork.id]);
+  if (local) return <BlocosLocais />;
 
-  useEffect(() => {
-    if (targetNetwork.id === hardhat.id && error) {
-      setHasError(true);
-    }
-  }, [targetNetwork.id, error]);
+  const explorador = targetNetwork.blockExplorers?.default;
 
-  useEffect(() => {
-    if (!isLocalNetwork) {
-      notification.error(
-        <>
-          <p className="font-bold mt-0 mb-1">
-            <code className="italic bg-base-300 text-base font-bold"> targetNetwork </code> is not localhost
-          </p>
-          <p className="m-0">
-            - You are on <code className="italic bg-base-300 text-base font-bold">{targetNetwork.name}</code> .This
-            block explorer is only for <code className="italic bg-base-300 text-base font-bold">localhost</code>.
-          </p>
-          <p className="mt-1 break-normal">
-            - You can use{" "}
-            <a className="text-accent" href={targetNetwork.blockExplorers?.default.url}>
-              {targetNetwork.blockExplorers?.default.name}
-            </a>{" "}
-            instead
-          </p>
-        </>,
-      );
-    }
-  }, [
-    isLocalNetwork,
-    targetNetwork.blockExplorers?.default.name,
-    targetNetwork.blockExplorers?.default.url,
-    targetNetwork.name,
-  ]);
+  return (
+    <div className="mx-auto flex max-w-md flex-col items-center gap-4 px-6 py-20 text-center">
+      <h1 className="m-0 font-serif text-2xl font-black text-secondary">Este explorador é da cadeia local</h1>
+      <p className="m-0 text-sm opacity-75">
+        A aplicação está em <b>{targetNetwork.name}</b>, e lá as transações vivem num explorador público.
+      </p>
+      {explorador && (
+        <a
+          href={explorador.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-primary h-14 gap-2 rounded-2xl px-8 font-black"
+        >
+          Abrir {explorador.name}
+          <ArrowTopRightOnSquareIcon className="h-5 w-5" />
+        </a>
+      )}
+    </div>
+  );
+};
 
-  useEffect(() => {
-    if (hasError) {
-      notification.error(
-        <>
-          <p className="font-bold mt-0 mb-1">Cannot connect to local provider</p>
-          <p className="m-0">
-            - Did you forget to run <code className="italic bg-base-300 text-base font-bold">bun chain</code> ?
-          </p>
-          <p className="mt-1 break-normal">
-            - Or you can change <code className="italic bg-base-300 text-base font-bold">targetNetwork</code> in{" "}
-            <code className="italic bg-base-300 text-base font-bold">scaffold.config.ts</code>
-          </p>
-        </>,
-      );
-    }
-  }, [hasError]);
+const BlocosLocais = () => {
+  const { blocks, transactionReceipts, currentPage, hasNextPage, setCurrentPage } = useFetchBlocks();
 
   return (
     <div className="container mx-auto my-10">

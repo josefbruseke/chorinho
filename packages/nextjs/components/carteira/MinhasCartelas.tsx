@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { MapIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { SparklesIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 import { type Cartela, CartelaCard } from "~~/components/carteira/CartelaCard";
 import { supabaseBrowser, supabaseConfigurado } from "~~/services/database/browser";
+import { INICIO_DO_APP } from "~~/utils/rotas";
 
 type Resposta = { carteira: string | null; cartelas: Cartela[]; pontos: number };
 
@@ -110,9 +111,9 @@ export const MinhasCartelas = () => {
             <Link href="/passe" className="btn btn-primary rounded-2xl font-bold">
               Abrir meu passe
             </Link>
-            <Link href="/mapa" className="btn btn-ghost btn-sm gap-1.5 rounded-xl">
-              <MapIcon className="h-4 w-4" />
-              Ver lojas no mapa
+            <Link href={INICIO_DO_APP} className="btn btn-ghost btn-sm gap-1.5 rounded-xl">
+              <Squares2X2Icon className="h-4 w-4" />
+              Ver os lugares
             </Link>
           </div>
         </div>

@@ -38,7 +38,7 @@ const PLANOS = [
   {
     nome: "Bairro",
     para: "Quem quer aparecer mais",
-    itens: ["Destaque no mapa", "Campanhas relâmpago", "6 operadores", "Peças exclusivas por tempo de casa"],
+    itens: ["Destaque no mapa", "Peças colecionáveis", "6 operadores", "Programa conjunto com as vizinhas"],
     destaque: true,
   },
   {

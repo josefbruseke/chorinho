@@ -7,6 +7,7 @@ import type { NextPage } from "next";
 import { ArrowLeftIcon, EnvelopeIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { BrandLogo } from "~~/components/BrandLogo";
 import { supabaseBrowser } from "~~/services/database/browser";
+import { INICIO_DO_APP } from "~~/utils/rotas";
 
 const MarcaGoogle = ({ className = "" }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
@@ -29,7 +30,7 @@ const MarcaGoogle = ({ className = "" }: { className?: string }) => (
 const Formulario = () => {
   const router = useRouter();
   const params = useSearchParams();
-  const proximo = params.get("proximo") ?? "/mapa";
+  const proximo = params.get("proximo") ?? INICIO_DO_APP;
 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");

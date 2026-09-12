@@ -13,6 +13,7 @@ import {
   UsersIcon,
 } from "@heroicons/react/24/outline";
 import { Mapa } from "~~/components/mapa/Mapa";
+import { INICIO_DO_APP } from "~~/utils/rotas";
 
 const PASSOS = [
   {
@@ -75,7 +76,10 @@ const Landing: NextPage = () => (
 
         <div className="flex flex-col sm:flex-row gap-3 mt-8 w-full sm:w-auto">
           {/* botão principal da página: min-h-14 garante os 56px mesmo se o texto quebrar linha num celular de 360px */}
-          <Link href="/mapa" className="btn btn-primary min-h-14 rounded-2xl text-base font-black gap-2 shadow-sm">
+          <Link
+            href={INICIO_DO_APP}
+            className="btn btn-primary min-h-14 rounded-2xl text-base font-black gap-2 shadow-sm"
+          >
             <MapPinIcon className="w-5 h-5 shrink-0" />
             Ver quem participa perto de mim
           </Link>

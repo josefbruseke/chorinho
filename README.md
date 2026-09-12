@@ -127,11 +127,11 @@ O aplicativo é um só, dividido em sete experiências ("flavors"). Cada uma tem
 | :--- | :--- | :--- |
 | **Site** | `/`, `/como-funciona`, `/para-comerciantes`, `/ajuda`, `/entrar` | Visitante — site e aquisição |
 | **Legal** | `/privacidade`, `/termos`, `/carteira-e-seguranca`, `/cookies` | Quem quer ler as regras |
-| **Cliente** | `/mapa`, `/explorar`, `/local/[slug]`, `/carteira`, `/carteira/[slug]`, `/passe`, `/recompensas`, `/perfil` | Quem compra no bairro |
+| **Cliente** | `/explorar` (entrada), `/mapa`, `/local/[slug]`, `/carteira`, `/carteira/[slug]`, `/passe`, `/recompensas`, `/perfil` | Quem compra no bairro |
 | **Balcão** | `/pdv`, `/pdv/fila`, `/pdv/resgatar` | Atendente no caixa |
 | **Lojista** | `/painel`, `/painel/loja`, `/painel/regras`, `/painel/recompensas`, `/painel/pdv`, `/painel/equipe`, `/painel/assinatura`, `/painel/auditoria` | Dono da loja |
 | **Admin** | `/admin`, `/admin/estabelecimentos`, `/admin/pontos`, `/admin/relayer`, `/admin/auditoria` | Nossa equipe |
-| **Dev** | `/debug`, `/blockexplorer` | Ferramentas do Scaffold-ETH |
+| **Dev** | `/debug`, `/blockexplorer` | Ferramentas do Scaffold-ETH (o explorador só serve à cadeia local) |
 
 Cada flavor vive num route group em `packages/nextjs/app/` — `(site)`, `(legal)`, `(app)`, `(pos)`, `(merchant)`, `(admin)` e `(dev)` — com layout, navegação e par de temas próprios.
 

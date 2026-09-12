@@ -16,9 +16,16 @@ fork: setup-anvil-wallet
 	anvil --fork-url ${FORK_URL} --chain-id 31337
 
 # Deploy the contracts
+# `--slow` espera o recibo de cada transacao antes de mandar a proxima.
+#
+# O deploy passou de dois contratos para nove, mais uma duzia de concessoes de
+# papel. Sem isto o forge despacha tudo de uma vez e as transacoes chegam ao no
+# fora de ordem: "nonce too low" em cascata, terminando em "replacement
+# transaction underpriced". Passava na maquina de quem tem o anvil morno e
+# quebrava no CI toda vez -- e falhar so as vezes e pior do que falhar sempre.
 deploy:
 	@if [ ! -f "$(DEPLOY_SCRIPT)" ]; then 		echo "Error: Deploy script '$(DEPLOY_SCRIPT)' not found"; 		exit 1; 	fi
-	@if [ "$(RPC_URL)" = "localhost" ]; then 		if [ "$(ETH_KEYSTORE_ACCOUNT)" = "scaffold-eth-default" ]; then 			forge script $(DEPLOY_SCRIPT) --rpc-url localhost --password localhost --broadcast --ffi; 		else 			forge script $(DEPLOY_SCRIPT) --rpc-url localhost --broadcast --ffi; 		fi 	else 		forge script $(DEPLOY_SCRIPT) --rpc-url $(RPC_URL) --broadcast --ffi; 	fi
+	@if [ "$(RPC_URL)" = "localhost" ]; then 		if [ "$(ETH_KEYSTORE_ACCOUNT)" = "scaffold-eth-default" ]; then 			forge script $(DEPLOY_SCRIPT) --rpc-url localhost --password localhost --broadcast --slow --ffi; 		else 			forge script $(DEPLOY_SCRIPT) --rpc-url localhost --broadcast --slow --ffi; 		fi 	else 		forge script $(DEPLOY_SCRIPT) --rpc-url $(RPC_URL) --broadcast --slow --ffi; 	fi
 
 # Deploy and generate ABIs
 deploy-and-generate-abis: deploy generate-abis 

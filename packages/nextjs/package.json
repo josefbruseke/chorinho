@@ -13,7 +13,6 @@
     "start": "next dev",
     "vercel": "vercel --build-env VERCEL_TELEMETRY_DISABLED=1",
     "vercel:login": "vercel login",
-    "vercel:yolo": "vercel --build-env NEXT_PUBLIC_IGNORE_BUILD_ERROR=true --build-env VERCEL_TELEMETRY_DISABLED=1",
     "sw:build": "serwist build"
   },
   "dependencies": {

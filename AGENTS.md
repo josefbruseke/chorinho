@@ -49,7 +49,8 @@ bun account             # View current account info
 # Deploy to live network
 bun deploy --network <network>   # e.g., sepolia, mainnet, base
 
-bun vercel:yolo --prod # for deployment of frontend
+# Frontend deploys come from the GitHub repo (Vercel's Git integration), never the CLI.
+# The Vercel CLI is only for configuration: `bunx vercel link`, `bunx vercel env add`.
 ```
 
 ## Architecture

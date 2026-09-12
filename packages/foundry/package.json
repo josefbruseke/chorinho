@@ -10,7 +10,9 @@
     "chain": "make chain",
     "clean": "forge clean",
     "compile": "make compile",
+    "conta:demo": "node scripts-js/gerarContaDaDemo.js",
     "deploy": "node scripts-js/parseArgs.js",
+    "deploy:sepolia": "node scripts-js/sepolia.js",
     "flatten": "make flatten",
     "fork": "make fork FORK_URL=${1:-mainnet}",
     "format": "make format",
@@ -19,6 +21,7 @@
     "seed:balcao": "ETH_KEYSTORE_ACCOUNT=scaffold-eth-default forge script script/SeedBalcao.s.sol --rpc-url localhost --password localhost --broadcast -vv",
     "seed:colecao": "ETH_KEYSTORE_ACCOUNT=scaffold-eth-default forge script script/SeedColecao.s.sol --rpc-url localhost --password localhost --broadcast -vv",
     "seed:recompensas": "ETH_KEYSTORE_ACCOUNT=scaffold-eth-default forge script script/SeedRecompensas.s.sol --rpc-url localhost --password localhost --broadcast -vv",
+    "seed:sepolia": "node scripts-js/sepolia.js --file SeedBalcao.s.sol && node scripts-js/sepolia.js --file SeedRecompensas.s.sol && node scripts-js/sepolia.js --file SeedColecao.s.sol",
     "test": "forge test",
     "verify": "make verify RPC_URL=${1:-localhost}"
   },

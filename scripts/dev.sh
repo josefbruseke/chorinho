@@ -3,31 +3,28 @@ set -e
 
 export PATH="$HOME/.foundry/bin:$PATH"
 
-cleanup() {
-  echo -e "\n🛑 Encerrando serviços..."
-  # Kill all child processes belonging to this script
-  kill 0 2>/dev/null || true
-  exit 0
-}
-trap cleanup SIGINT SIGTERM EXIT
+# Desenvolvimento aponta para a Sepolia, a mesma rede da demonstração.
+#
+# Havia um anvil aqui, com deploy e seed a cada `bun dev`. Ele era ótimo
+# enquanto a cadeia era detalhe de implementação: bloco instantâneo, ETH de
+# graça, tudo recomeçando do zero. Mas era exatamente por isso que ele escondia
+# o que a Sepolia cobra — espera de doze segundos, nonce disputado entre dois
+# envios, teto de tempo da função. Cada um desses apareceu publicado, nunca
+# aqui.
+#
+# Agora a máquina de quem programa fala com a mesma rede do balcão. Mais lento,
+# e é o ponto: o que funciona aqui funciona lá.
+#
+# Para voltar ao anvil por um momento — depurar um contrato, por exemplo:
+#   bun run chain              (num terminal)
+#   bun run deploy && bun run seed:tudo
+#   CHORINHO_CHAIN_ID=31337 bun run start
 
-echo "⛓️  [1/4] Iniciando blockchain local (Anvil)..."
-bun run chain &
+if [ ! -f packages/nextjs/.env.local ]; then
+  echo "⚠️  packages/nextjs/.env.local não existe."
+  echo "   Copie packages/nextjs/.env.example e preencha — sem ele o app sobe sem banco e sem rede."
+  echo
+fi
 
-echo "⏳ Aguardando Anvil ficar pronto..."
-until curl -s http://127.0.0.1:8545 > /dev/null 2>&1; do
-  sleep 0.5
-done
-
-echo "🚀 [2/4] Fazendo deploy dos contratos..."
-bun run deploy
-
-# As lojas, as regras de carimbo e as recompensas precisam existir na cadeia
-# para o balcao funcionar. Sem isso o PDV abre e recusa toda venda com
-# "a loja ainda nao configurou a regra de carimbos" -- e a primeira impressao
-# de quem clonou o repositorio e que esta quebrado.
-echo "🌱 [3/4] Populando a rede local (lojas, regras e recompensas)..."
-bun run seed:tudo
-
-echo "✨ [4/4] Iniciando o frontend Next.js..."
-bun run start
+echo "✨ Iniciando o frontend Next.js (rede: Sepolia)..."
+exec bun run start

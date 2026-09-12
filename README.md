@@ -18,24 +18,33 @@ O cliente não precisa saber que existe blockchain por trás. Entra com e-mail o
 git clone <url-do-repositorio> chorinho
 cd chorinho
 bun install
+cp packages/nextjs/.env.example packages/nextjs/.env.local   # e preencha
 bun dev
 ```
 
-É só isso. O `bun dev` faz quatro coisas de uma vez: sobe a blockchain local (Anvil), publica os contratos, popula a rede com oito lojas de exemplo (com regra de carimbo e prêmios) e abre o frontend.
+A aplicação sobe em http://localhost:3000 apontando para a **Sepolia da
+Ethereum** — a mesma rede da demonstração, com os contratos já publicados. Não
+há blockchain local para subir.
 
-| Serviço | Endereço |
-| :--- | :--- |
-| Aplicação | http://localhost:3000 |
-| Blockchain local (Anvil) | http://localhost:8545 |
+Isso é uma escolha, e ela custa doze segundos por venda. O anvil é ótimo
+enquanto a cadeia é detalhe de implementação, e é exatamente por isso que ele
+escondia o que a rede de verdade cobra: a espera do bloco, o nonce disputado
+entre dois envios, o teto de tempo da função. Cada um desses defeitos apareceu
+publicado, nunca na máquina de quem programou.
 
-Quer os passos separados, cada um no seu terminal?
+<details>
+<summary>Voltar ao anvil por um momento (depurar um contrato, por exemplo)</summary>
 
 ```bash
-bun chain          # blockchain local
-bun run deploy     # publica os contratos e gera os tipos do frontend
-bun run seed:tudo  # lojas, regras de carimbo, prêmios e a coleção de peças
-bun start          # frontend
+bun run chain                          # num terminal
+bun run deploy && bun run seed:tudo    # noutro
+CHORINHO_CHAIN_ID=31337 bun run start
 ```
+
+Lembre de trocar `targetNetworks` em `packages/nextjs/scaffold.config.ts` para
+`chains.foundry` enquanto estiver assim — e de voltar depois.
+
+</details>
 
 ### Testando o fluxo inteiro
 
@@ -62,7 +71,7 @@ Com o PDV aberto, desligue o wifi e registre três vendas. Elas ficam em `/pdv/f
 
 | Comando | O que faz |
 | :--- | :--- |
-| `bun dev` | Sobe tudo: blockchain, deploy, seed e frontend |
+| `bun dev` | Sobe o frontend apontando para a Sepolia |
 | `bun run test` | Roda os testes dos contratos (precisa do `run` — `test` é comando embutido do Bun) |
 | `bun run lint` | Verifica contratos e frontend |
 | `bun run format` | Formata contratos e frontend |
@@ -78,7 +87,9 @@ Com o PDV aberto, desligue o wifi e registre três vendas. Elas ficam em `/pdv/f
 | `bun run seed:balcao` | Registra as oito lojas, assinaturas e regras de carimbo |
 | `bun run seed:recompensas` | Dez prêmios de exemplo, com ids fixos |
 | `bun run seed:colecao` | Programas de desconto, peças, conquistas e a troca por carimbos |
-| `bun run seed:tudo` | Os três acima, na ordem |
+| `bun run seed:tudo` | Os três acima, na ordem (rede local) |
+| `bun run deploy:sepolia` | Publica os nove contratos na Sepolia |
+| `bun run seed:sepolia` | Os três seeds, na Sepolia |
 | `bun account` | Mostra a conta usada nos deploys |
 | `bun generate` | Cria uma conta nova de deploy |
 | `bun account:import` | Importa uma chave privada existente |
@@ -93,29 +104,50 @@ Com o PDV aberto, desligue o wifi e registre três vendas. Elas ficam em `/pdv/f
 
 ## Publicando
 
-O frontend vai para a [Vercel](https://vercel.com); os contratos, para a [Base](https://base.org).
-
 ### Frontend
 
+**O deploy sai do repositório, não da linha de comando.** A Vercel observa o
+GitHub: publicar é `git push` do branch que ela acompanha. Assim o que está no
+ar é sempre um commit que existe — um `vercel --prod` sobe o que está na máquina
+de quem rodou o comando, e ninguém consegue dizer, olhando o repositório, o que
+foi publicado.
+
+A CLI da Vercel serve só para **configurar**:
+
 ```bash
-bun run vercel:login          # uma vez, na primeira máquina
-bun run deploy:vercel         # publica em produção
+bun run vercel:login                       # uma vez, na primeira máquina
+bunx vercel link                           # amarra a pasta ao projeto
+bunx vercel env add NOME production        # cada variável, uma por vez
 ```
 
-Na primeira vez a CLI pergunta o escopo e o nome do projeto. O diretório raiz do projeto na Vercel é `packages/nextjs`.
-
-Antes de publicar, configure as variáveis de ambiente no painel da Vercel (Settings → Environment Variables) — são as mesmas de `packages/nextjs/.env.local`, descritas abaixo. **Nunca** dê o prefixo `NEXT_PUBLIC_` a um segredo: tudo com esse prefixo é enviado ao navegador.
-
-Para um deploy de teste, sem afetar produção: `bun run vercel`.
+O diretório raiz do projeto na Vercel é `packages/nextjs`. As variáveis são as
+mesmas de `packages/nextjs/.env.local`, descritas abaixo — dá para configurá-las
+pelo painel (Settings → Environment Variables) em vez da CLI. **Nunca** dê o
+prefixo `NEXT_PUBLIC_` a um segredo: tudo com esse prefixo é enviado ao
+navegador.
 
 ### Contratos
 
+A demonstração roda na **Sepolia da Ethereum** (chain id 11155111).
+
 ```bash
-bun run deploy --network baseSepolia    # rede de teste
-bun run verify --network baseSepolia    # publica o código-fonte no explorador
+bun run deploy:sepolia    # publica os nove contratos
+bun run seed:sepolia      # lojas, prêmios e a coleção de exemplo
 ```
 
-Depois do deploy numa rede pública, aponte a aplicação para lá com `CHORINHO_CHAIN_ID=84532` e ajuste `targetNetworks` em `packages/nextjs/scaffold.config.ts`.
+Os dois leem `DEPLOYER_PRIVATE_KEY` e `ALCHEMY_API_KEY` de
+`packages/foundry/.env`. A conta precisa de pelo menos **0,3 ETH de teste** —
+são nove deploys mais algumas dezenas de transações de seed. Faucets:
+[Google Cloud](https://cloud.google.com/application/web3/faucet/ethereum/sepolia),
+[pk910](https://sepolia-faucet.pk910.de) (sem conta).
+
+Depois do deploy, aponte a aplicação para lá com `CHORINHO_CHAIN_ID=11155111` e
+`targetNetworks: [chains.sepolia]` em `packages/nextjs/scaffold.config.ts`.
+Nessa ordem: virar a rede antes de publicar deixa o front falando com contrato
+que não existe.
+
+Para outra rede pública, o caminho do kit continua valendo:
+`bun run deploy --network <rede>` com keystore e senha.
 
 ---
 

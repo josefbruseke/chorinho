@@ -47,7 +47,11 @@ export async function POST(request: NextRequest) {
   // Senha longa e aleatória a cada vez: ela não precisa ser lembrada por
   // ninguém, e uma fixa no código viraria credencial válida no dia em que o
   // modo de teste fosse ligado por engano num lugar público.
-  const senha = `t-${crypto.randomUUID()}-${crypto.randomUUID()}`;
+  // Um UUID (36 caracteres) e não dois: a Supabase guarda a senha com bcrypt,
+  // que trava em 72 bytes, e devolve um "Internal Server Error" seco quando
+  // passa disso — sem dizer que o problema é o tamanho. A versão anterior
+  // gerava 75 caracteres e falhava sempre.
+  const senha = `t-${crypto.randomUUID()}`;
 
   const { data: existentes } = await admin.auth.admin.listUsers({ perPage: 200 });
   const ja = existentes?.users.find(u => u.email === EMAIL);
@@ -57,7 +61,10 @@ export async function POST(request: NextRequest) {
     : await admin.auth.admin.createUser({ email: EMAIL, password: senha, email_confirm: true });
 
   if (eConta) {
-    console.error("[teste] falha ao preparar a conta:", eConta.message);
+    // O código e o status vêm junto porque a mensagem da Supabase costuma ser
+    // genérica — foi um "Internal Server Error" que escondeu, por um tempo, uma
+    // senha longa demais.
+    console.error("[teste] falha ao preparar a conta:", eConta.status, eConta.code, eConta.message);
     return NextResponse.json({ erro: "não foi possível preparar a conta de teste" }, { status: 500 });
   }
 

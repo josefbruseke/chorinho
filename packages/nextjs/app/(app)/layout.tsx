@@ -9,7 +9,7 @@ import { TabBar } from "~~/components/app/TabBar";
  */
 export const metadata: Metadata = { manifest: "/manifest/cliente" };
 
-export const viewport: Viewport = { themeColor: "#c2410c", viewportFit: "cover" };
+export const viewport: Viewport = { themeColor: "#76c112", viewportFit: "cover" };
 
 /**
  * Flavor cliente: o PWA. Mobile-first, navegação por barra inferior ao alcance

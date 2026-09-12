@@ -154,7 +154,7 @@ export const RecompensasDaLoja = () => {
           aria-label="Descrição do prêmio"
           className="textarea textarea-bordered w-full text-base"
         />
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <label className="flex flex-col gap-1 text-xs font-semibold opacity-75">
             Custo em carimbos
             <input

@@ -212,7 +212,7 @@ export const ProgramasDaLoja = () => {
           className="textarea textarea-bordered w-full text-base"
         />
 
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <label className="flex flex-col gap-1 text-xs font-semibold opacity-75">
             Tipo de desconto
             <select
@@ -466,7 +466,11 @@ const Pool = ({
       {recado && <span className="text-xs font-semibold opacity-75">{recado}</span>}
       <span className="text-xs opacity-60">
         A peça só vale onde a loja aceitar. Ela decide, e pode sair quando quiser —{" "}
-        {formatarCentavos(programa.tetoCentavos || 0) !== "R$ 0,00"
+        {/* A pergunta é sobre o número, não sobre o texto. Isto já comparou com
+            a string "R$ 0,00" e nunca batia: o `Intl` separa o símbolo do valor
+            com espaço não-quebrável, então um programa sem teto anunciava um
+            teto de zero para a vizinha que ia decidir se entrava. */}
+        {programa.tetoCentavos > 0
           ? `o desconto dela é limitado a ${formatarCentavos(programa.tetoCentavos)}.`
           : "o desconto sai do caixa dela."}
       </span>

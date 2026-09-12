@@ -215,7 +215,7 @@ export const ColecaoDaLoja = () => {
             className="textarea textarea-bordered w-full text-base"
           />
 
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             <label className="flex flex-col gap-1 text-xs font-semibold opacity-75">
               Nível
               <input

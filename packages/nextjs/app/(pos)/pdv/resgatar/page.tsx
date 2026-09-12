@@ -3,8 +3,8 @@ import { EntregaDePremio } from "~~/components/pdv/EntregaDePremio";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
 
 export const metadata = getMetadata({
-  title: "Entregar prêmio",
-  description: "Leia o passe do cliente e entregue o que ele já conquistou.",
+  title: "Prêmio ou peça",
+  description: "Leia o passe do cliente: entregue um prêmio ou use uma peça de desconto.",
 });
 
 const Resgatar: NextPage = () => <EntregaDePremio />;

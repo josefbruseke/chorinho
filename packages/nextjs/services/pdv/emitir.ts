@@ -463,8 +463,13 @@ const gravarDesfecho = async (balcao: Balcao, pendentes: Pendente[], enviados: M
  *
  * O contrato continua sendo a fonte da verdade; isto existe para a carteira do
  * cliente abrir instantânea, sem esperar uma chamada RPC por loja.
+ *
+ * Exportado porque QUEIMAR carimbo muda o saldo tanto quanto emitir. A entrega
+ * de prêmio não chamava isto, e o resultado era a carteira do cliente anunciar
+ * carimbos que a cadeia já tinha consumido — ele ia ao balcão pedir um prêmio
+ * que o contrato recusaria, na frente da fila.
  */
-const atualizarCache = async (balcao: Balcao, carteiras: string[]) => {
+export const atualizarCache = async (balcao: Balcao, carteiras: string[]) => {
   const admin = supabaseAdmin();
 
   await Promise.all(

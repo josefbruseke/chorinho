@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "~~/services/database/admin";
 import { supabaseServer } from "~~/services/database/server";
 import { lerAtendimento } from "~~/services/passe/atendimento";
-import { ErroDePdv, balcaoDoOperador } from "~~/services/pdv/emitir";
+import { ErroDePdv, atualizarCache, balcaoDoOperador } from "~~/services/pdv/emitir";
 import { erroDoContrato, refDaVenda, relayerConfigurado, resgatarRecompensa } from "~~/services/relayer/servidor";
 
 export const runtime = "nodejs";
@@ -111,6 +111,10 @@ export async function POST(request: NextRequest) {
           .from("rewards")
           .update({ redeemed: recompensa.redeemed + 1, updated_at: new Date().toISOString() })
           .eq("id", recompensa.id),
+        // O espelho precisa saber que os carimbos foram embora. Sem esta
+        // linha a cartela do cliente continua anunciando o que ele acabou de
+        // gastar.
+        atualizarCache(balcao, [atendimento.carteira]),
       ]);
 
       return NextResponse.json({ ok: true, titulo: recompensa.title, selos, pontos, tx: hash });

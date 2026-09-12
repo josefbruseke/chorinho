@@ -21,25 +21,38 @@ export async function GET() {
     const loja = await lojaDoGestor(userId);
     const { data: terminais } = await supabaseAdmin()
       .from("pos_terminals")
-      .select("id, name, device_label, paired_at, last_seen_at, pairing_expires_at, created_at")
+      .select("id, name, device_label, paired_at, last_seen_at, pairing_expires_at, pairing_code, created_at")
       .eq("establishment_id", loja.id)
       .is("revoked_at", null)
       .order("created_at", { ascending: true });
 
     return NextResponse.json({
       loja: { nome: loja.nome, limite: loja.limiteDePdv },
-      terminais: (terminais ?? []).map(t => ({
-        id: t.id,
-        nome: t.name,
-        aparelho: t.device_label,
-        pareadoEm: t.paired_at,
-        vistoEm: t.last_seen_at,
-        // O código em si nunca sai do servidor depois de criado: quem perdeu
-        // o papel cria outro terminal. Aqui só dizemos se ainda dá para parear.
-        aguardandoPareamento:
-          !t.paired_at && Boolean(t.pairing_expires_at) && t.pairing_expires_at! > new Date().toISOString(),
-        expirado: !t.paired_at && Boolean(t.pairing_expires_at) && t.pairing_expires_at! <= new Date().toISOString(),
-      })),
+      terminais: (terminais ?? []).map(t => {
+        const agora = new Date().toISOString();
+        const aguardando = !t.paired_at && Boolean(t.pairing_expires_at) && t.pairing_expires_at! > agora;
+
+        return {
+          id: t.id,
+          nome: t.name,
+          aparelho: t.device_label,
+          pareadoEm: t.paired_at,
+          vistoEm: t.last_seen_at,
+          aguardandoPareamento: aguardando,
+          expirado: !t.paired_at && Boolean(t.pairing_expires_at) && t.pairing_expires_at! <= agora,
+          // O código volta enquanto o pareamento está em aberto, para o painel
+          // poder mostrar o QR de novo.
+          //
+          // Antes ele aparecia uma vez só, "para não guardar chave de balcão em
+          // texto puro" — mas ele já está em texto puro na tabela, é assim que
+          // o pareamento o encontra. Esconder do painel não protegia nada e
+          // custava caro: quem fechasse a tela cedo demais tinha que criar
+          // OUTRO terminal e queimar uma vaga do plano. Quem protege são a
+          // validade de trinta minutos, o uso único e o desligamento imediato.
+          codigo: aguardando ? t.pairing_code : null,
+          expiraEm: aguardando ? t.pairing_expires_at : null,
+        };
+      }),
     });
   } catch (e) {
     if (e instanceof ErroDeGestao) return NextResponse.json({ erro: e.message }, { status: e.status });
@@ -65,10 +78,9 @@ export async function POST(request: NextRequest) {
     corpo = {};
   }
 
-  const nome = String(corpo.nome ?? "")
+  const pedido = String(corpo.nome ?? "")
     .trim()
     .slice(0, 40);
-  if (nome.length < 2) return NextResponse.json({ erro: "dê um nome ao terminal (ex.: Caixa 1)" }, { status: 400 });
 
   try {
     const loja = await lojaDoGestor(userId);
@@ -88,6 +100,10 @@ export async function POST(request: NextRequest) {
         { status: 409 },
       );
     }
+
+    // Nome em branco vira "Caixa N". Uma loja com seis caixas não deveria
+    // precisar inventar seis nomes para instalar seis tablets.
+    const nome = pedido.length >= 2 ? pedido : `Caixa ${(count ?? 0) + 1}`;
 
     const codigo = gerarCodigoDePareamento();
     const { data: terminal, error } = await admin

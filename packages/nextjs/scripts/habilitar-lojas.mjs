@@ -230,11 +230,18 @@ for (const loja of lojas) {
     // Grava AGORA, não no fim. A versão anterior esperava as três escritas, e
     // quando a regra falhava a loja ficava na cadeia sem o banco saber — a
     // execução seguinte a registrava outra vez.
-    const { error: eId } = await supabase
-      .from("establishments")
-      .update({ onchain_id: onchainId, ...(txDoRegistro ? { onchain_tx_hash: txDoRegistro } : {}) })
-      .eq("id", loja.id);
-    if (eId) throw new Error(`na cadeia (id ${onchainId}) mas falhou ao gravar no banco: ${eId.message}`);
+    //
+    // Em `--so-regras` não há o que gravar: o modo só pega lojas que já têm o
+    // id. Reescrever o mesmo valor era inútil e custou caro — um timeout
+    // passageiro do banco abortava a loja ANTES da regra, que é justamente o
+    // que aquela execução existia para fazer.
+    if (!soRegras) {
+      const { error: eId } = await supabase
+        .from("establishments")
+        .update({ onchain_id: onchainId, ...(txDoRegistro ? { onchain_tx_hash: txDoRegistro } : {}) })
+        .eq("id", loja.id);
+      if (eId) throw new Error(`na cadeia (id ${onchainId}) mas falhou ao gravar no banco: ${eId.message}`);
+    }
 
     if (!soRegras) {
       process.stdout.write("  assinatura…  ");

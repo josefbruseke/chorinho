@@ -4,7 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { NextPage } from "next";
 import { QRCodeSVG } from "qrcode.react";
-import { ArrowPathIcon, ExclamationTriangleIcon, TicketIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon, CheckCircleIcon, ExclamationTriangleIcon, TicketIcon } from "@heroicons/react/24/outline";
+import { supabaseBrowser, supabaseConfigurado } from "~~/services/database/browser";
+import { decodificarPasse } from "~~/utils/pass";
 
 type Passe = {
   qr: string;
@@ -12,6 +14,14 @@ type Passe = {
   expiraEm: number;
   validadeSegundos: number;
 };
+
+/**
+ * O que a tela sabe sobre a venda que está acontecendo agora.
+ *
+ * `lido` é a linha nascendo em `sales` — o caixa acabou de ler o QR. `caiu` é
+ * ela virando `confirmada`, com a rede tendo aceitado.
+ */
+type Andamento = { estado: "lido" } | { estado: "caiu"; carimbos: number };
 
 /**
  * O passe que o cliente mostra no balcão — a tela mais usada do aplicativo.
@@ -26,6 +36,7 @@ const Passe: NextPage = () => {
   const [restantes, setRestantes] = useState(0);
   const [erro, setErro] = useState<string | null>(null);
   const [carregando, setCarregando] = useState(true);
+  const [andamento, setAndamento] = useState<Andamento>();
   const emVoo = useRef(false);
 
   const renovar = useCallback(async () => {
@@ -67,13 +78,60 @@ const Passe: NextPage = () => {
     const tick = () => {
       const falta = Math.max(0, passe.expiraEm - Math.floor(Date.now() / 1000));
       setRestantes(falta);
-      if (falta <= 15) renovar();
+      if (falta <= 15 && !andamento) renovar();
     };
 
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, [passe, renovar]);
+  }, [passe, renovar, andamento]);
+
+  /**
+   * Escuta a venda acontecer, com o celular ainda na mão do cliente.
+   *
+   * Antes, quem mostrava o passe não via nada: o contador seguia andando e a
+   * única forma de saber se o carimbo entrou era trocar de tela. No balcão isso
+   * vira a pergunta que ninguém quer fazer — "caiu?" — com o caixa já atendendo
+   * o próximo.
+   *
+   * São dois eventos porque são dois momentos, e a diferença entre eles é o
+   * tempo de um bloco. O `INSERT` chega no instante da leitura e serve para a
+   * tela parar de pedir para escanear. O `UPDATE` para `confirmada` é a rede
+   * aceitando — só aí o carimbo é do cliente.
+   *
+   * O filtro é a carteira e não o perfil porque é ela que a tela já tem, vinda
+   * do próprio passe. A política de RLS é que garante o isolamento: ela deixa
+   * cada um ver só as vendas em que é o cliente, e o Realtime a respeita.
+   */
+  useEffect(() => {
+    const carteira = passe ? decodificarPasse(passe.qr)?.a : undefined;
+    if (!carteira || !supabaseConfigurado()) return;
+
+    const canal = supabaseBrowser()
+      .channel(`passe:${carteira}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "sales", filter: `customer_wallet=eq.${carteira}` },
+        () => setAndamento(a => a ?? { estado: "lido" }),
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "sales", filter: `customer_wallet=eq.${carteira}` },
+        ({ new: linha }) => {
+          const venda = linha as { status?: string; stamps_issued?: number | null };
+          if (venda.status === "confirmada") setAndamento({ estado: "caiu", carimbos: venda.stamps_issued ?? 1 });
+          // `falhou` volta a tela para o QR: o cliente ainda está ali e o caixa
+          // vai tentar de novo. Ficar em "lido" o deixaria esperando por algo
+          // que não vem.
+          if (venda.status === "falhou") setAndamento(undefined);
+        },
+      )
+      .subscribe();
+
+    return () => {
+      void supabaseBrowser().removeChannel(canal);
+    };
+  }, [passe]);
 
   const proporcao = passe ? restantes / passe.validadeSegundos : 0;
 
@@ -95,6 +153,55 @@ const Passe: NextPage = () => {
           <ArrowPathIcon className="w-5 h-5" />
           Tentar de novo
         </button>
+      </div>
+    );
+  }
+
+  /**
+   * A venda em curso toma a tela inteira.
+   *
+   * Some o QR de propósito: mostrá-lo ao lado de "lemos seu passe" convidaria o
+   * caixa a escanear de novo, e o passe já foi queimado — a segunda leitura
+   * falharia com "passe já usado", que parece defeito e não é.
+   */
+  if (andamento) {
+    const caiu = andamento.estado === "caiu";
+    return (
+      <div className="flex grow flex-col items-center justify-center gap-5 px-6 py-16 text-center">
+        {caiu ? (
+          <CheckCircleIcon className="h-20 w-20 text-success" />
+        ) : (
+          <span className="loading loading-spinner w-16 text-brand-ink" />
+        )}
+
+        <div>
+          <h1 className="m-0 font-serif text-3xl font-black text-secondary">
+            {caiu
+              ? `+${andamento.carimbos} ${andamento.carimbos === 1 ? "carimbo" : "carimbos"}`
+              : "Passe lido no balcão"}
+          </h1>
+          <p className="m-0 mt-2 max-w-xs text-sm leading-relaxed opacity-75">
+            {caiu ? "Já está na sua cartela." : "Registrando na rede. Pode guardar o celular — isso termina sozinho."}
+          </p>
+        </div>
+
+        {caiu && (
+          <div className="flex w-full max-w-xs flex-col gap-2">
+            <Link href="/carteira" className="btn btn-primary h-14 rounded-2xl font-black">
+              Ver minhas cartelas
+            </Link>
+            <button
+              type="button"
+              onClick={() => {
+                setAndamento(undefined);
+                void renovar();
+              }}
+              className="btn btn-ghost h-12 rounded-2xl font-bold"
+            >
+              Mostrar o passe de novo
+            </button>
+          </div>
+        )}
       </div>
     );
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { MapPinIcon, RectangleStackIcon, TrophyIcon } from "@heroicons/react/24/outline";
 import { beneficioEmTexto, dataCurta } from "~~/utils/colecao";
@@ -71,20 +71,63 @@ export const MinhaColecao = () => {
     void carregar();
   }, [carregar]);
 
-  const receber = async (c: Conquista) => {
-    setRecebendo(c.id);
-    setRecado(undefined);
-    try {
-      const r = await fetch(`/api/carteira/conquistas/${c.id}`, { method: "POST" });
-      const corpo = await r.json().catch(() => ({}));
-      setRecado(r.ok ? `${c.titulo} é sua.` : (corpo?.erro ?? "não deu certo agora"));
-      if (r.ok) await carregar();
-    } catch {
-      setRecado("sem conexão — tente de novo em instantes");
-    } finally {
-      setRecebendo(undefined);
-    }
-  };
+  const receber = useCallback(
+    async (c: Conquista) => {
+      setRecebendo(c.id);
+      setRecado(undefined);
+      try {
+        const r = await fetch(`/api/carteira/conquistas/${c.id}`, { method: "POST" });
+        const corpo = await r.json().catch(() => ({}));
+        setRecado(r.ok ? `${c.titulo} é sua.` : (corpo?.erro ?? "não deu certo agora"));
+        if (r.ok) await carregar();
+      } catch {
+        setRecado("sem conexão — tente de novo em instantes");
+      } finally {
+        setRecebendo(undefined);
+      }
+    },
+    [carregar],
+  );
+
+  /**
+   * O que já foi merecido é recebido sozinho, ao abrir a carteira.
+   *
+   * O carimbo cai no balcão, mas o selo não é cunhado ali: seriam mais uns
+   * quinze segundos com o caixa parado e a fila esperando. Então a cunhagem
+   * acontece aqui, com o cliente no sofá — e sem pedir um toque, porque exigir
+   * que a pessoa descubra um botão para receber o que já é dela é atrito à toa.
+   *
+   * Duas travas, e as duas custam dinheiro se faltarem:
+   *
+   * - `jaTentadas` guarda quem já tentamos NESTA sessão. Sem isso, uma
+   *   reivindicação que reverte volta como `merecida` na recarga e o efeito
+   *   tenta de novo, para sempre, gastando gás do relayer a cada volta.
+   * - `emCurso` serializa. Todas as reivindicações saem do mesmo relayer, e
+   *   dois envios simultâneos disputam o mesmo nonce — o segundo volta como
+   *   *replacement transaction underpriced*.
+   *
+   * O botão continua na tela: se a automática falhar, a pessoa ainda tem como
+   * pedir de novo, e aí é escolha dela.
+   */
+  const jaTentadas = useRef(new Set<string>());
+  const emCurso = useRef(false);
+
+  useEffect(() => {
+    const pendentes = (dados?.conquistas ?? []).filter(c => c.merecida && !jaTentadas.current.has(c.id));
+    if (pendentes.length === 0 || emCurso.current) return;
+
+    emCurso.current = true;
+    void (async () => {
+      try {
+        for (const c of pendentes) {
+          jaTentadas.current.add(c.id);
+          await receber(c);
+        }
+      } finally {
+        emCurso.current = false;
+      }
+    })();
+  }, [dados, receber]);
 
   if (erro) return <p className="m-0 px-5 text-sm opacity-70">{erro}</p>;
 
@@ -137,14 +180,17 @@ export const MinhaColecao = () => {
                     Recebendo…
                   </>
                 ) : (
-                  "Tocar para receber"
+                  // Só aparece como convite depois que a automática desistiu:
+                  // antes disso o botão está em "Recebendo…" e ninguém precisa
+                  // tocar em nada.
+                  "Tentar receber de novo"
                 )}
               </button>
-              {recebendo === c.id && (
-                <span className="text-center text-xs opacity-70">
-                  A rede leva alguns segundos para confirmar. Pode deixar a tela aberta.
-                </span>
-              )}
+              <span className="text-center text-xs opacity-70">
+                {recebendo === c.id
+                  ? "A rede leva alguns segundos para confirmar. Pode deixar a tela aberta."
+                  : "Não conseguimos registrar agora. O selo continua seu — é só tentar de novo."}
+              </span>
             </li>
           ))}
         </ul>

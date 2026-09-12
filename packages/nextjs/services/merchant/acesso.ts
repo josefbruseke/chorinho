@@ -1,5 +1,6 @@
 import "server-only";
 import { supabaseAdmin } from "~~/services/database/admin";
+import { lojaEscolhidaParaTeste } from "~~/services/teste/modo";
 
 /**
  * A loja que esta conta administra.
@@ -23,14 +24,22 @@ export type LojaGerida = { id: string; nome: string; onchainId: number | null; l
 export const lojaDoGestor = async (userId: string): Promise<LojaGerida> => {
   const admin = supabaseAdmin();
 
-  const { data: vinculo } = await admin
-    .from("establishment_members")
-    .select("establishment_id, role")
-    .eq("profile_id", userId)
-    .eq("active", true)
-    .in("role", ["owner", "manager"])
-    .limit(1)
-    .maybeSingle();
+  // Em modo de teste, a loja escolhida em `/teste` manda — e só ela. Não é
+  // atalho de autenticação: quem chega aqui já passou pelo proxy e pela
+  // sessão, exatamente como sempre. O que muda é qual loja a pessoa administra,
+  // porque a consulta abaixo devolve UMA por conta, e testar dezessete lojas
+  // exigiria dezessete lojistas.
+  const escolhida = await lojaEscolhidaParaTeste();
+  const { data: vinculo } = escolhida
+    ? { data: { establishment_id: escolhida, role: "owner" } }
+    : await admin
+        .from("establishment_members")
+        .select("establishment_id, role")
+        .eq("profile_id", userId)
+        .eq("active", true)
+        .in("role", ["owner", "manager"])
+        .limit(1)
+        .maybeSingle();
 
   if (!vinculo) throw new ErroDeGestao(403, "esta conta não administra nenhuma loja");
 

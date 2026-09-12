@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     EstablishmentRegistry: {
-      address: "0x700b6a60ce7eaaea56f065753d8dcb9653dbad35",
+      address: "0x86b3e65cdd7f9321118d5d4901a9800200c11b8a",
       abi: [
         {
           type: "constructor",
@@ -704,10 +704,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 1,
+      deployedOnBlock: 27,
     },
     DiscountNFT: {
-      address: "0xe1aa25618fa0c7a1cfdab5d6b456af611873b629",
+      address: "0x2fb5e98f1efe95ae50f9becafce660701ad8d9be",
       abi: [
         {
           type: "constructor",
@@ -716,6 +716,11 @@ const deployedContracts = {
               name: "_registry",
               type: "address",
               internalType: "contract EstablishmentRegistry",
+            },
+            {
+              name: "_programs",
+              type: "address",
+              internalType: "contract DiscountProgram",
             },
           ],
           stateMutability: "nonpayable",
@@ -770,26 +775,7 @@ const deployedContracts = {
         },
         {
           type: "function",
-          name: "campaignExists",
-          inputs: [
-            {
-              name: "tokenId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "createCampaign",
+          name: "createPiece",
           inputs: [
             {
               name: "tokenId",
@@ -799,10 +785,15 @@ const deployedContracts = {
             {
               name: "p",
               type: "tuple",
-              internalType: "struct DiscountNFT.CampaignParams",
+              internalType: "struct DiscountNFT.PieceParams",
               components: [
                 {
-                  name: "price",
+                  name: "programId",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "level",
                   type: "uint256",
                   internalType: "uint256",
                 },
@@ -827,21 +818,6 @@ const deployedContracts = {
                   internalType: "uint256",
                 },
                 {
-                  name: "category",
-                  type: "uint8",
-                  internalType: "enum DiscountNFT.Category",
-                },
-                {
-                  name: "flash",
-                  type: "bool",
-                  internalType: "bool",
-                },
-                {
-                  name: "comboTokenIds",
-                  type: "uint256[]",
-                  internalType: "uint256[]",
-                },
-                {
                   name: "uri",
                   type: "string",
                   internalType: "string",
@@ -851,6 +827,30 @@ const deployedContracts = {
           ],
           outputs: [],
           stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "discountFor",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "billCents",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
         },
         {
           type: "function",
@@ -873,7 +873,7 @@ const deployedContracts = {
         },
         {
           type: "function",
-          name: "getAllCampaigns",
+          name: "getAllPieces",
           inputs: [],
           outputs: [
             {
@@ -882,12 +882,17 @@ const deployedContracts = {
               internalType: "uint256[]",
             },
             {
-              name: "campaigns",
+              name: "pieces",
               type: "tuple[]",
-              internalType: "struct DiscountNFT.Campaign[]",
+              internalType: "struct DiscountNFT.Piece[]",
               components: [
                 {
-                  name: "price",
+                  name: "programId",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "level",
                   type: "uint256",
                   internalType: "uint256",
                 },
@@ -912,16 +917,6 @@ const deployedContracts = {
                   internalType: "uint256",
                 },
                 {
-                  name: "category",
-                  type: "uint8",
-                  internalType: "enum DiscountNFT.Category",
-                },
-                {
-                  name: "flash",
-                  type: "bool",
-                  internalType: "bool",
-                },
-                {
                   name: "active",
                   type: "bool",
                   internalType: "bool",
@@ -930,11 +925,6 @@ const deployedContracts = {
                   name: "exists",
                   type: "bool",
                   internalType: "bool",
-                },
-                {
-                  name: "comboTokenIds",
-                  type: "uint256[]",
-                  internalType: "uint256[]",
                 },
                 {
                   name: "uri",
@@ -953,7 +943,7 @@ const deployedContracts = {
         },
         {
           type: "function",
-          name: "getCampaign",
+          name: "getPiece",
           inputs: [
             {
               name: "tokenId",
@@ -965,10 +955,15 @@ const deployedContracts = {
             {
               name: "",
               type: "tuple",
-              internalType: "struct DiscountNFT.Campaign",
+              internalType: "struct DiscountNFT.Piece",
               components: [
                 {
-                  name: "price",
+                  name: "programId",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "level",
                   type: "uint256",
                   internalType: "uint256",
                 },
@@ -993,16 +988,6 @@ const deployedContracts = {
                   internalType: "uint256",
                 },
                 {
-                  name: "category",
-                  type: "uint8",
-                  internalType: "enum DiscountNFT.Category",
-                },
-                {
-                  name: "flash",
-                  type: "bool",
-                  internalType: "bool",
-                },
-                {
                   name: "active",
                   type: "bool",
                   internalType: "bool",
@@ -1011,11 +996,6 @@ const deployedContracts = {
                   name: "exists",
                   type: "bool",
                   internalType: "bool",
-                },
-                {
-                  name: "comboTokenIds",
-                  type: "uint256[]",
-                  internalType: "uint256[]",
                 },
                 {
                   name: "uri",
@@ -1029,7 +1009,7 @@ const deployedContracts = {
         },
         {
           type: "function",
-          name: "getCampaignIds",
+          name: "getPieceIds",
           inputs: [],
           outputs: [
             {
@@ -1066,8 +1046,13 @@ const deployedContracts = {
         },
         {
           type: "function",
-          name: "mint",
+          name: "mintTo",
           inputs: [
+            {
+              name: "to",
+              type: "address",
+              internalType: "address",
+            },
             {
               name: "tokenId",
               type: "uint256",
@@ -1080,7 +1065,7 @@ const deployedContracts = {
             },
           ],
           outputs: [],
-          stateMutability: "payable",
+          stateMutability: "nonpayable",
         },
         {
           type: "function",
@@ -1108,31 +1093,35 @@ const deployedContracts = {
         },
         {
           type: "function",
-          name: "redeem",
+          name: "pieceExists",
           inputs: [
-            {
-              name: "user",
-              type: "address",
-              internalType: "address",
-            },
             {
               name: "tokenId",
               type: "uint256",
               internalType: "uint256",
             },
+          ],
+          outputs: [
             {
-              name: "amount",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "redemptionRef",
-              type: "bytes32",
-              internalType: "bytes32",
+              name: "",
+              type: "bool",
+              internalType: "bool",
             },
           ],
-          outputs: [],
-          stateMutability: "nonpayable",
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "programs",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "contract DiscountProgram",
+            },
+          ],
+          stateMutability: "view",
         },
         {
           type: "function",
@@ -1233,7 +1222,7 @@ const deployedContracts = {
         },
         {
           type: "function",
-          name: "setCampaignActive",
+          name: "setPieceActive",
           inputs: [
             {
               name: "tokenId",
@@ -1251,7 +1240,7 @@ const deployedContracts = {
         },
         {
           type: "function",
-          name: "setCampaignUri",
+          name: "setPieceUri",
           inputs: [
             {
               name: "tokenId",
@@ -1339,12 +1328,32 @@ const deployedContracts = {
         },
         {
           type: "function",
-          name: "withdraw",
+          name: "usePiece",
           inputs: [
             {
-              name: "to",
+              name: "user",
               type: "address",
-              internalType: "address payable",
+              internalType: "address",
+            },
+            {
+              name: "tokenId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "amount",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "redemptionRef",
+              type: "bytes32",
+              internalType: "bytes32",
             },
           ],
           outputs: [],
@@ -1377,7 +1386,7 @@ const deployedContracts = {
         },
         {
           type: "event",
-          name: "CampaignActiveSet",
+          name: "PieceActiveSet",
           inputs: [
             {
               name: "tokenId",
@@ -1396,7 +1405,7 @@ const deployedContracts = {
         },
         {
           type: "event",
-          name: "CampaignCreated",
+          name: "PieceCreated",
           inputs: [
             {
               name: "tokenId",
@@ -1405,23 +1414,60 @@ const deployedContracts = {
               internalType: "uint256",
             },
             {
-              name: "category",
-              type: "uint8",
-              indexed: false,
-              internalType: "enum DiscountNFT.Category",
+              name: "programId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
             },
             {
-              name: "flash",
-              type: "bool",
+              name: "level",
+              type: "uint256",
               indexed: false,
-              internalType: "bool",
+              internalType: "uint256",
+            },
+            {
+              name: "maxSupply",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
             },
           ],
           anonymous: false,
         },
         {
           type: "event",
-          name: "CampaignUriSet",
+          name: "PieceMinted",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "to",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "amount",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+            {
+              name: "minter",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "PieceUriSet",
           inputs: [
             {
               name: "tokenId",
@@ -1440,94 +1486,7 @@ const deployedContracts = {
         },
         {
           type: "event",
-          name: "ComboMintSkipped",
-          inputs: [
-            {
-              name: "mainTokenId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-            {
-              name: "comboTokenId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-            {
-              name: "to",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "ComboMinted",
-          inputs: [
-            {
-              name: "mainTokenId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-            {
-              name: "comboTokenId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-            {
-              name: "to",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "amount",
-              type: "uint256",
-              indexed: false,
-              internalType: "uint256",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "Minted",
-          inputs: [
-            {
-              name: "tokenId",
-              type: "uint256",
-              indexed: true,
-              internalType: "uint256",
-            },
-            {
-              name: "to",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "amount",
-              type: "uint256",
-              indexed: false,
-              internalType: "uint256",
-            },
-            {
-              name: "paid",
-              type: "uint256",
-              indexed: false,
-              internalType: "uint256",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "Redeemed",
+          name: "PieceUsed",
           inputs: [
             {
               name: "tokenId",
@@ -1542,10 +1501,10 @@ const deployedContracts = {
               internalType: "address",
             },
             {
-              name: "establishment",
-              type: "address",
+              name: "establishmentId",
+              type: "uint256",
               indexed: true,
-              internalType: "address",
+              internalType: "uint256",
             },
             {
               name: "amount",
@@ -1656,90 +1615,6 @@ const deployedContracts = {
           anonymous: false,
         },
         {
-          type: "event",
-          name: "Withdrawn",
-          inputs: [
-            {
-              name: "to",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "amount",
-              type: "uint256",
-              indexed: false,
-              internalType: "uint256",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "error",
-          name: "CampaignAlreadyExists",
-          inputs: [
-            {
-              name: "tokenId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "CampaignDoesNotExist",
-          inputs: [
-            {
-              name: "tokenId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "CampaignEnded",
-          inputs: [
-            {
-              name: "tokenId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "endTime",
-              type: "uint64",
-              internalType: "uint64",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "CampaignNotActive",
-          inputs: [
-            {
-              name: "tokenId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "CampaignNotStarted",
-          inputs: [
-            {
-              name: "tokenId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "startTime",
-              type: "uint64",
-              internalType: "uint64",
-            },
-          ],
-        },
-        {
           type: "error",
           name: "ERC1155InsufficientBalance",
           inputs: [
@@ -1843,30 +1718,8 @@ const deployedContracts = {
         },
         {
           type: "error",
-          name: "InvalidComboReference",
-          inputs: [
-            {
-              name: "comboTokenId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "InvalidPayment",
-          inputs: [
-            {
-              name: "expected",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "sent",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
+          name: "InvalidLevel",
+          inputs: [],
         },
         {
           type: "error",
@@ -1917,22 +1770,103 @@ const deployedContracts = {
         },
         {
           type: "error",
-          name: "NotAdmin",
+          name: "NotAllowedToMint",
           inputs: [],
         },
         {
           type: "error",
-          name: "NotEstablishment",
+          name: "NotEstablishmentOwner",
           inputs: [],
         },
         {
           type: "error",
-          name: "ReentrancyGuardReentrantCall",
+          name: "NotOperator",
           inputs: [],
         },
         {
           type: "error",
-          name: "WithdrawFailed",
+          name: "NotValidHere",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "PieceAlreadyExists",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "PieceExpired",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "endTime",
+              type: "uint64",
+              internalType: "uint64",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "PieceNotActive",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "PieceNotStarted",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "startTime",
+              type: "uint64",
+              internalType: "uint64",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "UnknownPiece",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "UnknownProgram",
           inputs: [],
         },
         {
@@ -1942,10 +1876,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 6,
+      deployedOnBlock: 33,
     },
     BonusNFT: {
-      address: "0xe1da8919f262ee86f9be05059c9280142cf23f48",
+      address: "0x5e388db7c3aef7dea9585fbe3c077f0c98857d0d",
       abi: [
         {
           type: "constructor",
@@ -2106,6 +2040,40 @@ const deployedContracts = {
             },
           ],
           stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "mintAchievementBadge",
+          inputs: [
+            {
+              name: "to",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "routeId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "uri",
+              type: "string",
+              internalType: "string",
+            },
+          ],
+          outputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "nonpayable",
         },
         {
           type: "function",
@@ -2487,6 +2455,37 @@ const deployedContracts = {
           ],
           outputs: [],
           stateMutability: "nonpayable",
+        },
+        {
+          type: "event",
+          name: "AchievementBadgeMinted",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "to",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "routeId",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+          ],
+          anonymous: false,
         },
         {
           type: "event",
@@ -2880,10 +2879,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 4,
+      deployedOnBlock: 33,
     },
     SubscriptionManager: {
-      address: "0xa15bb66138824a1c7167f5e85b957d04dd34e468",
+      address: "0xc624801dd98bef87c0718ddb43ad3a566cc51ecc",
       abi: [
         {
           type: "constructor",
@@ -3304,10 +3303,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 2,
+      deployedOnBlock: 28,
     },
     PointsVault: {
-      address: "0xb19b36b1456e65e3a6d514d3f715f204bd59f431",
+      address: "0x5d1ce2a19aa885765abcef89b7590e213422a8b9",
       abi: [
         {
           type: "constructor",
@@ -4220,10 +4219,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 3,
+      deployedOnBlock: 33,
     },
     StampLedger: {
-      address: "0x8ce361602b935680e8dec218b820ff5056beb7af",
+      address: "0xd3497ab25da369b3ee5a239890348ea542b0f479",
       abi: [
         {
           type: "constructor",
@@ -5024,10 +5023,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 5,
+      deployedOnBlock: 29,
     },
     RewardCatalog: {
-      address: "0x0c8e79f3534b00d9a3d4a856b665bf4ebc22f2ba",
+      address: "0x270fbc6a0f1007eb41863237eefb773795fd1f9c",
       abi: [
         {
           type: "constructor",
@@ -5046,6 +5045,11 @@ const deployedContracts = {
               name: "_pointsVault",
               type: "address",
               internalType: "contract PointsVault",
+            },
+            {
+              name: "_discountNFT",
+              type: "address",
+              internalType: "contract DiscountNFT",
             },
           ],
           stateMutability: "nonpayable",
@@ -5137,6 +5141,11 @@ const deployedContracts = {
               internalType: "uint32",
             },
             {
+              name: "pieceId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
               name: "metadataHash",
               type: "bytes32",
               internalType: "bytes32",
@@ -5150,6 +5159,19 @@ const deployedContracts = {
             },
           ],
           stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "discountNFT",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "contract DiscountNFT",
+            },
+          ],
+          stateMutability: "view",
         },
         {
           type: "function",
@@ -5251,6 +5273,11 @@ const deployedContracts = {
               name: "active",
               type: "bool",
               internalType: "bool",
+            },
+            {
+              name: "pieceId",
+              type: "uint256",
+              internalType: "uint256",
             },
             {
               name: "metadataHash",
@@ -5461,7 +5488,1105 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 6,
+      deployedOnBlock: 29,
+    },
+    DiscountProgram: {
+      address: "0x49ea5126fd67f877b62ddc0144dbeb42591df7bb",
+      abi: [
+        {
+          type: "constructor",
+          inputs: [
+            {
+              name: "_registry",
+              type: "address",
+              internalType: "contract EstablishmentRegistry",
+            },
+          ],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "BPS_DENOMINATOR",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "acceptInvite",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "createProgram",
+          inputs: [
+            {
+              name: "ownerEstablishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "name",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+            {
+              name: "kind",
+              type: "uint8",
+              internalType: "enum DiscountProgram.DiscountKind",
+            },
+            {
+              name: "baseBenefit",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "capCents",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "product",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+            {
+              name: "startTime",
+              type: "uint64",
+              internalType: "uint64",
+            },
+            {
+              name: "endTime",
+              type: "uint64",
+              internalType: "uint64",
+            },
+            {
+              name: "joint",
+              type: "bool",
+              internalType: "bool",
+            },
+            {
+              name: "metadataHash",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          outputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "discountFor",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "level",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "billCents",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "getProgram",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "tuple",
+              internalType: "struct DiscountProgram.Program",
+              components: [
+                {
+                  name: "ownerEstablishmentId",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "name",
+                  type: "bytes32",
+                  internalType: "bytes32",
+                },
+                {
+                  name: "kind",
+                  type: "uint8",
+                  internalType: "enum DiscountProgram.DiscountKind",
+                },
+                {
+                  name: "baseBenefit",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "capCents",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "product",
+                  type: "bytes32",
+                  internalType: "bytes32",
+                },
+                {
+                  name: "startTime",
+                  type: "uint64",
+                  internalType: "uint64",
+                },
+                {
+                  name: "endTime",
+                  type: "uint64",
+                  internalType: "uint64",
+                },
+                {
+                  name: "joint",
+                  type: "bool",
+                  internalType: "bool",
+                },
+                {
+                  name: "active",
+                  type: "bool",
+                  internalType: "bool",
+                },
+                {
+                  name: "exists",
+                  type: "bool",
+                  internalType: "bool",
+                },
+                {
+                  name: "metadataHash",
+                  type: "bytes32",
+                  internalType: "bytes32",
+                },
+              ],
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "invite",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "leaveProgram",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "membersOf",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256[]",
+              internalType: "uint256[]",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "membershipOf",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint8",
+              internalType: "enum DiscountProgram.Membership",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "programExists",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "registry",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "contract EstablishmentRegistry",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "setProgramActive",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "active",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "validAt",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "event",
+          name: "EstablishmentInvited",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "EstablishmentJoined",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "EstablishmentLeft",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "ProgramActiveSet",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "active",
+              type: "bool",
+              indexed: false,
+              internalType: "bool",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "ProgramCreated",
+          inputs: [
+            {
+              name: "programId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "ownerEstablishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "name",
+              type: "bytes32",
+              indexed: false,
+              internalType: "bytes32",
+            },
+            {
+              name: "joint",
+              type: "bool",
+              indexed: false,
+              internalType: "bool",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "error",
+          name: "AlreadyAMember",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "InvalidBenefit",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "InvalidWindow",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NotAMember",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NotEstablishmentOwner",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NotInvited",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "ProgramIsNotJoint",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "UnknownEstablishment",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "UnknownProgram",
+          inputs: [],
+        },
+      ],
+      inheritedFunctions: {},
+      deployedOnBlock: 33,
+    },
+    Achievements: {
+      address: "0x9db9797733fe5f734724aa05d29fa39563563af5",
+      abi: [
+        {
+          type: "constructor",
+          inputs: [
+            {
+              name: "_registry",
+              type: "address",
+              internalType: "contract EstablishmentRegistry",
+            },
+            {
+              name: "_stampLedger",
+              type: "address",
+              internalType: "contract StampLedger",
+            },
+            {
+              name: "_bonusNFT",
+              type: "address",
+              internalType: "contract BonusNFT",
+            },
+            {
+              name: "_discountNFT",
+              type: "address",
+              internalType: "contract DiscountNFT",
+            },
+          ],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "achievementExists",
+          inputs: [
+            {
+              name: "achievementId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "badgeUri",
+          inputs: [
+            {
+              name: "achievementId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "string",
+              internalType: "string",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "bonusNFT",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "contract BonusNFT",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "claim",
+          inputs: [
+            {
+              name: "achievementId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "customer",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "claimRef",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "claimedBy",
+          inputs: [
+            {
+              name: "achievementId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "customer",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "createAchievement",
+          inputs: [
+            {
+              name: "establishmentId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "criterion",
+              type: "uint8",
+              internalType: "enum Achievements.Criterion",
+            },
+            {
+              name: "target",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "startTime",
+              type: "uint64",
+              internalType: "uint64",
+            },
+            {
+              name: "endTime",
+              type: "uint64",
+              internalType: "uint64",
+            },
+            {
+              name: "maxWinners",
+              type: "uint32",
+              internalType: "uint32",
+            },
+            {
+              name: "pieceId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "grantsBadge",
+              type: "bool",
+              internalType: "bool",
+            },
+            {
+              name: "routeId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "uri",
+              type: "string",
+              internalType: "string",
+            },
+            {
+              name: "metadataHash",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          outputs: [
+            {
+              name: "achievementId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "discountNFT",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "contract DiscountNFT",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "getAchievement",
+          inputs: [
+            {
+              name: "achievementId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "tuple",
+              internalType: "struct Achievements.Achievement",
+              components: [
+                {
+                  name: "establishmentId",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "criterion",
+                  type: "uint8",
+                  internalType: "enum Achievements.Criterion",
+                },
+                {
+                  name: "target",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "startTime",
+                  type: "uint64",
+                  internalType: "uint64",
+                },
+                {
+                  name: "endTime",
+                  type: "uint64",
+                  internalType: "uint64",
+                },
+                {
+                  name: "maxWinners",
+                  type: "uint32",
+                  internalType: "uint32",
+                },
+                {
+                  name: "winners",
+                  type: "uint32",
+                  internalType: "uint32",
+                },
+                {
+                  name: "pieceId",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "grantsBadge",
+                  type: "bool",
+                  internalType: "bool",
+                },
+                {
+                  name: "routeId",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "active",
+                  type: "bool",
+                  internalType: "bool",
+                },
+                {
+                  name: "exists",
+                  type: "bool",
+                  internalType: "bool",
+                },
+                {
+                  name: "metadataHash",
+                  type: "bytes32",
+                  internalType: "bytes32",
+                },
+              ],
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "progressOf",
+          inputs: [
+            {
+              name: "achievementId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "customer",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "achieved",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "target",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "met",
+              type: "bool",
+              internalType: "bool",
+            },
+            {
+              name: "alreadyClaimed",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "registry",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "contract EstablishmentRegistry",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "setAchievementActive",
+          inputs: [
+            {
+              name: "achievementId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "active",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "stampLedger",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "contract StampLedger",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "usedClaimRef",
+          inputs: [
+            {
+              name: "claimRef",
+              type: "bytes32",
+              internalType: "bytes32",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "event",
+          name: "AchievementActiveSet",
+          inputs: [
+            {
+              name: "achievementId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "active",
+              type: "bool",
+              indexed: false,
+              internalType: "bool",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "AchievementClaimed",
+          inputs: [
+            {
+              name: "achievementId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "customer",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "badgeTokenId",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+            {
+              name: "pieceId",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+            {
+              name: "claimRef",
+              type: "bytes32",
+              indexed: false,
+              internalType: "bytes32",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "AchievementCreated",
+          inputs: [
+            {
+              name: "achievementId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "establishmentId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "criterion",
+              type: "uint8",
+              indexed: false,
+              internalType: "enum Achievements.Criterion",
+            },
+            {
+              name: "target",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "error",
+          name: "AchievementEnded",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "AchievementInactive",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "AchievementNotStarted",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "AlreadyClaimed",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "ClaimAlreadyProcessed",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "CriterionNotMet",
+          inputs: [
+            {
+              name: "achieved",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "target",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "DeliversNothing",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "InvalidTarget",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "InvalidWindow",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NoWinnersLeft",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NotEstablishmentOwner",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NotRelayer",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "UnknownAchievement",
+          inputs: [],
+        },
+      ],
+      inheritedFunctions: {},
+      deployedOnBlock: 33,
     },
   },
 } as const;

@@ -328,3 +328,338 @@ export const ABI_ASSINATURA_ESCRITA = [
     outputs: [],
   },
 ] as const;
+
+// --------------------------------------------------------- a camada de peças
+//
+// Programa, peça e conquista. O mesmo raciocínio do topo do arquivo: só o que o
+// servidor chama, tipado de verdade.
+
+export const ABI_PROGRAMA = [
+  {
+    type: "function",
+    name: "createProgram",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "ownerEstablishmentId", type: "uint256" },
+      { name: "name", type: "bytes32" },
+      { name: "kind", type: "uint8" },
+      { name: "baseBenefit", type: "uint256" },
+      { name: "capCents", type: "uint256" },
+      { name: "product", type: "bytes32" },
+      { name: "startTime", type: "uint64" },
+      { name: "endTime", type: "uint64" },
+      { name: "joint", type: "bool" },
+      { name: "metadataHash", type: "bytes32" },
+    ],
+    outputs: [{ name: "programId", type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "setProgramActive",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "programId", type: "uint256" },
+      { name: "active", type: "bool" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "invite",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "programId", type: "uint256" },
+      { name: "establishmentId", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "acceptInvite",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "programId", type: "uint256" },
+      { name: "establishmentId", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "leaveProgram",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "programId", type: "uint256" },
+      { name: "establishmentId", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "validAt",
+    stateMutability: "view",
+    inputs: [
+      { name: "programId", type: "uint256" },
+      { name: "establishmentId", type: "uint256" },
+    ],
+    outputs: [{ name: "", type: "bool" }],
+  },
+  {
+    type: "function",
+    name: "discountFor",
+    stateMutability: "view",
+    inputs: [
+      { name: "programId", type: "uint256" },
+      { name: "level", type: "uint256" },
+      { name: "billCents", type: "uint256" },
+    ],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    type: "event",
+    name: "ProgramCreated",
+    inputs: [
+      { name: "programId", type: "uint256", indexed: true },
+      { name: "ownerEstablishmentId", type: "uint256", indexed: true },
+      { name: "name", type: "bytes32", indexed: false },
+      { name: "joint", type: "bool", indexed: false },
+    ],
+  },
+  { type: "error", name: "NotEstablishmentOwner", inputs: [] },
+  { type: "error", name: "ProgramIsNotJoint", inputs: [] },
+  { type: "error", name: "UnknownProgram", inputs: [] },
+  { type: "error", name: "UnknownEstablishment", inputs: [] },
+  { type: "error", name: "NotInvited", inputs: [] },
+  { type: "error", name: "NotAMember", inputs: [] },
+  { type: "error", name: "AlreadyAMember", inputs: [] },
+  { type: "error", name: "InvalidBenefit", inputs: [] },
+  { type: "error", name: "InvalidWindow", inputs: [] },
+] as const;
+
+export const ABI_PECA = [
+  {
+    type: "function",
+    name: "createPiece",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      {
+        name: "p",
+        type: "tuple",
+        components: [
+          { name: "programId", type: "uint256" },
+          { name: "level", type: "uint256" },
+          { name: "maxSupply", type: "uint256" },
+          { name: "startTime", type: "uint64" },
+          { name: "endTime", type: "uint64" },
+          { name: "maxPerWallet", type: "uint256" },
+          { name: "uri", type: "string" },
+        ],
+      },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "setPieceActive",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "active", type: "bool" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "usePiece",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "user", type: "address" },
+      { name: "tokenId", type: "uint256" },
+      { name: "establishmentId", type: "uint256" },
+      { name: "amount", type: "uint256" },
+      { name: "redemptionRef", type: "bytes32" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "balanceOfBatch",
+    stateMutability: "view",
+    inputs: [
+      { name: "accounts", type: "address[]" },
+      { name: "ids", type: "uint256[]" },
+    ],
+    outputs: [{ name: "", type: "uint256[]" }],
+  },
+  {
+    type: "function",
+    name: "discountFor",
+    stateMutability: "view",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "billCents", type: "uint256" },
+    ],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "totalSupply",
+    stateMutability: "view",
+    inputs: [{ name: "id", type: "uint256" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    type: "event",
+    name: "PieceUsed",
+    inputs: [
+      { name: "tokenId", type: "uint256", indexed: true },
+      { name: "user", type: "address", indexed: true },
+      { name: "establishmentId", type: "uint256", indexed: true },
+      { name: "amount", type: "uint256", indexed: false },
+      { name: "redemptionRef", type: "bytes32", indexed: false },
+    ],
+  },
+  { type: "error", name: "NotEstablishmentOwner", inputs: [] },
+  { type: "error", name: "NotOperator", inputs: [] },
+  { type: "error", name: "PieceAlreadyExists", inputs: [{ name: "tokenId", type: "uint256" }] },
+  { type: "error", name: "UnknownPiece", inputs: [{ name: "tokenId", type: "uint256" }] },
+  { type: "error", name: "PieceNotActive", inputs: [{ name: "tokenId", type: "uint256" }] },
+  {
+    type: "error",
+    name: "PieceExpired",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "endTime", type: "uint64" },
+    ],
+  },
+  {
+    type: "error",
+    name: "MaxSupplyExceeded",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "requested", type: "uint256" },
+      { name: "available", type: "uint256" },
+    ],
+  },
+  {
+    type: "error",
+    name: "MaxPerWalletExceeded",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "requested", type: "uint256" },
+      { name: "remaining", type: "uint256" },
+    ],
+  },
+  { type: "error", name: "NotAllowedToMint", inputs: [] },
+  { type: "error", name: "ZeroAmount", inputs: [] },
+  {
+    type: "error",
+    name: "NotValidHere",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "establishmentId", type: "uint256" },
+    ],
+  },
+  { type: "error", name: "UnknownProgram", inputs: [] },
+  { type: "error", name: "InvalidLevel", inputs: [] },
+  { type: "error", name: "InvalidWindow", inputs: [] },
+] as const;
+
+export const ABI_CONQUISTA = [
+  {
+    type: "function",
+    name: "createAchievement",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "establishmentId", type: "uint256" },
+      { name: "criterion", type: "uint8" },
+      { name: "target", type: "uint256" },
+      { name: "startTime", type: "uint64" },
+      { name: "endTime", type: "uint64" },
+      { name: "maxWinners", type: "uint32" },
+      { name: "pieceId", type: "uint256" },
+      { name: "grantsBadge", type: "bool" },
+      { name: "routeId", type: "uint256" },
+      { name: "uri", type: "string" },
+      { name: "metadataHash", type: "bytes32" },
+    ],
+    outputs: [{ name: "achievementId", type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "setAchievementActive",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "achievementId", type: "uint256" },
+      { name: "active", type: "bool" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "claim",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "achievementId", type: "uint256" },
+      { name: "customer", type: "address" },
+      { name: "claimRef", type: "bytes32" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "progressOf",
+    stateMutability: "view",
+    inputs: [
+      { name: "achievementId", type: "uint256" },
+      { name: "customer", type: "address" },
+    ],
+    outputs: [
+      { name: "achieved", type: "uint256" },
+      { name: "target", type: "uint256" },
+      { name: "met", type: "bool" },
+      { name: "alreadyClaimed", type: "bool" },
+    ],
+  },
+  {
+    type: "event",
+    name: "AchievementCreated",
+    inputs: [
+      { name: "achievementId", type: "uint256", indexed: true },
+      { name: "establishmentId", type: "uint256", indexed: true },
+      { name: "criterion", type: "uint8", indexed: false },
+      { name: "target", type: "uint256", indexed: false },
+    ],
+  },
+  {
+    type: "event",
+    name: "AchievementClaimed",
+    inputs: [
+      { name: "achievementId", type: "uint256", indexed: true },
+      { name: "establishmentId", type: "uint256", indexed: true },
+      { name: "customer", type: "address", indexed: true },
+      { name: "badgeTokenId", type: "uint256", indexed: false },
+      { name: "pieceId", type: "uint256", indexed: false },
+      { name: "claimRef", type: "bytes32", indexed: false },
+    ],
+  },
+  { type: "error", name: "NotEstablishmentOwner", inputs: [] },
+  { type: "error", name: "NotRelayer", inputs: [] },
+  { type: "error", name: "UnknownAchievement", inputs: [] },
+  { type: "error", name: "AchievementInactive", inputs: [] },
+  { type: "error", name: "AchievementEnded", inputs: [] },
+  { type: "error", name: "NoWinnersLeft", inputs: [] },
+  { type: "error", name: "AlreadyClaimed", inputs: [] },
+  { type: "error", name: "ClaimAlreadyProcessed", inputs: [] },
+  {
+    type: "error",
+    name: "CriterionNotMet",
+    inputs: [
+      { name: "achieved", type: "uint256" },
+      { name: "target", type: "uint256" },
+    ],
+  },
+  { type: "error", name: "DeliversNothing", inputs: [] },
+  { type: "error", name: "AchievementNotStarted", inputs: [] },
+  { type: "error", name: "InvalidTarget", inputs: [] },
+] as const;

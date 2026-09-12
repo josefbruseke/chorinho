@@ -37,6 +37,7 @@ const ABI_CATALOGO_CRIACAO = [
       { name: "startTime", type: "uint64" },
       { name: "endTime", type: "uint64" },
       { name: "maxRedemptions", type: "uint32" },
+      { name: "pieceId", type: "uint256" },
       { name: "metadataHash", type: "bytes32" },
     ],
     outputs: [{ name: "rewardId", type: "uint256" }],
@@ -71,9 +72,11 @@ type LinhaDeRecompensa = {
   active: boolean;
   max_redemptions: number;
   redeemed: number;
+  piece_id: string | null;
 };
 
-const COLUNAS = "id, onchain_id, title, description, stamp_cost, point_cost, active, max_redemptions, redeemed";
+const COLUNAS =
+  "id, onchain_id, title, description, stamp_cost, point_cost, active, max_redemptions, redeemed, piece_id";
 
 /** Do formato da tabela para o que a tela do lojista consome. */
 const mapearRecompensa = (r: LinhaDeRecompensa) => ({
@@ -86,6 +89,7 @@ const mapearRecompensa = (r: LinhaDeRecompensa) => ({
   ativa: r.active,
   maxResgates: r.max_redemptions,
   resgatados: r.redeemed,
+  pecaId: r.piece_id,
   // Sem `onchain_id` o contrato não sabe que este prêmio existe: o balcão
   // não tem o que entregar, por mais que o Supabase já mostre a foto e o
   // texto na vitrine.
@@ -105,9 +109,25 @@ export async function GET() {
       .eq("establishment_id", loja.id)
       .order("created_at", { ascending: true });
 
+    // As peças que este prêmio pode entregar junto — o gatilho direto: o
+    // cliente gasta os próprios carimbos e leva a peça.
+    const { data: programas } = await supabaseAdmin()
+      .from("discount_programs")
+      .select("id")
+      .eq("establishment_id", loja.id);
+    const idsDeProgramas = (programas ?? []).map(p => p.id);
+    const { data: pecas } = idsDeProgramas.length
+      ? await supabaseAdmin()
+          .from("pieces")
+          .select("id, title, level, onchain_id")
+          .in("program_id", idsDeProgramas)
+          .eq("active", true)
+      : { data: [] };
+
     return NextResponse.json({
       loja: { nome: loja.nome },
       recompensas: (recompensas ?? []).map(mapearRecompensa),
+      pecas: (pecas ?? []).filter(p => p.onchain_id !== null).map(p => ({ id: p.id, titulo: p.title, nivel: p.level })),
     });
   } catch (e) {
     if (e instanceof ErroDeGestao) return NextResponse.json({ erro: e.message }, { status: e.status });
@@ -127,7 +147,7 @@ export async function POST(request: NextRequest) {
   const userId = await sessao();
   if (!userId) return NextResponse.json({ erro: "sem sessão" }, { status: 401 });
 
-  let corpo: { titulo?: unknown; descricao?: unknown; selos?: unknown; pontos?: unknown };
+  let corpo: { titulo?: unknown; descricao?: unknown; selos?: unknown; pontos?: unknown; pecaId?: unknown };
   try {
     corpo = await request.json();
   } catch {
@@ -138,6 +158,7 @@ export async function POST(request: NextRequest) {
   const descricao = typeof corpo.descricao === "string" ? corpo.descricao.trim().slice(0, 280) : "";
   const selos = Number(corpo.selos);
   const pontos = Number(corpo.pontos);
+  const pecaId = typeof corpo.pecaId === "string" && corpo.pecaId ? corpo.pecaId : null;
 
   if (titulo.length < 2 || titulo.length > 80) {
     return NextResponse.json({ erro: "o título precisa ter entre 2 e 80 caracteres" }, { status: 400 });
@@ -161,6 +182,29 @@ export async function POST(request: NextRequest) {
     const loja = await lojaDoGestor(userId);
     const admin = supabaseAdmin();
 
+    // A peça precisa existir na cadeia antes de ser prometida: guardar um id
+    // que o contrato não conhece faria o resgate reverter no balcão, com o
+    // cliente na frente.
+    let pecaTokenId = 0;
+    if (pecaId) {
+      const { data: peca } = await admin
+        .from("pieces")
+        .select("id, onchain_id, program_id")
+        .eq("id", pecaId)
+        .maybeSingle();
+      const { data: programa } = peca
+        ? await admin.from("discount_programs").select("establishment_id").eq("id", peca.program_id).maybeSingle()
+        : { data: null };
+
+      if (!peca || programa?.establishment_id !== loja.id) {
+        return NextResponse.json({ erro: "peça não encontrada nesta loja" }, { status: 404 });
+      }
+      if (peca.onchain_id === null) {
+        return NextResponse.json({ erro: "essa peça ainda é rascunho na rede" }, { status: 409 });
+      }
+      pecaTokenId = peca.onchain_id;
+    }
+
     const { data: reward, error } = await admin
       .from("rewards")
       .insert({
@@ -170,6 +214,7 @@ export async function POST(request: NextRequest) {
         stamp_cost: selos,
         point_cost: pontos,
         point_type_id: Number(PONTO_DA_CIDADE),
+        piece_id: pecaId,
         active: true,
       })
       .select(COLUNAS)
@@ -177,7 +222,7 @@ export async function POST(request: NextRequest) {
 
     if (error || !reward) return NextResponse.json({ erro: "não foi possível salvar o prêmio" }, { status: 500 });
 
-    const registro = await registrarNaRede(loja, reward, titulo);
+    const registro = await registrarNaRede(loja, reward, titulo, pecaTokenId);
     if (!registro.ok) {
       return NextResponse.json({ ok: true, recompensa: mapearRecompensa(reward), aviso: registro.aviso });
     }
@@ -214,6 +259,7 @@ const registrarNaRede = async (
   loja: { onchainId: number | null },
   reward: { id: string; stamp_cost: number; point_cost: number },
   titulo: string,
+  pecaTokenId: number,
 ): Promise<ResultadoDoRegistro> => {
   if (!relayerConfigurado()) {
     return { ok: false, aviso: "prêmio salvo como rascunho: a rede não está configurada neste ambiente." };
@@ -239,6 +285,7 @@ const registrarNaRede = async (
       0n,
       0n,
       0,
+      BigInt(pecaTokenId),
       metadataHash,
     ]);
 

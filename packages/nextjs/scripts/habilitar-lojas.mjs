@@ -116,16 +116,18 @@ const escrever = async (contrato, abi, functionName, args) => {
  * e teto 1, qualquer valor maior que zero rende exatamente um carimbo. Piso
  * zero completa: nenhuma venda é pequena demais.
  *
- * A carência é o que passou a segurar o abuso. Antes era o piso de ticket que
- * impedia o caixa de carimbar dez vezes seguidas; sem valor, sobra o relógio.
- * Quatro horas deixam passar café de manhã e padaria à tarde — duas visitas no
- * mesmo dia são reais — e barram a repetição no mesmo atendimento.
+ * A carência está em ZERO, e isso é uma escolha, não esquecimento: a mesma
+ * pessoa pode ser carimbada quantas vezes seguidas quiser. Com o valor fora da
+ * conta, era o último freio contra repetição no balcão — não há outro. Vale
+ * enquanto o que importa é testar o fluxo; num balcão de verdade, subir isto
+ * para algumas horas é o que impede um caixa distraído (ou mal-intencionado)
+ * de encher a cartela de alguém numa tarde.
  */
 const REGRA = {
   minTicketCents: 0n,
   centsPerStamp: 1n,
   maxStampsPerTx: 1,
-  cooldownSeconds: 4 * 60 * 60,
+  cooldownSeconds: 0,
   streakWindowSeconds: 7 * 24 * 60 * 60,
   pointsPerStamp: 1,
   pointTypeId: 1n,

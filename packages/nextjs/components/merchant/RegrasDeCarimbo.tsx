@@ -12,7 +12,7 @@ type Regra = {
 
 const PADRAO: Regra = {
   ativa: true,
-  intervaloSegundos: 4 * 60 * 60,
+  intervaloSegundos: 0,
   janelaDaSequenciaSegundos: 7 * 24 * 60 * 60,
   pontosPorCarimbo: 10,
 };

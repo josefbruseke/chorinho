@@ -8,7 +8,7 @@ import { FlavorTheme } from "~~/components/FlavorTheme";
  */
 export const metadata: Metadata = { manifest: "/manifest/pdv" };
 
-export const viewport: Viewport = { themeColor: "#261c14", viewportFit: "cover" };
+export const viewport: Viewport = { themeColor: "#1c2010", viewportFit: "cover" };
 
 /**
  * Flavor PDV: terminal de balcão. Sem cabeçalho e sem rodapé — a tela inteira

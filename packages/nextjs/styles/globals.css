@@ -25,24 +25,24 @@
 */
 @theme {
   --color-kraft: #fdfbf7;
-  --color-craft: #f4ede2;
+  --color-craft: #f3f0e0;
   /* kraft-ink escurecido (era #856d5c, 4.68:1) para vencer 7:1 no pos-light,
      que reusa este mesmo token -- ainda assim so ajusta L em oklch, matiz e
      croma da tinta espresso preservados. */
-  --color-kraft-ink: #695242;
-  --color-kraft-edge: #d8c7b0;
+  --color-kraft-ink: #57582a;
+  --color-kraft-edge: #cec69c;
 
-  --color-honey-soft: #fef3c7;
-  --color-honey-edge: #fde68a;
+  --color-honey-soft: #f7f2cc;
+  --color-honey-edge: #e6dc8a;
   /* honey-ink escurecido (era #92400e, 6.37:1) para vencer 7:1 no pos-light. */
-  --color-honey-ink: #8b3903;
+  --color-honey-ink: #5a4a00;
 
   /* A tela do QR e a unica superficie que NAO acompanha o tema: camera de
      celular barato le muito mais rapido codigo escuro sobre fundo claro, e no
      balcao isso e a diferenca entre escanear de primeira ou segurar a fila.
      Por isso estes tres nao tem contraparte no bloco escuro. */
   --color-qr-surface: #ffffff;
-  --color-qr-ink: #261c14;
+  --color-qr-ink: #1c2010;
   /* qr-muted escurecido (era #856d5c, 4.84:1) para vencer 7:1 no pos-light. */
   --color-qr-muted: #6b5444;
 }
@@ -63,28 +63,28 @@
 @plugin "daisyui/theme" {
   name: "pos-light";
 
-  --color-primary: #9a3412;
-  --color-primary-content: #fffdfa;
-  --color-secondary: #1c1410;
+  --color-primary: #76c112;
+  --color-primary-content: #1c2010;
+  --color-secondary: #1c2010;
   --color-secondary-content: #fdfbf7;
   /* accent escurecido (era #b45309, accent-content so alcancava 4.95:1) --
      balcao sob luz do dia exige 7:1, matiz mel preservada. */
-  --color-accent: #983a00;
-  --color-accent-content: #fffdfa;
-  --color-neutral: #2b211a;
-  --color-neutral-content: #fffdfa;
+  --color-accent: #d8b301;
+  --color-accent-content: #1c2010;
+  --color-neutral: #262b14;
+  --color-neutral-content: #fdfbf7;
   --color-base-100: #ffffff;
-  --color-base-200: #f7f3ec;
-  --color-base-300: #ddd2bf;
-  --color-base-content: #1c1410;
+  --color-base-200: #f9f8ee;
+  --color-base-300: #c4bc8f;
+  --color-base-content: #1c2010;
   --color-info: #1e40af;
   /* success/warning escurecidos (eram #15803d e #b45309, so alcancavam
      4.94:1 e 4.95:1 com tinta branca) para vencer 7:1 no balcao. */
   --color-success: #006624;
-  --color-warning: #983a00;
+  --color-warning: #d6cc3e;
   --color-error: #991b1b;
   --color-success-content: #fffdfa;
-  --color-warning-content: #fffdfa;
+  --color-warning-content: #1c2010;
   --color-error-content: #fffdfa;
 
   --radius-field: 0.5rem;
@@ -95,28 +95,28 @@
 @plugin "daisyui/theme" {
   name: "pos-dark";
 
-  --color-primary: #f97316;
+  --color-primary: #8fd42e;
   /* primary-content escurecido (era #140c06, 6.91:1) para vencer 7:1. */
-  --color-primary-content: #110a04;
-  --color-secondary: #faf6ef;
-  --color-secondary-content: #1c1410;
-  --color-accent: #fbbf24;
-  --color-accent-content: #1c1410;
-  --color-neutral: #33281f;
-  --color-neutral-content: #faf6ef;
-  --color-base-100: #1c1611;
-  --color-base-200: #120e0b;
-  --color-base-300: #453527;
-  --color-base-content: #fdf9f0;
+  --color-primary-content: #0f1406;
+  --color-secondary: #f5f2de;
+  --color-secondary-content: #1c2010;
+  --color-accent: #e3c21a;
+  --color-accent-content: #0f1406;
+  --color-neutral: #33361f;
+  --color-neutral-content: #f5f2de;
+  --color-base-100: #171a0f;
+  --color-base-200: #0f1108;
+  --color-base-300: #3d4024;
+  --color-base-content: #f8f6e8;
   --color-info: #60a5fa;
   --color-success: #4ade80;
-  --color-warning: #fbbf24;
-  --color-error: #f87171;
+  --color-warning: #e3c21a;
+  --color-error: #fa9090;
   /* reaproveita a tinta escura de primary-content: ja testada contra fundos
      claros/saturados e bate 7:1 nos tres. */
-  --color-success-content: #110a04;
-  --color-warning-content: #110a04;
-  --color-error-content: #110a04;
+  --color-success-content: #0f1406;
+  --color-warning-content: #0f1406;
+  --color-error-content: #0f1406;
 
   --radius-field: 0.5rem;
   --radius-box: 0.75rem;
@@ -126,27 +126,27 @@
 @plugin "daisyui/theme" {
   name: "merchant-light";
 
-  --color-primary: #c2410c;
-  --color-primary-content: #fffdfa;
-  --color-secondary: #261c14;
+  --color-primary: #6bb010;
+  --color-primary-content: #1c2010;
+  --color-secondary: #1c2010;
   --color-secondary-content: #fdfbf7;
-  --color-accent: #d97706;
-  --color-accent-content: #261c14;
-  --color-neutral: #362a22;
+  --color-accent: #d8b301;
+  --color-accent-content: #1c2010;
+  --color-neutral: #2e3318;
   --color-neutral-content: #fffdfa;
   --color-base-100: #ffffff;
-  --color-base-200: #f8f6f2;
-  --color-base-300: #e7e0d5;
-  --color-base-content: #281d16;
+  --color-base-200: #f8f7ef;
+  --color-base-300: #d9d3b0;
+  --color-base-content: #1c2010;
   --color-info: #1d4ed8;
-  --color-success: #15803d;
-  --color-warning: #d97706;
+  --color-success: #3f7d05;
+  --color-warning: #d6cc3e;
   --color-error: #b91c1c;
   /* daisyUI calcula -content automaticamente quando ausente; fixamos aqui
      para garantir >= 4.5:1 (warning usa tinta escura, mais forte contra o
      laranja medio de fundo do que a tinta branca). */
   --color-success-content: #fffdfa;
-  --color-warning-content: #281d16;
+  --color-warning-content: #1c2010;
   --color-error-content: #fffdfa;
 
   --radius-field: 0.5rem;
@@ -157,27 +157,27 @@
 @plugin "daisyui/theme" {
   name: "merchant-dark";
 
-  --color-primary: #ea580c;
-  --color-primary-content: #1e130b;
-  --color-secondary: #f5efe6;
-  --color-secondary-content: #261c14;
-  --color-accent: #fbbf24;
-  --color-accent-content: #261c14;
-  --color-neutral: #382d24;
-  --color-neutral-content: #fbf8f2;
-  --color-base-100: #211a15;
-  --color-base-200: #17120f;
-  --color-base-300: #3a2e25;
-  --color-base-content: #f7f1e6;
+  --color-primary: #86cc28;
+  --color-primary-content: #0f1406;
+  --color-secondary: #f1eed8;
+  --color-secondary-content: #1a1c12;
+  --color-accent: #e3c21a;
+  --color-accent-content: #0f1406;
+  --color-neutral: #2f3220;
+  --color-neutral-content: #f4f2e4;
+  --color-base-100: #1b1d13;
+  --color-base-200: #121409;
+  --color-base-300: #363923;
+  --color-base-content: #f4f2e4;
   --color-info: #3b82f6;
   --color-success: #22c55e;
-  --color-warning: #f59e0b;
+  --color-warning: #d8b301;
   --color-error: #ef4444;
   /* tinta escura (mesma de primary-content) ja testada contra fundos
      claros/saturados de tema escuro -- bate >= 4.5:1 nos tres. */
-  --color-success-content: #1e130b;
-  --color-warning-content: #1e130b;
-  --color-error-content: #1e130b;
+  --color-success-content: #0f1406;
+  --color-warning-content: #0f1406;
+  --color-error-content: #0f1406;
 
   --radius-field: 0.5rem;
   --radius-box: 0.875rem;
@@ -187,24 +187,24 @@
 @plugin "daisyui/theme" {
   name: "admin-light";
 
-  --color-primary: #7c2d12;
+  --color-primary: #3f7d05;
   --color-primary-content: #fffdfa;
-  --color-secondary: #1f1810;
+  --color-secondary: #1c2010;
   --color-secondary-content: #fdfbf7;
-  --color-accent: #a16207;
-  --color-accent-content: #fffdfa;
-  --color-neutral: #2f261e;
+  --color-accent: #d8b301;
+  --color-accent-content: #1c2010;
+  --color-neutral: #2a2e17;
   --color-neutral-content: #fffdfa;
   --color-base-100: #ffffff;
-  --color-base-200: #f6f4f0;
-  --color-base-300: #e3ddd2;
-  --color-base-content: #231a14;
+  --color-base-200: #f7f6ef;
+  --color-base-300: #d6d1b4;
+  --color-base-content: #1c2010;
   --color-info: #1d4ed8;
-  --color-success: #15803d;
-  --color-warning: #a16207;
+  --color-success: #3f7d05;
+  --color-warning: #d6cc3e;
   --color-error: #b91c1c;
   --color-success-content: #fffdfa;
-  --color-warning-content: #fffdfa;
+  --color-warning-content: #1c2010;
   --color-error-content: #fffdfa;
 
   --radius-field: 0.375rem;
@@ -215,25 +215,25 @@
 @plugin "daisyui/theme" {
   name: "admin-dark";
 
-  --color-primary: #d9622a;
-  --color-primary-content: #170f09;
-  --color-secondary: #efe9e0;
-  --color-secondary-content: #1f1810;
-  --color-accent: #d9a441;
-  --color-accent-content: #1f1810;
-  --color-neutral: #332a22;
-  --color-neutral-content: #efe9e0;
-  --color-base-100: #1e1915;
-  --color-base-200: #15110e;
-  --color-base-300: #372d24;
-  --color-base-content: #f2ece2;
+  --color-primary: #a3d94a;
+  --color-primary-content: #0f1406;
+  --color-secondary: #ece9d6;
+  --color-secondary-content: #1c2010;
+  --color-accent: #d9c236;
+  --color-accent-content: #0f1406;
+  --color-neutral: #2e3120;
+  --color-neutral-content: #ece9d6;
+  --color-base-100: #191b12;
+  --color-base-200: #101208;
+  --color-base-300: #343722;
+  --color-base-content: #f0eee2;
   --color-info: #3b82f6;
   --color-success: #22c55e;
-  --color-warning: #d9a441;
+  --color-warning: #d9c236;
   --color-error: #ef4444;
-  --color-success-content: #170f09;
-  --color-warning-content: #170f09;
-  --color-error-content: #170f09;
+  --color-success-content: #0f1406;
+  --color-warning-content: #0f1406;
+  --color-error-content: #0f1406;
 
   --radius-field: 0.375rem;
   --radius-box: 0.75rem;
@@ -242,16 +242,16 @@
 
 @layer base {
   [data-theme$="dark"] {
-    --color-kraft: #2a201a;
-    --color-craft: #201a14;
+    --color-kraft: #262818;
+    --color-craft: #1c1e10;
     /* kraft-ink clareado (era #b9a897, 6.90:1) para vencer 7:1 no pos-dark,
        que reusa este mesmo token -- so L em oklch mudou, matiz preservada. */
-    --color-kraft-ink: #bba998;
-    --color-kraft-edge: #4a3a2e;
+    --color-kraft-ink: #b8b78f;
+    --color-kraft-edge: #45472a;
 
-    --color-honey-soft: #3a2c12;
-    --color-honey-edge: #5b4520;
-    --color-honey-ink: #fcd34d;
+    --color-honey-soft: #33300f;
+    --color-honey-edge: #57511c;
+    --color-honey-ink: #e5d44a;
   }
 
   /* Antes da hidratacao o next-themes ainda nao escreveu data-theme; o daisyUI
@@ -259,14 +259,14 @@
      piscar superficies claras sobre fundo escuro. */
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme]) {
-      --color-kraft: #2a201a;
-      --color-craft: #201a14;
-      --color-kraft-ink: #bba998;
-      --color-kraft-edge: #4a3a2e;
+      --color-kraft: #262818;
+      --color-craft: #1c1e10;
+      --color-kraft-ink: #b8b78f;
+      --color-kraft-edge: #45472a;
 
-      --color-honey-soft: #3a2c12;
-      --color-honey-edge: #5b4520;
-      --color-honey-ink: #fcd34d;
+      --color-honey-soft: #33300f;
+      --color-honey-edge: #57511c;
+      --color-honey-ink: #e5d44a;
     }
   }
 }
@@ -284,32 +284,34 @@
 }
 
 /*
-  "Chorinho" Warm Humanist Palette:
-  Modern, organic, and inviting design inspired by authentic Brazilian neighborhood
-  commerce (cafés, bakeries, craft spots). Warm terracotta, roasted coffee tones,
-  artisanal linen paper, and golden honey accents.
+  Paleta "Caldo de Cana":
+  Verde da cana (#76c112) como primario, amarelo do caldo (#d8b301) como accent,
+  bagaco (#cec69c) como borda/base-300 e o amarelo-lima (#d6cc3e) como warning.
+  Todas as quatro sao claras, entao a tinta sobre elas e sempre escura -- texto
+  branco nao passa de 2.2:1 em nenhuma. A excecao e o admin-light, que usa um
+  verde mais fechado (#3f7d05) com tinta clara para ficar mais sobrio.
 */
 @plugin "daisyui/theme" {
   name: "light";
 
-  --color-primary: #c2410c;
-  --color-primary-content: #fffdfa;
-  --color-secondary: #261c14;
+  --color-primary: #76c112;
+  --color-primary-content: #1c2010;
+  --color-secondary: #1c2010;
   --color-secondary-content: #fdfbf7;
-  --color-accent: #d97706;
-  --color-accent-content: #261c14;
-  --color-neutral: #362a22;
-  --color-neutral-content: #fffdfa;
+  --color-accent: #d8b301;
+  --color-accent-content: #1c2010;
+  --color-neutral: #2e3318;
+  --color-neutral-content: #fdfbf7;
   --color-base-100: #ffffff;
-  --color-base-200: #fbf8f2;
-  --color-base-300: #ebe3d5;
-  --color-base-content: #281d16;
+  --color-base-200: #fbfaf1;
+  --color-base-300: #cec69c;
+  --color-base-content: #1c2010;
   --color-info: #1d4ed8;
-  --color-success: #15803d;
-  --color-warning: #d97706;
+  --color-success: #3f7d05;
+  --color-warning: #d6cc3e;
   --color-error: #b91c1c;
   --color-success-content: #fffdfa;
-  --color-warning-content: #281d16;
+  --color-warning-content: #1c2010;
   --color-error-content: #fffdfa;
 
   --radius-field: 0.75rem;
@@ -322,25 +324,25 @@
 @plugin "daisyui/theme" {
   name: "dark";
 
-  --color-primary: #ea580c;
-  --color-primary-content: #1e130b;
-  --color-secondary: #f5efe6;
-  --color-secondary-content: #261c14;
-  --color-accent: #fbbf24;
-  --color-accent-content: #261c14;
-  --color-neutral: #382d24;
-  --color-neutral-content: #fbf8f2;
-  --color-base-100: #231b15;
-  --color-base-200: #19130f;
-  --color-base-300: #3b2e24;
-  --color-base-content: #f7f1e6;
+  --color-primary: #8fd42e;
+  --color-primary-content: #0f1406;
+  --color-secondary: #f1eed8;
+  --color-secondary-content: #1a1c12;
+  --color-accent: #e3c21a;
+  --color-accent-content: #0f1406;
+  --color-neutral: #2f3220;
+  --color-neutral-content: #f4f2e4;
+  --color-base-100: #1a1c12;
+  --color-base-200: #111309;
+  --color-base-300: #33361f;
+  --color-base-content: #f4f2e4;
   --color-info: #3b82f6;
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-success-content: #1e130b;
-  --color-warning-content: #1e130b;
-  --color-error-content: #1e130b;
+  --color-success: #4ade80;
+  --color-warning: #d8b301;
+  --color-error: #f87171;
+  --color-success-content: #0f1406;
+  --color-warning-content: #0f1406;
+  --color-error-content: #0f1406;
 
   --radius-field: 0.75rem;
   --radius-box: 1.25rem;

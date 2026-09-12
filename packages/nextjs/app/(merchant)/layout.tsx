@@ -9,7 +9,7 @@ import { PainelNav } from "~~/components/merchant/PainelNav";
  */
 export const metadata: Metadata = { manifest: "/manifest/lojista" };
 
-export const viewport: Viewport = { themeColor: "#261c14", viewportFit: "cover" };
+export const viewport: Viewport = { themeColor: "#1c2010", viewportFit: "cover" };
 
 /**
  * Flavor comerciante: back office. Tema `merchant-*`, mais denso e orientado a

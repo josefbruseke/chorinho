@@ -109,7 +109,7 @@ const Passe: NextPage = () => {
       {/* Fundo claro fixo: câmera de celular barato lê muito mais rápido código
           escuro sobre claro, e isso vale também no tema escuro. */}
       <div className="w-full max-w-xs rounded-3xl border-2 border-base-300 bg-qr-surface p-6 shadow-lg flex flex-col items-center gap-4">
-        {passe && <QRCodeSVG value={passe.qr} size={240} level="M" bgColor="#ffffff" fgColor="#261c14" />}
+        {passe && <QRCodeSVG value={passe.qr} size={240} level="M" bgColor="#ffffff" fgColor="#1c2010" />}
 
         <div className="w-full flex flex-col gap-1.5">
           <div className="h-1.5 w-full rounded-full bg-qr-muted/20 overflow-hidden">

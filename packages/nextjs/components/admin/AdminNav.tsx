@@ -6,9 +6,9 @@
 // tempo de execução, com o build e o `check-types` verdes.
 import {
   BuildingStorefrontIcon,
+  CircleStackIcon,
   ClipboardDocumentListIcon,
   SignalIcon,
-  SparklesIcon,
   Squares2X2Icon,
 } from "@heroicons/react/24/outline";
 import { type ItemDeNav, NavDeBackOffice } from "~~/components/NavDeBackOffice";
@@ -16,7 +16,7 @@ import { type ItemDeNav, NavDeBackOffice } from "~~/components/NavDeBackOffice";
 const ITENS: ItemDeNav[] = [
   { href: "/admin", label: "Visão geral", Icon: Squares2X2Icon },
   { href: "/admin/estabelecimentos", label: "Estabelecimentos", Icon: BuildingStorefrontIcon },
-  { href: "/admin/pontos", label: "Tipos de ponto", Icon: SparklesIcon },
+  { href: "/admin/pontos", label: "Tipos de ponto", Icon: CircleStackIcon },
   { href: "/admin/relayer", label: "Relayer", Icon: SignalIcon },
   { href: "/admin/auditoria", label: "Auditoria", Icon: ClipboardDocumentListIcon },
 ];

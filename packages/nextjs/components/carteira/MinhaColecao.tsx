@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { MapPinIcon, SparklesIcon, TrophyIcon } from "@heroicons/react/24/outline";
+import { MapPinIcon, RectangleStackIcon, TrophyIcon } from "@heroicons/react/24/outline";
 import { beneficioEmTexto, dataCurta } from "~~/utils/colecao";
 
 type Peca = {
@@ -197,7 +197,7 @@ const PecaCard = ({ peca }: { peca: Peca }) => {
           <img src={peca.imagem} alt="" className="h-auto w-24 shrink-0 object-cover" />
         ) : (
           <div className="flex w-24 shrink-0 items-center justify-center bg-linear-to-br from-amber-800 to-stone-900">
-            <SparklesIcon className="h-8 w-8 text-white/70" />
+            <RectangleStackIcon className="h-8 w-8 text-white/70" />
           </div>
         )}
 

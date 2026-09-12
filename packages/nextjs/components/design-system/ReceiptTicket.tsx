@@ -1,5 +1,5 @@
 import React from "react";
-import { SparklesIcon } from "@heroicons/react/24/solid";
+import { GiftIcon } from "@heroicons/react/24/solid";
 
 export interface ReceiptTicketProps {
   establishmentName: string;
@@ -31,7 +31,7 @@ export const ReceiptTicket: React.FC<ReceiptTicketProps> = ({
         <div className="flex items-center justify-between gap-2">
           <span className="text-[11px] font-bold uppercase tracking-wider text-kraft-ink">{category}</span>
           <span className="inline-flex items-center gap-1 text-xs font-bold text-honey-ink bg-honey-soft px-2.5 py-0.5 rounded-full border border-honey-edge">
-            <SparklesIcon className="w-3.5 h-3.5" />
+            <GiftIcon className="w-3.5 h-3.5" />
             Chorinho
           </span>
         </div>

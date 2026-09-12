@@ -1,6 +1,6 @@
 import React from "react";
 import { CheckIcon } from "@heroicons/react/24/outline";
-import { SparklesIcon } from "@heroicons/react/24/solid";
+import { GiftIcon } from "@heroicons/react/24/solid";
 
 export interface StampCardProps {
   establishmentName: string;
@@ -63,7 +63,7 @@ export const StampCard: React.FC<StampCardProps> = ({
                 {isPunched ? (
                   <CheckIcon className="w-6 h-6 stroke-[3]" />
                 ) : isRewardSlot ? (
-                  <SparklesIcon className="w-6 h-6" />
+                  <GiftIcon className="w-6 h-6" />
                 ) : (
                   <span className="text-sm font-extrabold">{index + 1}</span>
                 )}
@@ -101,7 +101,7 @@ export const StampCard: React.FC<StampCardProps> = ({
       {isComplete && (
         <div className="mt-3 p-3 rounded-2xl bg-success/12 border border-success/30 text-center">
           <p className="text-xs font-bold text-success flex items-center justify-center gap-1.5">
-            <SparklesIcon className="w-4 h-4 text-success" />
+            <GiftIcon className="w-4 h-4 text-success" />
             Cartela premiada! Peça seu chorinho ao atendente no balcão.
           </p>
         </div>

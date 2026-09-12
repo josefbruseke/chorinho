@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { GiftIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { GiftIcon, RectangleStackIcon, StarIcon } from "@heroicons/react/24/outline";
 
 type Recompensa = {
   id: string;
@@ -247,14 +247,14 @@ export const RecompensasDaLoja = () => {
                     {r.selos > 0 && r.pontos > 0 && " + "}
                     {r.pontos > 0 && (
                       <>
-                        <SparklesIcon className="h-3.5 w-3.5" />
+                        <StarIcon className="h-3.5 w-3.5" />
                         {r.pontos} pontos
                       </>
                     )}
                   </span>
                   {r.pecaId && (
                     <span className="mt-1.5 ml-1.5 inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-brand-ink">
-                      <SparklesIcon className="h-3.5 w-3.5" />
+                      <RectangleStackIcon className="h-3.5 w-3.5" />
                       vem com peça
                     </span>
                   )}

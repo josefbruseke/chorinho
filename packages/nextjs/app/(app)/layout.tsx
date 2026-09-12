@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { FlavorTheme } from "~~/components/FlavorTheme";
+import { Header } from "~~/components/Header";
 import { TabBar } from "~~/components/app/TabBar";
+import { INICIO_DO_APP } from "~~/utils/rotas";
 
 /**
  * Cada flavor instala um aplicativo diferente: o cliente leva o mapa, o
@@ -13,10 +15,17 @@ export const viewport: Viewport = { themeColor: "#76c112", viewportFit: "cover" 
 
 /**
  * Flavor cliente: o PWA. Mobile-first, navegação por barra inferior ao alcance
- * do polegar — sem cabeçalho de desktop, que só rouba altura no celular.
+ * do polegar.
+ *
+ * O cabeçalho é o mesmo do site, mas sem link nenhum: a navegação daqui mora
+ * na TabBar de baixo, e repeti-la no topo só gastaria a altura que o celular
+ * não tem. Ele entra pela marca — quem abre o app direto pelo ícone da tela
+ * inicial não via "Chorinho" em lugar algum — e pelo menu da conta, que antes
+ * só existia no site.
  */
 const AppLayout = ({ children }: { children: React.ReactNode }) => (
   <FlavorTheme flavor="cliente" className="flex flex-col min-h-[100dvh] bg-base-200">
+    <Header links={[]} homeHref={INICIO_DO_APP} />
     {/* O flavor do cliente e desenhado para o polegar. Num monitor, a coluna
         estreita continua sendo a leitura certa -- esticar cartela ate 1500px
         so afasta o numero do nome da loja. */}

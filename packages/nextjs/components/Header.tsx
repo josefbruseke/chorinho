@@ -101,6 +101,11 @@ export const Header = ({ links = menuLinks, homeHref = "/" }: { links?: HeaderMe
   // de explorador de blocos para o mundo.
   const isLocalNetwork = emDesenvolvimento() && targetNetwork.id === hardhat.id;
 
+  // O flavor do cliente passa `links` vazio: a navegacao dele mora na TabBar
+  // de baixo. Sem isto o sanduiche continuaria no lugar, abrindo uma gaveta
+  // sem nada dentro.
+  const linksVisiveis = links.filter(({ localOnly }) => !localOnly || isLocalNetwork);
+
   const burgerMenuRef = useRef<HTMLDetailsElement>(null);
   useOutsideClick(burgerMenuRef, () => {
     burgerMenuRef?.current?.removeAttribute("open");
@@ -109,19 +114,21 @@ export const Header = ({ links = menuLinks, homeHref = "/" }: { links?: HeaderMe
   return (
     <div className="sticky lg:static top-0 navbar bg-base-100/90 backdrop-blur-sm min-h-16 shrink-0 justify-between z-20 border-b border-base-300 px-3 sm:px-6">
       <div className="navbar-start w-auto self-stretch items-center">
-        <details className="dropdown" ref={burgerMenuRef}>
-          <summary className="ml-1 btn btn-ghost lg:hidden hover:bg-transparent">
-            <Bars3Icon className="h-1/2" />
-          </summary>
-          <ul
-            className="menu menu-compact dropdown-content mt-3 p-2 shadow-lg bg-base-100 border border-base-300 rounded-box w-60 gap-1"
-            onClick={() => {
-              burgerMenuRef?.current?.removeAttribute("open");
-            }}
-          >
-            <HeaderMenuLinks links={links} />
-          </ul>
-        </details>
+        {linksVisiveis.length > 0 && (
+          <details className="dropdown" ref={burgerMenuRef}>
+            <summary className="ml-1 btn btn-ghost lg:hidden hover:bg-transparent">
+              <Bars3Icon className="h-1/2" />
+            </summary>
+            <ul
+              className="menu menu-compact dropdown-content mt-3 p-2 shadow-lg bg-base-100 border border-base-300 rounded-box w-60 gap-1"
+              onClick={() => {
+                burgerMenuRef?.current?.removeAttribute("open");
+              }}
+            >
+              <HeaderMenuLinks links={links} />
+            </ul>
+          </details>
+        )}
         <Link href={homeHref} passHref className="flex items-center min-h-12 gap-2.5 mx-2 lg:mr-8 shrink-0 group">
           <BrandLogo className="w-9 h-9 group-hover:scale-105 transition-transform" />
           <div className="flex flex-col leading-tight">
@@ -134,9 +141,11 @@ export const Header = ({ links = menuLinks, homeHref = "/" }: { links?: HeaderMe
             <span className="text-[11px] opacity-75 hidden sm:block">O agrado do seu comércio local</span>
           </div>
         </Link>
-        <ul className="hidden lg:flex lg:flex-nowrap items-center gap-1.5 m-0 p-0 list-none">
-          <HeaderMenuLinks links={links} />
-        </ul>
+        {linksVisiveis.length > 0 && (
+          <ul className="hidden lg:flex lg:flex-nowrap items-center gap-1.5 m-0 p-0 list-none">
+            <HeaderMenuLinks links={links} />
+          </ul>
+        )}
       </div>
       <div className="navbar-end grow mr-2">
         {/* Aqui ninguem conecta carteira: a conta e e-mail ou Google, e a

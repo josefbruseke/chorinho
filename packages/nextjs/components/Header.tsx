@@ -132,12 +132,7 @@ export const Header = ({ links = menuLinks, homeHref = "/" }: { links?: HeaderMe
         <Link href={homeHref} passHref className="flex items-center min-h-12 gap-2.5 mx-2 lg:mr-8 shrink-0 group">
           <BrandLogo className="w-9 h-9 group-hover:scale-105 transition-transform" />
           <div className="flex flex-col leading-tight">
-            <div className="flex items-center gap-1.5">
-              <span className="font-black text-lg tracking-tight">Chorinho</span>
-              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-primary/10 text-brand-ink">
-                do bairro
-              </span>
-            </div>
+            <span className="font-black text-lg tracking-tight">Chorinho</span>
             <span className="text-[11px] opacity-75 hidden sm:block">O agrado do seu comércio local</span>
           </div>
         </Link>

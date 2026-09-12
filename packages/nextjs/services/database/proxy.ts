@@ -55,6 +55,34 @@ export const updateSession = async (request: NextRequest) => {
 
   const pathname = request.nextUrl.pathname;
 
+  /**
+   * A chave do modo de teste entra por aqui porque só o proxy pode gravar
+   * cookie antes de uma página: o Next recusa `cookies().set()` durante a
+   * renderização, e sem cookie a chave teria de viajar na URL a cada clique —
+   * inclusive nas chamadas que o balcão faz sozinho.
+   *
+   * Guardado o cookie, a chave sai da URL por redirecionamento: deixá-la ali
+   * a poria no histórico do navegador e no registro de quem serve a página.
+   */
+  const chaveDeTeste = process.env.CHORINHO_MODO_TESTE_CHAVE?.trim();
+  if (chaveDeTeste && pathname.startsWith("/teste")) {
+    const apresentada = request.nextUrl.searchParams.get("chave");
+    if (apresentada === chaveDeTeste) {
+      const limpo = request.nextUrl.clone();
+      limpo.searchParams.delete("chave");
+      const redirecionamento = NextResponse.redirect(limpo);
+      resposta.cookies.getAll().forEach(c => redirecionamento.cookies.set(c));
+      redirecionamento.cookies.set("chorinho_teste_chave", chaveDeTeste, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+      });
+      return redirecionamento;
+    }
+  }
+
   if (!data?.claims && exige(pathname) && !eLivre(pathname)) {
     const destino = request.nextUrl.clone();
     destino.pathname = "/entrar";

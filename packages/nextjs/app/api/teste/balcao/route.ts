@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "~~/services/database/admin";
 import { gerarTokenDoTerminal, gravarCookieDoTerminal, hashDoToken } from "~~/services/pdv/acesso";
-import { modoDeTesteLigado } from "~~/services/teste/modo";
+import { acessoDeTesteLiberado } from "~~/services/teste/modo";
 
 export const runtime = "nodejs";
 
@@ -18,7 +18,10 @@ export const runtime = "nodejs";
  * existe.
  */
 export async function POST(request: NextRequest) {
-  if (!modoDeTesteLigado()) return new NextResponse(null, { status: 404 });
+  // A mesma trava da vitrine: sem isto a chave protegeria a tela e deixaria
+  // as rotas abertas, que e o que de fato carimba.
+  const { liberado } = await acessoDeTesteLiberado();
+  if (!liberado) return new NextResponse(null, { status: 404 });
 
   let corpo: { lojaId?: unknown };
   try {

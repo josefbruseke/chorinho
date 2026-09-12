@@ -1,3 +1,4 @@
+import { timingSafeEqual } from "node:crypto";
 import "server-only";
 
 /**
@@ -26,6 +27,51 @@ export const modoDeTesteLigado = () => process.env.CHORINHO_MODO_TESTE === "1";
 
 /** O cookie que guarda a loja escolhida em `/teste`. */
 export const COOKIE_DA_LOJA_DE_TESTE = "chorinho_loja_teste";
+
+/** O cookie que prova ter apresentado a chave de acesso. */
+export const COOKIE_DA_CHAVE = "chorinho_teste_chave";
+
+/**
+ * Quem pode ver o modo de teste, quando ele está ligado num endereço público.
+ *
+ * Sem `CHORINHO_MODO_TESTE_CHAVE`, o modo se comporta como sempre: ligado é
+ * ligado para quem chegar. Isso serve na máquina de quem programa e numa prévia
+ * protegida.
+ *
+ * No endereço que se divulga, isso não serve: quem descobrisse `/teste`
+ * carimbaria em nome de qualquer loja, e carimbo é dinheiro. Com a chave
+ * definida, `/teste` só abre para quem apresentar `?chave=` uma vez — e a
+ * partir daí o cookie carrega a prova, para não deixar o segredo no histórico
+ * do navegador a cada visita.
+ *
+ * A comparação é byte a byte em tempo constante: comparar com `===` vazaria a
+ * chave pelo tempo de resposta, um caractere por vez.
+ */
+export const chaveDoModoDeTeste = () => process.env.CHORINHO_MODO_TESTE_CHAVE?.trim() || undefined;
+
+const iguais = (a: string, b: string) => {
+  const x = Buffer.from(a);
+  const y = Buffer.from(b);
+  if (x.length !== y.length) return false;
+  return timingSafeEqual(x, y);
+};
+
+/**
+ * Se esta visita pode ver o modo de teste.
+ *
+ * A chave em si é conferida pelo proxy, que é quem pode gravar o cookie antes
+ * de uma página. Aqui só se lê a prova que ele deixou.
+ */
+export const acessoDeTesteLiberado = async () => {
+  if (!modoDeTesteLigado()) return { liberado: false };
+
+  const chave = chaveDoModoDeTeste();
+  if (!chave) return { liberado: true };
+
+  const { cookies } = await import("next/headers");
+  const doCookie = (await cookies()).get(COOKIE_DA_CHAVE)?.value;
+  return { liberado: Boolean(doCookie && iguais(doCookie, chave)) };
+};
 
 /**
  * A loja que o painel deve mostrar, quando o modo de teste está ligado.

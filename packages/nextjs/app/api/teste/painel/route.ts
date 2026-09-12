@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "~~/services/database/admin";
 import { supabaseServer } from "~~/services/database/server";
-import { COOKIE_DA_LOJA_DE_TESTE, modoDeTesteLigado } from "~~/services/teste/modo";
+import { COOKIE_DA_LOJA_DE_TESTE, acessoDeTesteLiberado } from "~~/services/teste/modo";
 
 export const runtime = "nodejs";
 
@@ -25,7 +25,10 @@ const EMAIL = "modo-de-teste@chorinho.local";
  * ligado.
  */
 export async function POST(request: NextRequest) {
-  if (!modoDeTesteLigado()) return new NextResponse(null, { status: 404 });
+  // A mesma trava da vitrine: sem isto a chave protegeria a tela e deixaria
+  // as rotas abertas, que e o que de fato carimba.
+  const { liberado } = await acessoDeTesteLiberado();
+  if (!liberado) return new NextResponse(null, { status: 404 });
 
   let corpo: { lojaId?: unknown };
   try {

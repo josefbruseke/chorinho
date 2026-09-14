@@ -173,6 +173,15 @@ errado neste repositório. Supabase pelo MCP e pelo changelog; o resto pelo
 - **`next-env.d.ts` alterna sozinho** entre `./.next/dev/types/routes.d.ts` e
   `./.next/types/routes.d.ts` conforme você rode `dev` ou `build`. É ruído
   gerado; reverta com `git checkout --`.
+- **Não regere o `bun.lock` com bun 1.4+.** A imagem de build da Vercel roda
+  **bun 1.3.14**, que não lê o `lockfileVersion: 2` que o 1.4 escreve. Ela não
+  falha: avisa `Ignoring lockfile` e resolve tudo de novo — o que foi publicado
+  deixa de ser o que está travado no repositório. O CI, que usa
+  `--frozen-lockfile`, aí sim quebra. `BUN_VERSION` e `packageManager` **não**
+  mudam o bun da Vercel. Se precisar mexer em dependência com um bun mais novo,
+  regere o lockfile com o 1.3.14 antes de commitar:
+  `curl -sL -o b.zip https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-darwin-aarch64.zip`
+  e `./bun install --lockfile-only`.
 - **Realtime.** `postgres_changes` é *best-effort*: cliente que desconecta 30s
   perde o evento e não há fila. Para o que não pode ser perdido, use Broadcast
   from Database em canal privado.

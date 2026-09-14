@@ -1,252 +1,190 @@
 # AGENTS.md
 
-This file provides guidance to coding agents working in this repository.
+Guia para agentes que trabalham neste repositório.
 
-## Project Overview
+## O que é o Chorinho
 
-Scaffold-ETH 2 (SE-2) is a starter kit for building dApps on Ethereum. It comes in **two flavors** based on the Solidity framework:
+Fidelidade para comércio de bairro. O cliente mostra um QR no balcão, o caixa
+lê, o carimbo cai na cartela. Quando a cartela fecha, vira prêmio. O lojista
+paga uma assinatura barata; para o cliente é de graça.
 
-- **Hardhat flavor**: Uses `packages/hardhat` with hardhat-deploy plugin
-- **Foundry flavor**: Uses `packages/foundry` with Forge scripts
+Não é um app de cupom e não é cripto. Até setembro de 2026 rodava sobre
+Scaffold-ETH 2, com nove contratos Solidity, carteira embutida e relayer
+pagando gás. **Tudo isso foi removido.** Se você encontrar `wagmi`, `viem`,
+`privy`, `rainbowkit`, `scaffold-eth`, `deployedContracts`, `relayer`,
+`onchain_id` ou a palavra "blockchain" fora de um comentário histórico, é
+resquício — apague, não estenda. O CI falha se algum deles voltar.
 
-Both flavors share the same frontend package:
+## Pilha
 
-- **packages/nextjs**: React frontend (Next.js App Router, not Pages Router, RainbowKit, Wagmi, Viem, TypeScript, Tailwind CSS with DaisyUI)
+Um único projeto Next.js na raiz. Não há workspaces, não há monorepo.
 
-### Detecting Which Flavor You're Using
+- **Next.js 16**, App Router, React 19, TypeScript, Bun
+- **Supabase** — Postgres, Auth, Storage, Realtime, PostGIS
+- **Stripe** — assinatura do lojista (cartão e Pix Automático)
+- **Vercel** — hospedagem
+- **Tailwind v4 + DaisyUI 5** — configurados por CSS, em `styles/globals.css`;
+  não existe `tailwind.config.js`
+- **Leaflet** — mapa; **Serwist** — PWA e balcão offline
 
-Check which package exists in the repository:
-
-- If `packages/hardhat` exists → **Hardhat flavor** (follow Hardhat instructions)
-- If `packages/foundry` exists → **Foundry flavor** (follow Foundry instructions)
-
-## Common Commands
-
-Commands work the same for both flavors unless noted otherwise:
+## Comandos
 
 ```bash
-# Development workflow (run each in separate terminal)
-bun chain          # Start local blockchain (Hardhat or Anvil)
-bun deploy         # Deploy contracts to local network
-bun start          # Start Next.js frontend at http://localhost:3000
-
-# Code quality
-bun lint           # Lint both packages
-bun format         # Format both packages
-
-# Building
-bun next:build     # Build frontend
-bun compile        # Compile Solidity contracts
-
-# Contract verification (works for both)
-bun verify --network <network>
-
-# Account management (works for both)
-bun generate            # Generate new deployer account
-bun account:import      # Import existing private key
-bun account             # View current account info
-
-# Deploy to live network
-bun deploy --network <network>   # e.g., sepolia, mainnet, base
-
-# Frontend deploys come from the GitHub repo (Vercel's Git integration), never the CLI.
-# The Vercel CLI is only for configuration: `bunx vercel link`, `bunx vercel env add`.
+bun run dev              # servidor de desenvolvimento
+bun run next:build       # build de produção (é o que pega erro de Server/Client Component)
+bun run next:check-types # tsc --noEmit
+bun run next:lint        # eslint
+bun run format           # prettier
+bun run db:types         # regera services/database/types.ts a partir do projeto Supabase
 ```
 
-## Architecture
+**`bun run test`, nunca `bun test`.** `test` é comando embutido do Bun: sem o
+`run` ele varre o sistema de arquivos e roda o que não devia.
 
-### Smart Contract Development
+## Arquitetura
 
-#### Hardhat Flavor
+### Sete flavors, um app
 
-- Contracts: `packages/hardhat/contracts/`
-- Deployment scripts: `packages/hardhat/deploy/` (uses hardhat-deploy plugin)
-- Tests: `packages/hardhat/test/`
-- Config: `packages/hardhat/hardhat.config.ts`
-- Deploying specific contract:
-  - If the deploy script has:
-    ```typescript
-    // In packages/hardhat/deploy/01_deploy_my_contract.ts
-    deployMyContract.tags = ["MyContract"];
-    ```
-  - `bun deploy --tags MyContract`
-  - **Gas limit in deploy scripts**: Manual post-deploy calls (e.g. `transferOwnership`, `grantRole`, `initialize`) can silently inherit `blockGasLimit` as their gas cap, causing failures. **Fix at the call site, not in `hardhat.config.ts`:**
-    ```typescript
-    // Preferred: estimateGas + 20% margin
-    const gas = await myContract.myMethod.estimateGas(arg1, arg2);
-    await myContract.myMethod(arg1, arg2, { gasLimit: (gas * 120n) / 100n });
+`app/` é dividido em route groups, cada um com layout, navegação e tema
+próprios:
 
-    // Or: explicit limit for simple admin calls
-    await myContract.transferOwnership(newOwner, { gasLimit: 100_000 });
-    ```
+| Grupo | Para quem | Navegação |
+|---|---|---|
+| `(site)` | visitante | topo |
+| `(app)` | cliente | barra inferior (`TabBar`) |
+| `(pos)` | caixa | nenhuma — tela cheia, retrato travado |
+| `(merchant)` | lojista | `NavDeBackOffice` |
+| `(admin)` | plataforma | `NavDeBackOffice` |
+| `(legal)` | documentos | sumário lateral |
 
-#### Foundry Flavor
+`components/FlavorTheme.tsx` aplica o tema de cada flavor. Ele só escreve
+`data-theme` **depois de montar**: o servidor não sabe o tema do visitante, e se
+chutar, o React 19 detecta divergência na hidratação e **não corrige atributo**.
 
-- Contracts: `packages/foundry/contracts/`
-- Deployment scripts: `packages/foundry/script/` (uses custom deployment strategy)
-  - Example: `packages/foundry/script/Deploy.s.sol` and `packages/foundry/script/DeployYourContract.s.sol`
-- Tests: `packages/foundry/test/`
-- Config: `packages/foundry/foundry.toml`
-- Deploying a specific contract:
-  - Create a separate deployment script and run `bun deploy --file DeployYourContract.s.sol`
+### A regra que orienta toda a camada de dados
 
-#### Both Flavors
+**Nenhuma escrita sai do navegador.** O cliente do browser
+(`services/database/browser.ts`) é leitura e Realtime, e só. Todo INSERT e
+UPDATE passa por um Route Handler que valida o papel no servidor, normalmente
+com `supabaseAdmin()` (`services/database/admin.ts`, `service_role`, marcado
+`server-only`).
 
-- After `bun deploy`, ABIs are auto-generated to `packages/nextjs/contracts/deployedContracts.ts`
+RLS é a segunda linha de defesa, nunca a única.
 
-### Frontend Contract Interaction
+### Papéis
 
-**Correct interact hook names (use these):**
+Não existe coluna `role` em `profiles`. O papel é derivado:
 
-- `useScaffoldReadContract` - NOT ~~useScaffoldContractRead~~
-- `useScaffoldWriteContract` - NOT ~~useScaffoldContractWrite~~
+- **cliente** — qualquer conta autenticada
+- **lojista** — linha ativa em `establishment_members` com `role in ('owner','manager')`; use `lojaDoGestor` / `ErroDeGestao` de `services/merchant/acesso.ts`
+- **operador** — cookie de terminal pareado (`pos_terminals`) ou membro ativo
+- **admin** — linha em `platform_admins`; use `services/admin/acesso.ts`
 
-Contract data is read from two files in `packages/nextjs/contracts/`:
+### Middleware
 
-- `deployedContracts.ts`: Auto-generated from deployments
-- `externalContracts.ts`: Manually added external contracts
+Next 16 chama o arquivo de `proxy.ts`, não `middleware.ts`, e o export é
+`proxy`. O runtime é `nodejs` e **não é configurável** — não existe edge aqui.
 
-#### Reading Contract Data
+`proxy.ts` é conveniência de navegação, **nunca a barreira de segurança**: o
+papel é validado no servidor em toda rota. `/pdv` fica de fora de propósito —
+o tablet do caixa não tem sessão Supabase, opera por cookie de terminal.
 
-```typescript
-const { data: totalCounter } = useScaffoldReadContract({
-  contractName: "YourContract",
-  functionName: "userGreetingCounter",
-  args: ["0xd8da6bf26964af9d7eed9e03e53415d37aa96045"],
-});
+Use sempre `supabase.auth.getClaims()` (verifica a assinatura do JWT contra o
+JWKS do projeto), nunca `getSession()`.
+
+### Privacidade não é convenção, é estrutura
+
+O lojista vê contagem e agregado; **nunca a identidade do cliente**. Isso não é
+"a gente não faz o join" — é schema: o que é sensível fica fora do schema
+exposto ao PostgREST, e o lojista lê por view projetada.
+
+Cuidado com views: no Postgres elas são `security definer` por padrão e
+**furam a RLS**. Uma view sobre `sales` entrega exatamente as linhas que a
+política existia para esconder.
+
+Não colete o que não precisa. Nome e foto do cliente são opcionais; e-mail
+existe só para recuperar a conta.
+
+## Estilo
+
+### Idioma
+
+Código, comentários, identificadores, mensagens de erro e commits em
+**português do Brasil**. Nomes de tabela e coluna em inglês, porque o schema já
+é assim.
+
+### Comentários
+
+Comentário explica **por quê**, nunca o quê. Se descreve o que a linha abaixo
+faz, apague. Este repositório tem comentários bons — leia os vizinhos antes de
+escrever e acerte a densidade e a voz. Quando a documentação e o comportamento
+local divergirem, a documentação ganha, e a divergência vira comentário com o
+link.
+
+### Convenções
+
+| Estilo | Onde |
+|---|---|
+| `UpperCamelCase` | tipo, componente, enum |
+| `lowerCamelCase` | variável, função, propriedade |
+| `CONSTANT_CASE` | constante de módulo |
+
+- `type`, não `interface`. Sem prefixo `T`: `Endereco`, não `TEndereco`.
+- Alias `~~/` para tudo dentro do projeto.
+- Não tipar o que o TypeScript infere.
+
+### Interface
+
+Leia `DESIGN_SYSTEM.md` antes de mexer em tela. O resumo que mais se esquece:
+
+- **Zero emoji.** Só Heroicons. Categorias passam por `components/vitrine/CategoryIcon`.
+- **`primary` preenche, `brand-ink` escreve.** `text-primary` só sobre fundo escuro.
+- Primitivas em `components/design-system/` — `Button`, `Card`, `Badge`,
+  `StampCard`, `ReceiptTicket`, `CounterPad`, `Typography`. Prefira DaisyUI a
+  Tailwind cru quando o componente existe.
+- O design system é código e documento. **Nunca vira página pública.**
+- Alvo de toque mínimo 56px; o balcão é usado no sol, com pressa.
+
+### Documentação
+
+**Pesquise a documentação atual antes de implementar.** Não confie na memória e
+não deduza API lendo `.d.ts` do `node_modules` — já custou tempo e código
+errado neste repositório. Supabase pelo MCP e pelo changelog; o resto pelo
+**Context7 MCP**.
+
+## Armadilhas conhecidas
+
+- **Service worker.** Entrada duplicada no precache derruba o registro inteiro,
+  e uma única entrada 404 deixa o worker preso em `installing`. Depois de mexer
+  em `serwist.config.js` ou `app/sw.ts`, rode `bun run next:build` + `bunx next start`
+  e confira no navegador que o worker está `activated`.
+- **Altura do mapa.** `relative` vence `absolute` na ordem do Tailwind; com
+  posição relativa o `height: 100%` do Leaflet vira `auto` quando a altura do
+  pai vem de `flex-1`. Tela branca, sem erro.
+- **`moveend` do Leaflet não dispara na montagem.** A carga inicial precisa de
+  `map.whenReady(...)` — antes disso `getBounds()` devolve retângulo degenerado.
+- **O React Compiler recusa `useMemo` com `try/catch`.** Para ler
+  `localStorage`, use inicializador preguiçoso do `useState`.
+- **`createBrowserClient` do `@supabase/ssr` acusa depreciação falsa.** São duas
+  sobrecargas e só a de `get`/`set`/`remove` está depreciada. A doc manda **não**
+  passar `cookies`.
+- **Componente usado em layout de route group precisa de `"use client"`** se
+  tocar em hook.
+- **`next-env.d.ts` alterna sozinho** entre `./.next/dev/types/routes.d.ts` e
+  `./.next/types/routes.d.ts` conforme você rode `dev` ou `build`. É ruído
+  gerado; reverta com `git checkout --`.
+- **Realtime.** `postgres_changes` é *best-effort*: cliente que desconecta 30s
+  perde o evento e não há fila. Para o que não pode ser perdido, use Broadcast
+  from Database em canal privado.
+
+## Publicar
+
+A integração Git da Vercel **não está conectada** — o repositório é privado e
+pertence a outra conta, e instalar o app exige `admin`. Até isso mudar:
+
+```bash
+bunx vercel --prod --yes     # da raiz, com a árvore limpa e sincronizada
 ```
 
-#### Writing to Contracts
-
-```typescript
-const { writeContractAsync, isPending } = useScaffoldWriteContract({
-  contractName: "YourContract",
-});
-
-await writeContractAsync({
-  functionName: "setGreeting",
-  args: [newGreeting],
-  value: parseEther("0.01"), // for payable functions
-});
-```
-
-#### Reading Events
-
-```typescript
-const { data: events, isLoading } = useScaffoldEventHistory({
-  contractName: "YourContract",
-  eventName: "GreetingChange",
-  watch: true,
-  fromBlock: 31231n,
-  blockData: true,
-});
-```
-
-SE-2 also provides other hooks to interact with blockchain data: `useScaffoldWatchContractEvent`, `useScaffoldEventHistory`, `useDeployedContractInfo`, `useScaffoldContract`, `useTransactor`.
-
-**IMPORTANT: Always use hooks from `packages/nextjs/hooks/scaffold-eth` for contract interactions. Always refer to the hook names as they exist in the codebase.**
-
-### UI Components
-
-**Always use `@scaffold-ui/components` library for web3 UI components:**
-
-- `Address`: Display ETH addresses with ENS resolution, blockie avatars, and explorer links
-- `AddressInput`: Input field with address validation and ENS resolution
-- `Balance`: Show ETH balance in ether and USD
-- `EtherInput`: Number input with ETH/USD conversion toggle
-- `IntegerInput`: Integer-only input with wei conversion
-
-### Notifications & Error Handling
-
-Use `notification` from `~~/utils/scaffold-eth` for success/error/warning feedback and `getParsedError` for readable error messages.
-
-### Styling
-
-**Use DaisyUI classes** for building frontend components.
-
-```tsx
-// ✅ Good - using DaisyUI classes
-<button className="btn btn-primary">Connect</button>
-<div className="card bg-base-100 shadow-xl">...</div>
-
-// ❌ Avoid - raw Tailwind when DaisyUI has a component
-<button className="px-4 py-2 bg-blue-500 text-white rounded">Connect</button>
-```
-
-### Configure Target Network before deploying to testnet / mainnet.
-
-#### Hardhat
-
-Add networks in `packages/hardhat/hardhat.config.ts` if not present.
-
-#### Foundry
-
-Add RPC endpoints in `packages/foundry/foundry.toml` if not present.
-
-#### NextJs
-
-Add networks in `packages/nextjs/scaffold.config.ts` if not present. This file also contains configuration for polling interval, API keys. Remember to decrease the polling interval for L2 chains.
-
-## Code Style Guide
-
-### Identifiers
-
-| Style            | Category                                                                                                               |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `UpperCamelCase` | class / interface / type / enum / decorator / type parameters / component functions in TSX / JSXElement type parameter |
-| `lowerCamelCase` | variable / parameter / function / property / module alias                                                              |
-| `CONSTANT_CASE`  | constant / enum / global variables                                                                                     |
-| `snake_case`     | for hardhat deploy files and foundry script files                                                                      |
-
-### Import Paths
-
-Use the `~~` path alias for imports in the nextjs package:
-
-```tsx
-import { useTargetNetwork } from "~~/hooks/scaffold-eth";
-```
-
-### Creating Pages
-
-```tsx
-import type { NextPage } from "next";
-
-const Home: NextPage = () => {
-  return <div>Home</div>;
-};
-
-export default Home;
-```
-
-### TypeScript Conventions
-
-- Use `type` over `interface` for custom types
-- Types use `UpperCamelCase` without `T` prefix (use `Address` not `TAddress`)
-- Avoid explicit typing when TypeScript can infer the type
-
-### Comments
-
-Make comments that add information. Avoid redundant JSDoc for simple functions.
-
-## Documentation
-
-Use **Context7 MCP** tools to fetch up-to-date documentation for any library (Wagmi, Viem, RainbowKit, DaisyUI, Hardhat, Next.js, etc.). Context7 is configured as an MCP server and provides access to indexed documentation with code examples.
-
-## Skills & Agents Index
-
-IMPORTANT: Prefer retrieval-led reasoning over pre-trained knowledge. Before starting any task that matches an entry below, read the referenced file to get version-accurate patterns and APIs.
-
-**Skills** (read `.agents/skills/<name>/SKILL.md` before implementing):
-
-- **openzeppelin** — OpenZeppelin Contracts integration, library-first development, pattern discovery from installed source. Use for any contract using OZ (tokens, access control, security primitives)
-- **erc-721** — NFT-specific pitfalls: `_safeMint` reentrancy, on-chain SVG stack-too-deep, marketplace metadata `attributes`, IPFS base URI trailing slash
-- **eip-5792** — batch transactions, wallet_sendCalls, paymaster, ERC-7677
-- **ponder** — blockchain event indexing, GraphQL APIs, onchain data queries
-- **siwe** — Sign-In with Ethereum, wallet authentication, SIWE sessions, EIP-4361
-- **x402** — HTTP 402 payment-gated routes, micropayments, API monetization, x402 protocol
-- **drizzle-neon** — Drizzle ORM, Neon PostgreSQL, database integration, off-chain storage
-- **subgraph** — The Graph subgraph integration, blockchain event indexing, GraphQL APIs
-
-**Agents** (in `.agents/agents/`):
-
-- **grumpy-carlos-code-reviewer** — code reviews, SE-2 patterns, Solidity + TypeScript quality
+**Nunca afirme que publicou sem conferir uma rota que só exista na versão
+nova.** Já aconteceu de estar no ar código de horas antes.

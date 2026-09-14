@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 48 48" role="img" aria-label="Chorinho">
+  <!-- Ladrilho oliva escuro -->
+  <rect width="48" height="48" rx="14" fill="#1C2010"/>
+  <rect x="1" y="1" width="46" height="46" rx="13" stroke="#76C112" stroke-opacity="0.4" stroke-width="1.5"/>
+  <!-- Folhas da cana -->
+  <path d="M22 16C17 11 12.5 9 8.5 10.5C11.5 15 16.5 17 22 17.5V16Z" fill="#8FD42E"/>
+  <path d="M24 15C27.5 8.5 32 6 37.5 6.5C34 12 29 15.5 24 16.5V15Z" fill="#A6DD5A"/>
+  <!-- Colmo -->
+  <rect x="20" y="15" width="6" height="25" rx="3" fill="#76C112"/>
+  <!-- Nos do colmo -->
+  <path d="M20 23H26M20 31H26" stroke="#1C2010" stroke-width="1.6" stroke-linecap="round" stroke-opacity="0.85"/>
+  <!-- O "Chorinho": a gota dourada de caldo escorrendo -->
+  <path d="M33 22C33 22 36.5 25.2 36.5 27.2C36.5 29.133 34.933 30.7 33 30.7C31.067 30.7 29.5 29.133 29.5 27.2C29.5 25.2 33 22 33 22Z" fill="#D8B301"/>
+  <!-- Chao de bagaco -->
+  <path d="M11 40C17 42 29 42 35 40" stroke="#CEC69C" stroke-width="3" stroke-linecap="round" stroke-opacity="0.9"/>
+</svg>

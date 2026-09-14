@@ -1,0 +1,6 @@
+# O projeto vive em São Paulo (sa-east-1) desde 14/09/2026. Antes era us-east-2;
+# a mudança de região no Supabase não existe, então foi projeto novo e schema
+# reaplicado a partir destas migrations — que, por sua vez, foram recuperadas de
+# `supabase_migrations.schema_migrations` do projeto antigo, onde eram a única
+# cópia que existia. Não repita isso: migration nasce aqui, versionada.
+project_id = "chorinho"

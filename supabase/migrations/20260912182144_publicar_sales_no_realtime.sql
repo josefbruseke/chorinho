@@ -1,0 +1,16 @@
+-- A tela do passe precisa reagir quando o caixa lê o QR.
+--
+-- O cliente fica com o celular na mão esperando, e até agora a única coisa que
+-- mudava era o contador de dois minutos: ele não sabia se o carimbo entrou até
+-- trocar de tela. `stamp_balances_cache` já era publicada e avisa quando o
+-- saldo muda — mas isso só acontece depois da rede confirmar, uns doze segundos
+-- na Sepolia, tempo demais de silêncio com alguém olhando.
+--
+-- `sales` chega antes: a linha nasce como `enviada` no instante da leitura. Com
+-- as duas, a tela conta a história em dois tempos — "li o seu passe" e depois
+-- "o carimbo caiu".
+--
+-- RLS continua mandando: o Realtime respeita as políticas, e `sales` só deixa o
+-- cliente ver as próprias vendas (`customer_profile_id = auth.uid()`). Publicar
+-- a tabela não abre a de ninguém.
+ALTER PUBLICATION supabase_realtime ADD TABLE public.sales;;

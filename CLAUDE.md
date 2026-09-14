@@ -2,4 +2,5 @@
 
 @AGENTS.md
 
-This repository keeps agent guidance in `AGENTS.md` to avoid duplication. Please refer to `AGENTS.md` for the full instructions.
+Este repositório mantém a orientação para agentes em `AGENTS.md`, para não
+duplicar. Consulte-o.

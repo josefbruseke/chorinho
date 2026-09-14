@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, dev, ci]
+    branches: [main, dev, ci, web2-sem-blockchain]
   pull_request:
     branches: [main, dev]
 
@@ -32,86 +32,21 @@ jobs:
 
       - run: bun install --frozen-lockfile
 
-      - uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: stable
-
-      - name: Cache de artefatos do forge
-        uses: actions/cache@v4
-        with:
-          path: packages/foundry/out
-          key: forge-${{ runner.os }}-${{ hashFiles('packages/foundry/contracts/**/*.sol') }}
-          restore-keys: forge-${{ runner.os }}-
-
-      - name: Formatação dos contratos
-        run: bun run foundry:lint
-
-      - name: Testes dos contratos
-        run: bun run foundry:test
-
-      # O deploy roda em SIMULACAO, sem no nenhum.
-      #
-      # Antes ele subia um anvil e transmitia de verdade, e falhava no runner
-      # desde o primeiro commit do repositorio -- nunca na maquina de quem
-      # programa. Tentei `--slow`, que trocou "nonce too low" em cascata por
-      # "EOA nonce changed unexpectedly", e tentei chave direta no lugar do
-      # keystore, que nao mudou nada. Aqui o nonce bate exato: 17 transacoes,
-      # nonce 0 -> 17.
-      #
-      # Parei de adivinhar. Transmitir para um anvil descartavel testa a
-      # contabilidade de nonce do forge, nao o nosso codigo -- e a simulacao
-      # pega tudo o que importa: o script compila, roda inteiro e nao reverte.
-      - name: Simular o deploy
-        working-directory: packages/foundry
-        run: forge script script/Deploy.s.sol --ffi
-
-      # O que a transmissao protegia de verdade era isto: o
-      # `deployedContracts.ts` versionado precisa conhecer todo contrato que o
-      # deploy publica, senao o frontend compila contra um contrato que nao
-      # existe. Agora e uma conferencia direta, deterministica, em vez de um
-      # efeito colateral de subir uma blockchain.
-      - name: deployedContracts.ts conhece todos os contratos
+      # Substitui, com simetria, a conferência que morreu junto com os
+      # contratos ("o deployedContracts.ts conhece todo contrato publicado?").
+      # Aquela impedia o frontend de compilar contra um contrato inexistente;
+      # esta impede a blockchain de voltar por um import distraído.
+      - name: Nenhum resquício de web3
         run: |
-          faltou=0
-          for c in $(grep -oE 'Deployment\("[A-Za-z]+"' packages/foundry/script/DeployLoyalty.s.sol \
-                     | sed 's/Deployment("//; s/"//'); do
-            if grep -qE "^\s+$c: \{" packages/nextjs/contracts/deployedContracts.ts; then
-              echo "  ok      $c"
-            else
-              echo "  FALTOU  $c"
-              faltou=1
-            fi
-          done
-          if [ "$faltou" = "1" ]; then
+          padrao='wagmi|viem|@rainbow-me|@privy-io|@scaffold-ui|scaffold-eth|deployedContracts|services/relayer|services/web3'
+          if grep -rInE "$padrao" app components services utils hooks \
+               --include='*.ts' --include='*.tsx' --include='*.mjs' --include='*.json' \
+               --exclude-dir=node_modules --exclude-dir=.next; then
             echo
-            echo "Rode 'bun run deploy' e versione o deployedContracts.ts."
+            echo "A blockchain foi removida em M8. Os padrões acima não podem voltar."
             exit 1
           fi
-
-      # A conferencia acima e cega a rede: ela passa se o contrato existir sob
-      # QUALQUER chain id. E o `generateTsAbis.js` reescreve o arquivo inteiro a
-      # partir de `broadcast/`, onde o 31337 e ignorado pelo git -- entao um
-      # deploy publico feito de um clone limpo apaga o bloco local e ninguem
-      # percebe ate o desenvolvimento parar de compilar. Aqui as duas redes sao
-      # obrigatorias, e some uma, a build fica vermelha.
-      - name: deployedContracts.ts tem a rede local e a publica
-        run: |
-          faltou=0
-          for id in 31337 11155111; do
-            if grep -qE "^\s+$id: \{" packages/nextjs/contracts/deployedContracts.ts; then
-              echo "  ok      chain $id"
-            else
-              echo "  FALTOU  chain $id"
-              faltou=1
-            fi
-          done
-          if [ "$faltou" = "1" ]; then
-            echo
-            echo "31337 vem de 'bun run chain' + 'bun run deploy'."
-            echo "11155111 vem de 'bun run deploy:sepolia'."
-            echo "O gerador precisa dos DOIS historicos em packages/foundry/broadcast/."
-            exit 1
-          fi
+          echo "  ok  nenhuma referência a web3"
 
       - name: Lint do frontend
         run: bun run next:lint --max-warnings=0

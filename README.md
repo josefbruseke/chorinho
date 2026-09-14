@@ -1,308 +1,171 @@
-<img src="packages/nextjs/public/og.png" alt="Chorinho" width="720">
+<img src="public/og.png" alt="Chorinho" width="720">
 
 # Chorinho
 
 **Chorinho** é a digitalização daquele agrado que só o comércio de bairro sabe dar: a fatia extra de bolo na padaria, o refil de café no coador, a toalha quente na barbearia.
 
-É um programa de fidelidade **compartilhado entre lojas**. O caixa digita o valor da venda, lê o passe do cliente, e os carimbos caem na hora — pelas regras daquele comerciante. Carimbo vira produto, desconto e selo de conquista, e tudo fica registrado na blockchain.
+É um programa de fidelidade **compartilhado entre lojas**. O cliente mostra o passe, o caixa lê, e o carimbo cai na hora — pelas regras daquele comerciante. Carimbo vira produto, desconto e selo de conquista.
 
-O cliente não precisa saber que existe blockchain por trás. Entra com e-mail ou Google e pronto: a carteira nasce junto, invisível.
+O caixa não digita nada. Passou no balcão, ganhou carimbo.
 
 ---
 
 ## Rodando na sua máquina
 
-**Pré-requisitos:** [Bun](https://bun.sh) 1.3+, [Foundry](https://getfoundry.sh) e [Git](https://git-scm.com).
+**Pré-requisitos:** [Bun](https://bun.sh) 1.3+ e [Git](https://git-scm.com).
 
 ```bash
 git clone <url-do-repositorio> chorinho
 cd chorinho
 bun install
-cp packages/nextjs/.env.example packages/nextjs/.env.local   # e preencha
-bun dev
+cp .env.example .env.local   # e preencha
+bun run dev
 ```
 
-A aplicação sobe em http://localhost:3000. **Sem configuração, ela aponta para
-o anvil local** — então é preciso subir a cadeia antes:
-
-```bash
-bun run chain                          # num terminal
-bun run deploy && bun run seed:tudo    # noutro
-```
-
-<details>
-<summary>Programar contra a Sepolia, a mesma rede da demonstração</summary>
-
-Os contratos estão publicados lá, então dá para pular o anvil. Em
-`packages/nextjs/.env.local`:
-
-```bash
-CHORINHO_CHAIN_ID=11155111              # o servidor lê esta
-NEXT_PUBLIC_CHORINHO_CHAIN_ID=11155111  # o navegador lê ESTA, outra variável
-CHORINHO_TORNEIRA_ETH=                  # vazia: a torneira só existe no anvil
-```
-
-Não é preciso editar `scaffold.config.ts`: as duas redes já estão na lista e a
-variável escolhe qual é a alvo.
-
-É mais lento, e esse é o ponto. O anvil é ótimo enquanto a cadeia é detalhe de
-implementação, e é exatamente por isso que ele escondia o que a rede de verdade
-cobra: a espera de doze segundos pelo bloco, o nonce disputado entre dois
-envios, o teto de tempo da função. Cada um desses defeitos apareceu publicado,
-nunca na máquina de quem programou.
-
-</details>
+A aplicação sobe em http://localhost:3000. Não há cadeia para subir, nem
+contrato para publicar: o que ela precisa é de um projeto Supabase e das três
+variáveis dele.
 
 ### Testando o fluxo inteiro
 
-Depois de `bun dev`, em http://localhost:3000:
-
-1. **Crie uma conta** em `/entrar` (e-mail e senha). A carteira é criada sozinha; confira em `/perfil`.
-2. **Abra seu passe** em `/passe`. É o QR que o caixa lê — ele se renova a cada dois minutos.
-3. **Abra o balcão** em `/pdv`, em outra aba. Digite o valor da compra, depois o código de 6 dígitos que aparece embaixo do QR.
+1. **Crie uma conta** em `/entrar`.
+2. **Abra seu passe** em `/passe`. É o QR que o caixa lê — ele se renova sozinho.
+3. **Abra o balcão** em `/pdv`, em outra aba. Leia o QR, ou digite o código de 6 dígitos que aparece embaixo dele.
 4. **Veja o carimbo cair** em `/carteira`. A tela acende sozinha, sem recarregar.
 5. **Entregue um prêmio** em `/pdv/resgatar`: leia o passe de novo e escolha o que o cliente já pode levar.
-6. **Confira a auditoria** em `/painel/auditoria`: cada carimbo, de qual terminal saiu e qual transação o registrou.
+6. **Confira a auditoria** em `/painel/auditoria`: cada carimbo e de qual terminal saiu.
 
-Para que seu usuário seja lojista e admin da plataforma, insira as linhas correspondentes em `establishment_members` e `platform_admins` no painel da Supabase.
+Para que seu usuário seja lojista e admin da plataforma, insira as linhas
+correspondentes em `establishment_members` e `platform_admins` no painel da
+Supabase. **Isso é temporário** — o cadastro self-service do comerciante é o
+próximo marco, e existe justamente para que ninguém precise fazer isso na mão.
 
 ### Testando o balcão sem internet
 
-Com o PDV aberto, desligue o wifi e registre três vendas. Elas ficam em `/pdv/fila`. Religue: a fila sobe sozinha, em lote, numa transação só.
+Com o PDV aberto, desligue o wifi e registre três vendas. Elas ficam em
+`/pdv/fila`. Religue: a fila sobe sozinha, em lote.
 
 ---
 
 ## Comandos
 
-### Dia a dia
-
-| Comando | O que faz |
-| :--- | :--- |
-| `bun dev` | Sobe o frontend na rede do `.env.local` (padrão: anvil local) |
-| `bun run test` | Roda os testes dos contratos (precisa do `run` — `test` é comando embutido do Bun) |
-| `bun run lint` | Verifica contratos e frontend |
-| `bun run format` | Formata contratos e frontend |
-| `bun run next:build` | Build de produção do frontend, incluindo o service worker |
-
-### Blockchain
-
-| Comando | O que faz |
-| :--- | :--- |
-| `bun chain` | Só a blockchain local |
-| `bun run deploy` | Publica os contratos e regenera os tipos do frontend |
-| `bun compile` | Compila os contratos |
-| `bun run seed:balcao` | Registra as oito lojas, assinaturas e regras de carimbo |
-| `bun run seed:recompensas` | Dez prêmios de exemplo, com ids fixos |
-| `bun run seed:colecao` | Programas de desconto, peças, conquistas e a troca por carimbos |
-| `bun run seed:tudo` | Os três acima, na ordem (rede local) |
-| `bun run deploy:sepolia` | Publica os nove contratos na Sepolia |
-| `bun run seed:sepolia` | Os três seeds, na Sepolia |
-| `bun run abastecer:testes` | Dá 1000 ETH de mentira a todas as carteiras (só em nó de desenvolvimento) |
-| `bun account` | Mostra a conta usada nos deploys |
-| `bun generate` | Cria uma conta nova de deploy |
-| `bun account:import` | Importa uma chave privada existente |
-
-### Banco de dados
-
-| Comando | O que faz |
-| :--- | :--- |
-| `bun run db:types` | Regenera `services/database/types.ts` a partir do schema da Supabase (exige `SUPABASE_ACCESS_TOKEN`) |
-
----
-
-## Publicando
-
-### Frontend
-
-**O deploy sai do repositório, não da linha de comando.** A Vercel observa o
-GitHub: publicar é `git push` do branch que ela acompanha. Assim o que está no
-ar é sempre um commit que existe — um `vercel --prod` sobe o que está na máquina
-de quem rodou o comando, e ninguém consegue dizer, olhando o repositório, o que
-foi publicado.
-
-A CLI da Vercel serve só para **configurar**:
-
 ```bash
-bun run vercel:login                       # uma vez, na primeira máquina
-bunx vercel link                           # amarra a pasta ao projeto
-bunx vercel env add NOME production        # cada variável, uma por vez
+bun run dev               # servidor de desenvolvimento
+bun run next:build        # build de produção
+bun run next:check-types  # tsc --noEmit
+bun run next:lint         # eslint
+bun run format            # prettier
+bun run db:types          # regera services/database/types.ts a partir da Supabase
 ```
 
-O diretório raiz do projeto na Vercel é `packages/nextjs`. As variáveis são as
-mesmas de `packages/nextjs/.env.local`, descritas abaixo — dá para configurá-las
-pelo painel (Settings → Environment Variables) em vez da CLI. **Nunca** dê o
-prefixo `NEXT_PUBLIC_` a um segredo: tudo com esse prefixo é enviado ao
-navegador.
-
-### Contratos
-
-A demonstração roda na **Sepolia da Ethereum** (chain id 11155111).
-
-```bash
-bun run deploy:sepolia    # publica os nove contratos
-bun run seed:sepolia      # lojas, prêmios e a coleção de exemplo
-```
-
-Os dois leem `DEPLOYER_PRIVATE_KEY` e `ALCHEMY_API_KEY` de
-`packages/foundry/.env`. A conta precisa de **0,1 ETH de teste** — o deploy dos
-nove contratos, simulado contra a Sepolia, custa 0,036 ETH; os seeds somam
-outros ~0,02; e cada carimbo sai por menos de um milésimo. Faucets:
-[Google Cloud](https://cloud.google.com/application/web3/faucet/ethereum/sepolia),
-[pk910](https://sepolia-faucet.pk910.de) (sem conta).
-
-Depois do deploy, aponte a aplicação para lá com **as duas** variáveis —
-`CHORINHO_CHAIN_ID=11155111` para o servidor e
-`NEXT_PUBLIC_CHORINHO_CHAIN_ID=11155111` para o navegador. São variáveis
-diferentes, com padrões diferentes; configurar só uma deixa metade da aplicação
-falando com a outra rede. Não é preciso editar `scaffold.config.ts`.
-
-Nessa ordem: virar a rede antes de publicar deixa o front falando com contrato
-que não existe.
-
-O `deploy:sepolia` se recusa a rodar se não houver histórico do deploy local em
-`broadcast/Deploy.s.sol/31337/`. Não é frescura: o gerador de ABIs reescreve o
-`deployedContracts.ts` inteiro a partir do que achar em `broadcast/`, e aquela
-pasta é ignorada pelo git — a partir de um clone limpo, publicar apagaria o
-bloco `31337` e o desenvolvimento local pararia de compilar, sem erro nenhum
-durante o deploy.
-
-Para outra rede pública, o caminho do kit continua valendo:
-`bun run deploy --network <rede>` com keystore e senha.
+> **`bun run test`, nunca `bun test`.** Sem o `run`, `test` é comando embutido
+> do Bun: ele varre o sistema de arquivos e roda o que não devia.
 
 ---
 
-## As sete experiências
+## As experiências
 
-O aplicativo é um só, dividido em sete experiências ("flavors"). Cada uma tem navegação, tema e manifesto de instalação próprios, sobre a mesma paleta da marca.
+Um app, seis públicos. Cada um é um route group em `app/`, com layout,
+navegação e tema próprios.
 
-| Flavor | Rotas | Para quem |
-| :--- | :--- | :--- |
-| **Site** | `/`, `/como-funciona`, `/para-comerciantes`, `/ajuda`, `/entrar` | Visitante — site e aquisição |
-| **Legal** | `/privacidade`, `/termos`, `/carteira-e-seguranca`, `/cookies` | Quem quer ler as regras |
-| **Cliente** | `/explorar` (entrada), `/mapa`, `/local/[slug]`, `/carteira`, `/carteira/[slug]`, `/passe`, `/recompensas`, `/perfil` | Quem compra no bairro |
-| **Balcão** | `/pdv`, `/pdv/fila`, `/pdv/resgatar` | Atendente no caixa |
-| **Lojista** | `/painel`, `/painel/loja`, `/painel/regras`, `/painel/recompensas`, `/painel/pdv`, `/painel/equipe`, `/painel/assinatura`, `/painel/auditoria` | Dono da loja |
-| **Admin** | `/admin`, `/admin/estabelecimentos`, `/admin/pontos`, `/admin/relayer`, `/admin/auditoria` | Nossa equipe |
-| **Dev** | `/debug`, `/blockexplorer` | Ferramentas do Scaffold-ETH (o explorador só serve à cadeia local) |
-
-Cada flavor vive num route group em `packages/nextjs/app/` — `(site)`, `(legal)`, `(app)`, `(pos)`, `(merchant)`, `(admin)` e `(dev)` — com layout, navegação e par de temas próprios.
-
-Três deles são instaláveis como aplicativo: o cliente (`/manifest/cliente`), o balcão (`/manifest/pdv`) e o painel do lojista (`/manifest/lojista`).
-
----
+| Onde | Para quem | O que faz |
+|---|---|---|
+| `(site)` | visitante | vitrine, mapa, como funciona, entrar |
+| `(app)` | cliente | mapa, cartelas, prêmios, passe, perfil |
+| `(pos)` | caixa | balcão: ler passe, carimbar, entregar prêmio, fila offline |
+| `(merchant)` | lojista | loja, regra, recompensas, terminais, equipe, assinatura, auditoria |
+| `(admin)` | plataforma | estabelecimentos, auditoria |
+| `(legal)` | qualquer um | privacidade, termos, cookies |
 
 ## O balcão
 
-O PDV é a parte do produto que mais precisa funcionar quando tudo o mais falha.
+A parte que mais importa e a que mais apanha da realidade: o tablet do caixa
+fica no sol, a internet cai, e a fila não espera.
 
-**Não tem login.** Pedir e-mail e senha ao atendente a cada troca de turno é a forma mais confiável de o programa morrer — a senha vira papel colado no monitor, ou o caixa simplesmente para de carimbar. Em vez disso: o lojista cria um terminal em `/painel/pdv`, recebe um código de oito letras, digita uma vez no tablet. Aquele aparelho vira um caixa, para sempre. Some? O lojista desliga pelo painel e ele para de carimbar na hora.
-
-**Funciona sem internet.** A venda é gravada no aparelho primeiro e sobe depois, em lote. O atendente vê o que está pendente em `/pdv/fila`. Quando a conexão volta, tudo drena numa transação só — e a mesma venda nunca credita duas vezes, porque a referência dela é conferida no banco e no contrato.
-
-**O cliente não assina nada.** Quem envia a transação e paga o gás é o relayer da plataforma. A integridade do programa não depende dessa chave: o contrato é que aplica piso de ticket, teto de carimbos por venda, intervalo mínimo e assinatura ativa.
-
----
-
-## Contratos
-
-Em `packages/foundry/contracts/`:
-
-| Contrato | O que faz |
-| :--- | :--- |
-| `EstablishmentRegistry` | Diretório de lojas, donos, operadores e papéis da plataforma |
-| `SubscriptionManager` | Espelho on-chain da assinatura, agnóstico de gateway |
-| `StampLedger` | O núcleo: carimbos, regras com piso de ticket, sequências e idempotência por venda |
-| `PointsVault` | Pontos da rede (ERC-1155 intransferível), com escopo configurável por cidade, bairro ou categoria |
-| `RewardCatalog` | O que os carimbos e pontos compram; queima as duas moedas na mesma transação |
-| `BonusNFT` | Selo de conquista intransferível, por trilha e por tempo de casa |
-| `DiscountNFT` | Campanhas e cupons (ERC-1155) — o modelo anterior, ainda em uso |
-
-Rode `bun run test` para os testes. Depois de `bun run deploy`, os tipos aparecem sozinhos em `packages/nextjs/contracts/deployedContracts.ts` — **nunca edite esse arquivo à mão.**
-
----
-
-## Variáveis de ambiente
-
-**`packages/nextjs/.env.local`** — o que a aplicação lê.
-
-| Variável | Obrigatória | Para quê |
-| :--- | :--- | :--- |
-| `NEXT_PUBLIC_SUPABASE_URL` | sim | Endereço do projeto na Supabase |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | sim | Chave pública do navegador; só alcança o que a RLS permitir |
-| `SUPABASE_SECRET_KEY` | sim | Chave de servidor, para as escritas do sistema. **Nunca com prefixo público** |
-| `NEXT_PUBLIC_PRIVY_APP_ID` | sim | Carteira embutida criada no cadastro |
-| `PRIVY_APP_SECRET` | não | Lado servidor do Privy. **Nenhum código lê esta variável hoje** — a carteira é criada no navegador, com o JWT da Supabase. Só passa a fazer falta se algum dia o servidor falar com a API do Privy |
-| `PASS_HMAC_SECRET` | sim | Assina o passe do cliente. Sem ele, qualquer um forja um passe |
-| `RELAYER_PRIVATE_KEY` | sim | A conta que paga o gás dos carimbos |
-| `CHORINHO_ADMIN_PRIVATE_KEY` | não | Conta que escreve regra e registro. Em desenvolvimento usa a do relayer |
-| `CHORINHO_CHAIN_ID` | não | Rede do **servidor**: 31337 (local), 11155111 (Sepolia), 84532 (Base Sepolia), 8453 (Base). Padrão: 31337 |
-| `NEXT_PUBLIC_CHORINHO_CHAIN_ID` | não | Rede do **navegador**. Variável separada, e é preciso definir as duas. Padrão: 31337 em desenvolvimento, 11155111 publicado |
-| `CHORINHO_RPC_URL` | não | RPC próprio; vazio usa o padrão da rede |
-| `CHORINHO_TORNEIRA_ETH` | não | Ambiente de teste: quanto ETH de mentira cada carteira nova ganha. Só funciona em nó de desenvolvimento. Vazio = desligada |
-| `NEXT_PUBLIC_SITE_URL` | não | Onde a aplicação responde. Só o metadado das peças precisa: carteira e marketplace não adivinham o domínio. Na Vercel cai na URL de produção |
-| `NEXT_PUBLIC_MAP_TILE_URL` | não | Servidor de ladrilhos do mapa. Padrão: OpenStreetMap |
-| `NEXT_PUBLIC_ALCHEMY_API_KEY` | não | RPC próprio em redes públicas |
-| `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID` | não | Conectar carteira externa (uso avançado) |
-
-Gere um `PASS_HMAC_SECRET` com `openssl rand -base64 48`.
-
-**`packages/foundry/.env`** — só para publicar contratos.
-
-| Variável | Para quê |
-| :--- | :--- |
-| `ALCHEMY_API_KEY` | Deploy em redes públicas |
-| `ETHERSCAN_API_KEY` | Verificar contratos no explorador |
-| `SITE_URL` | Base da URI de metadado que o `seed:colecao` grava nas peças. Padrão: `http://localhost:3000` |
-
-> Nunca versione um `.env`. O `.gitignore` já bloqueia todos eles, e nenhum segredo pode carregar o prefixo `NEXT_PUBLIC_`.
+- **O passe é assinado, curto e de uso único.** HMAC-SHA256 sobre o id do
+  cliente, um nonce e a expiração. Vale por instantes e queima na leitura —
+  fotografar a tela não serve para nada.
+- **Um código de 6 dígitos** aparece embaixo do QR, para quando a câmera não
+  colabora.
+- **O terminal não tem sessão.** Ele é pareado uma vez, por um código de 8
+  caracteres, e guarda um cookie `httpOnly` de um ano. No banco fica só o hash.
+- **Sem internet, a venda entra numa fila** no próprio aparelho e sobe quando a
+  conexão volta — em lote, sem carimbar ninguém duas vezes.
+- **A tela do cliente reage** no instante em que o caixa lê o passe.
 
 ---
 
 ## Como o lojista paga
 
-**Ainda não está decidido** — e isso é de propósito. A cobrança fica atrás de uma interface única (`BillingProvider`), com cinco caminhos pré-engatilhados. Trocar de gateway é trocar uma variável, não refazer código.
+Um produto, preço pelo número de terminais, **nenhum recurso bloqueado**:
 
-```bash
-BILLING_PROVIDER=manual        # padrão — a equipe libera a loja à mão, sem gateway
-BILLING_PROVIDER=stripe        # cartão nacional e internacional, com portal de autoatendimento
-BILLING_PROVIDER=mercadopago   # cartão, Pix, boleto e saldo MP — o lojista já tem conta
-BILLING_PROVIDER=asaas         # Pix, boleto e cartão, com régua de inadimplência inclusa
-BILLING_PROVIDER=pix           # Pix Automático (Banco Central) — custo por transação quase zero
-BILLING_PROVIDER=crypto        # USDC na Base — liquidação instantânea, sem chargeback
-```
+| Caixas | Preço |
+|---|---|
+| até 3 | R$ 7/mês |
+| 4 ou mais | R$ 10/mês |
 
-| Opção | Meios | Recorrência | Ponto forte | Ponto fraco |
-| :--- | :--- | :--- | :--- | :--- |
-| **Stripe** | Cartão | Nativa | Único com portal pronto para o lojista | Taxa mais alta no Brasil |
-| **Mercado Pago** | Cartão, Pix, boleto | Nativa | O lojista já conhece e confia | API de assinatura mais rústica |
-| **Asaas** | Pix, boleto, cartão | Nativa | Feito para PME brasileira, taxa baixa | Menos conhecido fora do Brasil |
-| **Pix Automático** | Pix | Nativa | Custo quase zero por cobrança | Exige PSP habilitado |
-| **USDC (Base)** | Stablecoin | Própria | Instantâneo e sem chargeback | Exige que o lojista tenha cripto |
+Quinze dias de teste, sem cartão. Cartão ou **Pix Automático**, no mesmo
+checkout — o Pix custa 1,9% contra 10,3% do cartão nesse ticket, e não tem
+contestação.
 
-O plano contratado define o teto de terminais da loja (dez por padrão) e é o piso da cobrança; o uso acima disso entra depois, medido pelas vendas registradas.
-
-**Assinatura vencida bloqueia a emissão de carimbo, mas nunca o resgate.** O cliente não pode ser punido pelo problema de cobrança do lojista.
-
-Até a escolha do gateway, a equipe libera as lojas em `/admin/estabelecimentos` — nada no produto fica bloqueado por essa decisão.
+A cobrança fica atrás de uma porta (`services/billing/`), com o provedor
+escolhido por variável de ambiente. O `manual` continua existindo depois do
+Stripe entrar: loja em teste, cortesia e caso de suporte precisam de uma saída
+que não passe por cartão.
 
 ---
 
-## Branches
+## Variáveis de ambiente
 
-| Branch | Para quê |
-| :--- | :--- |
-| `main` | Produção. Só entra por PR com CI verde |
-| `dev` | Integração. É para cá que vão os PRs do dia a dia |
-| `testes` | QA com dados de exemplo. Pode forçar push à vontade |
-| `ci` | Sandbox para mexer no pipeline sem queimar run de PR |
+| Variável | Para quê |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | projeto Supabase |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | chave publicável, só leitura |
+| `SUPABASE_SECRET_KEY` | `service_role`, só no servidor |
+| `PASS_HMAC_SECRET` | assina o passe do balcão; mínimo 32 caracteres |
+| `NEXT_PUBLIC_SITE_URL` | base dos links absolutos |
+| `NEXT_PUBLIC_MAP_TILE_URL` | tiles do mapa |
+| `BILLING_PROVIDER` | `manual` ou `stripe` |
+
+---
+
+## Publicando
+
+A integração Git da Vercel não está conectada — o repositório é privado e
+pertence a outra conta, e instalar o app da Vercel nele exige `admin`. Até isso
+mudar, publica-se pela CLI, da raiz, com a árvore limpa:
+
+```bash
+bunx vercel --prod --yes
+```
+
+**Nunca dê o deploy por feito sem conferir uma rota que só exista na versão
+nova.**
 
 ---
 
 ## Documentação do projeto
 
-- [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md) — identidade visual, tipografia, cores e componentes
-- [`AGENTS.md`](./AGENTS.md) — convenções de código e instruções para agentes
+- **`AGENTS.md`** — como trabalhar neste repositório: arquitetura, convenções e as armadilhas que já custaram tempo.
+- **`DESIGN_SYSTEM.md`** — identidade, paleta, tipografia e primitivas de interface.
+- **`services/database/README.md`** — a camada de dados e a regra de que nenhuma escrita sai do navegador.
 
 ---
 
-Construído sobre [Scaffold-ETH 2](https://docs.scaffoldeth.io).
+## História
+
+Até setembro de 2026 o Chorinho rodava sobre Scaffold-ETH 2: nove contratos
+Solidity, carteira embutida criada no cadastro e um relayer patrocinando o gás.
+Funcionava, e nunca chegou a produção.
+
+A blockchain cobrava caro em três moedas — gás, doze segundos de espera por
+carimbo, e uma carteira que ninguém tinha pedido — e não comprava nada que o
+Postgres não fizesse melhor aqui. Uma delas era passivo direto: registro
+imutável contra o direito de eliminação da LGPD.
+
+Hoje é Supabase, Vercel e Stripe. O carimbo cai instantâneo, apagar a conta
+apaga de verdade, e o cliente nunca mais precisa ouvir a palavra carteira.
+
+---
+
+Licença MIT. Veja `LICENCE`.

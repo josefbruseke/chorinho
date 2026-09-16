@@ -21,11 +21,11 @@ export const urlDaMidia = (caminho?: string | null) => {
 /**
  * O endereço do site, para o que precisa de URL absoluta.
  *
- * Metadado de NFT é lido por carteira e por marketplace, que não têm ideia de
- * qual é o nosso domínio. Em desenvolvimento cai no localhost; publicado, a
- * Vercel preenche `VERCEL_PROJECT_PRODUCTION_URL` sozinha — mas
- * `NEXT_PUBLIC_SITE_URL` vence as duas, porque domínio próprio não aparece em
- * variável de plataforma.
+ * Link de e-mail, `og:image` e manifesto do PWA são lidos fora do site, por
+ * quem não tem ideia de qual é o nosso domínio. Em desenvolvimento cai no
+ * localhost; publicado, a Vercel preenche `VERCEL_PROJECT_PRODUCTION_URL`
+ * sozinha — mas `NEXT_PUBLIC_SITE_URL` vence as duas, porque domínio próprio
+ * não aparece em variável de plataforma.
  */
 export const enderecoDoSite = () => {
   const explicito = process.env.NEXT_PUBLIC_SITE_URL;

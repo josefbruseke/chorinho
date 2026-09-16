@@ -5,7 +5,7 @@ import "server-only";
  * O modo de teste: entrar no balcão de qualquer loja sem pareamento.
  *
  * Existe para quem está construindo conseguir abrir o PDV de uma loja qualquer
- * e percorrer o fluxo — criar selo, ler o passe, ver o NFT cair — sem precisar
+ * e percorrer o fluxo — ler o passe, carimbar, entregar prêmio — sem precisar
  * de um código de pareamento por loja e de uma conta por lojista.
  *
  * TRÊS CUIDADOS, e nenhum é decorativo:

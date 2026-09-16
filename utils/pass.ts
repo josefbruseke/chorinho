@@ -9,9 +9,10 @@
  * - **Curto**: expira em dois minutos, então uma foto da tela não vale nada.
  * - **Uso único**: o nonce é queimado na primeira leitura.
  *
- * A assinatura é do SERVIDOR, não da carteira. Pedir assinatura ao usuário a
+ * A assinatura é do SERVIDOR, não do usuário. Pedir que ele assine algo a
  * cada 90 segundos, de pé no balcão, seria uma experiência insuportável — e o
- * caixa já confere tudo contra a blockchain antes de creditar.
+ * crédito acontece num route handler, que valida o nonce e o terminal antes de
+ * escrever.
  *
  * O payload fica com ~120 caracteres de propósito: gera um QR de baixa
  * densidade, que câmera de celular barato lê de primeira. Num balcão movimentado

@@ -104,7 +104,7 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ erro: "corpo inválido" }, { status: 400 });
   }
 
-  // Campos como status, onchain_id, owner_profile_id, slug, featured e
+  // Campos como status, owner_profile_id, slug, featured e
   // pos_limit nunca são lidos daqui — não entram em `valores` mesmo que
   // venham no corpo, o que já cumpre "ignore esses campos se vierem".
   const valores: ValoresDaLoja = {};

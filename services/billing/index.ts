@@ -1,12 +1,11 @@
 import { asaas } from "./providers/asaas";
-import { crypto } from "./providers/crypto";
 import { manual } from "./providers/manual";
 import { mercadopago } from "./providers/mercadopago";
 import { pix } from "./providers/pix";
 import { stripe } from "./providers/stripe";
 import type { BillingProvider } from "./types";
 
-const PROVEDORES: Record<string, BillingProvider> = { manual, stripe, mercadopago, asaas, pix, crypto };
+const PROVEDORES: Record<string, BillingProvider> = { manual, stripe, mercadopago, asaas, pix };
 
 /**
  * Resolve o provedor pela variável de ambiente.

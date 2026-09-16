@@ -55,7 +55,6 @@ export type Database = {
           id: string;
           image_path: string | null;
           max_winners: number;
-          metadata_hash: string | null;
           piece_id: string | null;
           route_id: number;
           starts_at: string | null;
@@ -75,7 +74,6 @@ export type Database = {
           id?: string;
           image_path?: string | null;
           max_winners?: number;
-          metadata_hash?: string | null;
           piece_id?: string | null;
           route_id?: number;
           starts_at?: string | null;
@@ -95,7 +93,6 @@ export type Database = {
           id?: string;
           image_path?: string | null;
           max_winners?: number;
-          metadata_hash?: string | null;
           piece_id?: string | null;
           route_id?: number;
           starts_at?: string | null;
@@ -118,7 +115,6 @@ export type Database = {
           id: string;
           joint: boolean;
           kind: number;
-          metadata_hash: string | null;
           name: string;
           product: string | null;
           starts_at: string | null;
@@ -135,7 +131,6 @@ export type Database = {
           id?: string;
           joint?: boolean;
           kind?: number;
-          metadata_hash?: string | null;
           name: string;
           product?: string | null;
           starts_at?: string | null;
@@ -152,7 +147,6 @@ export type Database = {
           id?: string;
           joint?: boolean;
           kind?: number;
-          metadata_hash?: string | null;
           name?: string;
           product?: string | null;
           starts_at?: string | null;
@@ -199,7 +193,6 @@ export type Database = {
           geog: unknown;
           id: string;
           logo_path: string | null;
-          metadata_hash: string | null;
           name: string;
           neighborhood: string | null;
           opening_hours: Json;
@@ -224,7 +217,6 @@ export type Database = {
           geog?: unknown;
           id?: string;
           logo_path?: string | null;
-          metadata_hash?: string | null;
           name: string;
           neighborhood?: string | null;
           opening_hours?: Json;
@@ -249,7 +241,6 @@ export type Database = {
           geog?: unknown;
           id?: string;
           logo_path?: string | null;
-          metadata_hash?: string | null;
           name?: string;
           neighborhood?: string | null;
           opening_hours?: Json;

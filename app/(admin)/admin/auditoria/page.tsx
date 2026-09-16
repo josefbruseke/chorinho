@@ -4,7 +4,7 @@ import { getMetadata } from "~~/utils/metadata";
 
 export const metadata = getMetadata({
   title: "Auditoria",
-  description: "As últimas vendas de todas as lojas da plataforma, com o registro de cada uma na rede.",
+  description: "As últimas vendas de todas as lojas da plataforma, e de qual terminal saiu cada uma.",
 });
 
 const Auditoria: NextPage = () => <AuditoriaDaPlataforma />;

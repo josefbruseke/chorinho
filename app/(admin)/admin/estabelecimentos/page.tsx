@@ -4,7 +4,7 @@ import { getMetadata } from "~~/utils/metadata";
 
 export const metadata = getMetadata({
   title: "Estabelecimentos",
-  description: "Aprovar lojas, registrar na rede e liberar assinatura.",
+  description: "Aprovar lojas e liberar assinatura.",
 });
 
 const Estabelecimentos: NextPage = () => <EstabelecimentosDaPlataforma />;

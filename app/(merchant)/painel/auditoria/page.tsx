@@ -4,7 +4,7 @@ import { getMetadata } from "~~/utils/metadata";
 
 export const metadata = getMetadata({
   title: "Auditoria",
-  description: "Cada carimbo emitido na sua loja, com origem e registro na rede.",
+  description: "Cada carimbo emitido na sua loja, e de qual terminal saiu.",
 });
 
 const Auditoria: NextPage = () => <AuditoriaDaLoja />;

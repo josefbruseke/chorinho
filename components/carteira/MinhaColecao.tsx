@@ -7,7 +7,6 @@ import { beneficioEmTexto, dataCurta } from "~~/utils/colecao";
 
 type Peca = {
   id: string;
-  onchainId: number;
   titulo: string;
   descricao: string | null;
   imagem?: string;

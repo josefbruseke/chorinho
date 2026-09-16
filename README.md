@@ -28,7 +28,7 @@ Sobe em http://localhost:3000. Não há blockchain para subir nem contrato para 
 
 ### Subindo o banco do zero
 
-O schema inteiro está versionado em `supabase/migrations/` — 14 arquivos, na ordem em que rodam. Contra um projeto novo:
+O schema inteiro está versionado em `supabase/migrations/` — 15 arquivos, na ordem em que rodam. Contra um projeto novo:
 
 ```bash
 bunx supabase link --project-ref <seu-projeto>

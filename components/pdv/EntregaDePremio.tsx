@@ -27,7 +27,6 @@ type Atendimento = {
 
 type PecaNoBalcao = {
   id: string;
-  onchainId: number;
   titulo: string;
   programa?: string;
   nivel: number;
@@ -155,7 +154,7 @@ export const EntregaDePremio = () => {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           atendimento: dados.atendimento,
-          peca: peca.onchainId,
+          peca: peca.id,
           conta: contaCentavos,
           redemptionRef: novaRefDeVenda(),
         }),

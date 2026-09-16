@@ -4,7 +4,7 @@ import type { BillingProvider } from "../types";
  * O provedor padrão: não há gateway nenhum.
  *
  * A equipe libera a loja à mão em `/admin/estabelecimentos`, escrevendo direto
- * no `SubscriptionManager`. Parece pouco, mas é o que destrava o piloto e as
+ * no estabelecimento. Parece pouco, mas é o que destrava o piloto e as
  * primeiras dezenas de lojas sem que nenhuma outra parte do produto fique
  * esperando a decisão de gateway.
  *

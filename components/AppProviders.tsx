@@ -1,7 +1,6 @@
 "use client";
 
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
-import { Toaster } from "react-hot-toast";
 
 /**
  * Só providers: o chrome (cabeçalho, rodapé, barra de abas) vive no layout de
@@ -15,6 +14,5 @@ export const AppProviders = ({ children }: { children: React.ReactNode }) => (
   <>
     <ProgressBar height="3px" color="var(--color-primary)" />
     {children}
-    <Toaster />
   </>
 );

@@ -183,7 +183,7 @@ const Passe: NextPage = () => {
               : "Passe lido no balcão"}
           </h1>
           <p className="m-0 mt-2 max-w-xs text-sm leading-relaxed opacity-75">
-            {caiu ? "Já está na sua cartela." : "Registrando na rede. Pode guardar o celular — isso termina sozinho."}
+            {caiu ? "Já está na sua cartela." : "Registrando o carimbo. Pode guardar o celular — isso termina sozinho."}
           </p>
         </div>
 

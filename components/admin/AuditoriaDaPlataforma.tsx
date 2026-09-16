@@ -71,7 +71,7 @@ export const AuditoriaDaPlataforma = () => {
       <header>
         <h1 className="m-0 font-serif text-2xl font-black text-secondary">Auditoria da plataforma</h1>
         <p className="m-0 mt-1 text-sm opacity-75">
-          As últimas 200 vendas de todas as lojas, com o hash da transação que registrou cada carimbo na rede.
+          As últimas 200 vendas de todas as lojas, e de qual terminal saiu cada carimbo.
         </p>
       </header>
 

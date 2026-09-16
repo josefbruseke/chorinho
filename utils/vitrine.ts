@@ -24,5 +24,3 @@ export const CATEGORIES = [
 export type CategoryIconKey = (typeof CATEGORIES)[number]["iconKey"];
 
 export const categoryInfo = (id: number) => CATEGORIES[id] ?? CATEGORIES[0];
-
-export const nowSeconds = () => Math.floor(Date.now() / 1000);

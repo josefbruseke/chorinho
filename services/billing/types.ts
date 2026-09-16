@@ -18,14 +18,14 @@ export type StatusDaAssinatura = "ativa" | "atrasada" | "cancelada";
 /**
  * O evento interno, para onde todo webhook converge.
  *
- * Daí para frente o caminho é único e não sabe qual gateway falou: grava em
- * `billing_events` para idempotência, atualiza a assinatura e enfileira a
- * escrita on-chain. O contrato nunca fica sabendo quem pagou.
+ * Daí para frente o caminho é único e não sabe qual gateway falou: guarda o
+ * evento para idempotência e atualiza a assinatura do estabelecimento. O
+ * lojista nunca precisa saber por qual gateway pagou.
  */
 export type EventoDeCobranca = {
   /** Identificador do evento no provedor. É a chave de idempotência. */
   idNoProvedor: string;
-  establishmentId: bigint;
+  establishmentId: string;
   plano: number;
   status: StatusDaAssinatura;
   validoAte: Date;
@@ -38,14 +38,14 @@ export type BillingProvider = {
   nome: string;
 
   /** Leva o lojista para pagar. Devolve a URL para onde redirecionar. */
-  criarCheckout(establishmentId: bigint, planoId: string): Promise<string>;
+  criarCheckout(establishmentId: string, planoId: string): Promise<string>;
 
   /**
    * Portal de autoatendimento do provedor, quando existe. `null` significa
    * "este gateway não tem portal" — e a tela precisa saber disso para não
    * mostrar um botão que não leva a lugar nenhum.
    */
-  criarPortal(establishmentId: bigint): Promise<string | null>;
+  criarPortal(establishmentId: string): Promise<string | null>;
 
   /**
    * Converte o webhook em evento interno, ou devolve `null` quando a

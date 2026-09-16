@@ -210,6 +210,7 @@ Honestidade sobre o estado, para ninguém descobrir clicando:
 - **Pontos da cidade.** Viviam num contrato e não têm tabela: os saldos voltam zerados e marcados como indisponíveis.
 - **Peças colecionáveis e entrega de conquistas.** Mesma história — `/api/pos/peca` e `/api/carteira/conquistas/[id]` respondem 503, honestamente, em vez de fingir.
 - **Regra de carimbo.** `/painel/regras` é somente leitura: hoje a regra é a mesma em toda loja (um carimbo por visita, sem carência).
+- **Transferência.** O lojista vai poder decidir se carimbo e prêmio podem ser passados adiante, como presente para um amigo, ou ficam presos a quem ganhou. Ainda não está implementado: hoje tudo é intransferível.
 - **Testes.** Não há nenhum. Os 36 que existiam eram dos contratos e foram embora com eles.
 
 ---

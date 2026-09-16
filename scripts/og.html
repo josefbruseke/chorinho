@@ -17,10 +17,10 @@
 
   Para refazer (1200x630, o formato que as redes cortam):
 
-    cp packages/nextjs/scripts/og.html packages/nextjs/public/_og-temp.html
+    cp scripts/og.html public/_og-temp.html
     # abra http://localhost:3000/_og-temp.html num navegador em 1200x630,
-    # capture a tela inteira e salve como packages/nextjs/public/og.png
-    rm packages/nextjs/public/_og-temp.html
+    # capture a tela inteira e salve como public/og.png
+    rm public/_og-temp.html
 
   O arquivo temporario em public/ e necessario porque navegador recusa `file:`
   para fontes remotas; servir pelo Next resolve sem instalar nada.

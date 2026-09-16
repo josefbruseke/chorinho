@@ -27,7 +27,7 @@ export const supabaseBrowser = () => {
 
     if (!url || !chave) {
       throw new Error(
-        "Supabase não configurado: defina NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY em packages/nextjs/.env.local",
+        "Supabase não configurado: defina NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY em .env.local",
       );
     }
 

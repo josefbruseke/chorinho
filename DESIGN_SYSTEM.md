@@ -27,7 +27,7 @@ A tipografia do Chorinho combina a expressividade acolhedora de um clássico ser
 
 ## 3. Cores & Tokens
 
-Localizados em `packages/nextjs/components/design-system/tokens.ts` e refletidos nas variáveis de tema DaisyUI / Tailwind em `globals.css`:
+Localizados em `components/design-system/tokens.ts` e refletidos nas variáveis de tema DaisyUI / Tailwind em `globals.css`:
 
 ### Paleta Principal
 
